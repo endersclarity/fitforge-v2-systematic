@@ -1,0 +1,347 @@
+"use client"
+
+import { useState, useMemo } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Progress } from "@/components/ui/progress"
+import { Search, Plus, Dumbbell } from "lucide-react"
+
+interface Exercise {
+  id: string
+  name: string
+  category: string
+  equipment: string
+  difficulty: "Beginner" | "Intermediate" | "Advanced"
+  muscleEngagement: { [key: string]: number }
+  instructions: string[]
+  tips: string[]
+}
+
+const exercises: Exercise[] = [
+  {
+    id: "1",
+    name: "Push-ups",
+    category: "Chest/Triceps",
+    equipment: "Bodyweight",
+    difficulty: "Beginner",
+    muscleEngagement: { Chest: 75, Triceps: 20, Shoulders: 5 },
+    instructions: [
+      "Start in a plank position with hands slightly wider than shoulders",
+      "Lower your body until chest nearly touches the floor",
+      "Push back up to starting position",
+      "Keep your body in a straight line throughout",
+    ],
+    tips: ["Keep core engaged", "Don't let hips sag", "Control the movement"],
+  },
+  {
+    id: "2",
+    name: "Pull-ups",
+    category: "Back/Biceps",
+    equipment: "Pull-up Bar",
+    difficulty: "Intermediate",
+    muscleEngagement: { Lats: 60, Biceps: 25, Rhomboids: 10, "Rear Delts": 5 },
+    instructions: [
+      "Hang from pull-up bar with overhand grip",
+      "Pull your body up until chin clears the bar",
+      "Lower yourself with control",
+      "Repeat for desired reps",
+    ],
+    tips: ["Engage lats first", "Avoid swinging", "Full range of motion"],
+  },
+  {
+    id: "3",
+    name: "Squats",
+    category: "Legs",
+    equipment: "Bodyweight",
+    difficulty: "Beginner",
+    muscleEngagement: { Quadriceps: 50, Glutes: 30, Hamstrings: 15, Calves: 5 },
+    instructions: [
+      "Stand with feet shoulder-width apart",
+      "Lower your body as if sitting back into a chair",
+      "Keep chest up and knees behind toes",
+      "Return to starting position",
+    ],
+    tips: ["Keep weight on heels", "Don't let knees cave in", "Go as low as comfortable"],
+  },
+  {
+    id: "4",
+    name: "Deadlifts",
+    category: "Back/Biceps",
+    equipment: "Barbell",
+    difficulty: "Advanced",
+    muscleEngagement: { Hamstrings: 40, Glutes: 25, "Lower Back": 20, Traps: 10, Forearms: 5 },
+    instructions: [
+      "Stand with feet hip-width apart, bar over mid-foot",
+      "Bend at hips and knees to grip the bar",
+      "Keep chest up and back straight",
+      "Drive through heels to lift the bar",
+    ],
+    tips: ["Keep bar close to body", "Engage core throughout", "Don't round your back"],
+  },
+  {
+    id: "5",
+    name: "Plank",
+    category: "Abs",
+    equipment: "Bodyweight",
+    difficulty: "Beginner",
+    muscleEngagement: { Core: 70, Shoulders: 15, Glutes: 10, Legs: 5 },
+    instructions: ["Start in push-up position", "Lower to forearms", "Keep body in straight line", "Hold position"],
+    tips: ["Don't let hips sag", "Breathe normally", "Engage entire core"],
+  },
+  {
+    id: "6",
+    name: "Dumbbell Bench Press",
+    category: "Chest/Triceps",
+    equipment: "Dumbbells",
+    difficulty: "Intermediate",
+    muscleEngagement: { Chest: 70, Triceps: 20, Shoulders: 10 },
+    instructions: [
+      "Lie on bench with dumbbells in each hand",
+      "Start with arms extended above chest",
+      "Lower weights to chest level",
+      "Press back to starting position",
+    ],
+    tips: ["Control the weight", "Keep feet planted", "Don't arch back excessively"],
+  },
+]
+
+const categories = ["All", "Chest/Triceps", "Back/Biceps", "Legs", "Abs"]
+const equipment = ["All", "Bodyweight", "Dumbbells", "Barbell", "Pull-up Bar"]
+const difficulties = ["All", "Beginner", "Intermediate", "Advanced"]
+
+export function ExerciseLibrary() {
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [selectedEquipment, setSelectedEquipment] = useState("All")
+  const [selectedDifficulty, setSelectedDifficulty] = useState("All")
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
+
+  const filteredExercises = useMemo(() => {
+    return exercises.filter((exercise) => {
+      const matchesSearch = exercise.name.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesCategory = selectedCategory === "All" || exercise.category === selectedCategory
+      const matchesEquipment = selectedEquipment === "All" || exercise.equipment === selectedEquipment
+      const matchesDifficulty = selectedDifficulty === "All" || exercise.difficulty === selectedDifficulty
+
+      return matchesSearch && matchesCategory && matchesEquipment && matchesDifficulty
+    })
+  }, [searchTerm, selectedCategory, selectedEquipment, selectedDifficulty])
+
+  const addToWorkout = (exercise: Exercise) => {
+    // This would integrate with workout creation
+    console.log("Adding to workout:", exercise.name)
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">Exercise Library</h1>
+        <p className="text-muted-foreground">Discover exercises with detailed muscle engagement data</p>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Filters</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search exercises..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Category</label>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Equipment</label>
+              <Select value={selectedEquipment} onValueChange={setSelectedEquipment}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {equipment.map((eq) => (
+                    <SelectItem key={eq} value={eq}>
+                      {eq}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Difficulty</label>
+              <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {difficulties.map((diff) => (
+                    <SelectItem key={diff} value={diff}>
+                      {diff}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Exercise List */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Exercises ({filteredExercises.length})</h2>
+
+          {filteredExercises.map((exercise) => (
+            <Card
+              key={exercise.id}
+              className={`cursor-pointer transition-colors hover:bg-accent ${
+                selectedExercise?.id === exercise.id ? "ring-2 ring-primary" : ""
+              }`}
+              onClick={() => setSelectedExercise(exercise)}
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-lg">{exercise.name}</CardTitle>
+                  <Button
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      addToWorkout(exercise)
+                    }}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary">{exercise.category}</Badge>
+                  <Badge variant="outline">{exercise.equipment}</Badge>
+                  <Badge
+                    variant={
+                      exercise.difficulty === "Beginner"
+                        ? "default"
+                        : exercise.difficulty === "Intermediate"
+                          ? "secondary"
+                          : "destructive"
+                    }
+                  >
+                    {exercise.difficulty}
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Primary Muscles:</p>
+                  <div className="space-y-1">
+                    {Object.entries(exercise.muscleEngagement)
+                      .sort(([, a], [, b]) => b - a)
+                      .slice(0, 2)
+                      .map(([muscle, percentage]) => (
+                        <div key={muscle} className="flex items-center justify-between text-sm">
+                          <span>{muscle}</span>
+                          <span className="font-medium">{percentage}%</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Exercise Details */}
+        <div className="lg:sticky lg:top-6">
+          {selectedExercise ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>{selectedExercise.name}</CardTitle>
+                <CardDescription>
+                  {selectedExercise.category} • {selectedExercise.equipment} • {selectedExercise.difficulty}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Muscle Engagement */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold">Muscle Engagement</h3>
+                  {Object.entries(selectedExercise.muscleEngagement)
+                    .sort(([, a], [, b]) => b - a)
+                    .map(([muscle, percentage]) => (
+                      <div key={muscle} className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span>{muscle}</span>
+                          <span className="font-medium">{percentage}%</span>
+                        </div>
+                        <Progress value={percentage} className="h-2" />
+                      </div>
+                    ))}
+                </div>
+
+                {/* Instructions */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold">Instructions</h3>
+                  <ol className="space-y-2 text-sm">
+                    {selectedExercise.instructions.map((instruction, index) => (
+                      <li key={index} className="flex">
+                        <span className="font-medium text-primary mr-2">{index + 1}.</span>
+                        <span>{instruction}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+
+                {/* Tips */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold">Tips</h3>
+                  <ul className="space-y-1 text-sm">
+                    {selectedExercise.tips.map((tip, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="text-primary mr-2">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Button className="w-full" onClick={() => addToWorkout(selectedExercise)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add to Workout
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="flex flex-col items-center justify-center py-12">
+                <Dumbbell className="h-12 w-12 text-muted-foreground mb-4" />
+                <p className="text-muted-foreground text-center">Select an exercise to view detailed information</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

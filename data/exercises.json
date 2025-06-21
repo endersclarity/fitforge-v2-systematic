@@ -1,0 +1,92 @@
+[
+  {
+    "id": "1",
+    "name": "Push-ups",
+    "category": "Chest/Triceps",
+    "equipment": "Bodyweight",
+    "difficulty": "Beginner",
+    "muscleEngagement": { "Chest": 75, "Triceps": 20, "Shoulders": 5 },
+    "instructions": [
+      "Start in a plank position with hands slightly wider than shoulders",
+      "Lower your body until chest nearly touches the floor",
+      "Push back up to starting position",
+      "Keep your body in a straight line throughout"
+    ],
+    "tips": ["Keep core engaged", "Don't let hips sag", "Control the movement"]
+  },
+  {
+    "id": "2",
+    "name": "Pull-ups",
+    "category": "Back/Biceps",
+    "equipment": "Pull-up Bar",
+    "difficulty": "Intermediate",
+    "muscleEngagement": { "Lats": 60, "Biceps": 25, "Rhomboids": 10, "Rear Delts": 5 },
+    "instructions": [
+      "Hang from pull-up bar with overhand grip",
+      "Pull your body up until chin clears the bar",
+      "Lower yourself with control",
+      "Repeat for desired reps"
+    ],
+    "tips": ["Engage lats first", "Avoid swinging", "Full range of motion"]
+  },
+  {
+    "id": "3",
+    "name": "Squats",
+    "category": "Legs",
+    "equipment": "Bodyweight",
+    "difficulty": "Beginner",
+    "muscleEngagement": { "Quadriceps": 50, "Glutes": 30, "Hamstrings": 15, "Calves": 5 },
+    "instructions": [
+      "Stand with feet shoulder-width apart",
+      "Lower your body as if sitting back into a chair",
+      "Keep chest up and knees behind toes",
+      "Return to starting position"
+    ],
+    "tips": ["Keep weight on heels", "Don't let knees cave in", "Go as low as comfortable"]
+  },
+  {
+    "id": "4",
+    "name": "Deadlifts",
+    "category": "Back/Biceps",
+    "equipment": "Barbell",
+    "difficulty": "Advanced",
+    "muscleEngagement": { "Hamstrings": 40, "Glutes": 25, "Lower Back": 20, "Traps": 10, "Forearms": 5 },
+    "instructions": [
+      "Stand with feet hip-width apart, bar over mid-foot",
+      "Bend at hips and knees to grip the bar",
+      "Keep chest up and back straight",
+      "Drive through heels to lift the bar"
+    ],
+    "tips": ["Keep bar close to body", "Engage core throughout", "Don't round your back"]
+  },
+  {
+    "id": "5",
+    "name": "Plank",
+    "category": "Abs",
+    "equipment": "Bodyweight",
+    "difficulty": "Beginner",
+    "muscleEngagement": { "Core": 70, "Shoulders": 15, "Glutes": 10, "Legs": 5 },
+    "instructions": [
+      "Start in push-up position",
+      "Lower to forearms",
+      "Keep body in straight line",
+      "Hold position"
+    ],
+    "tips": ["Don't let hips sag", "Breathe normally", "Engage entire core"]
+  },
+  {
+    "id": "6",
+    "name": "Dumbbell Bench Press",
+    "category": "Chest/Triceps",
+    "equipment": "Dumbbells",
+    "difficulty": "Intermediate",
+    "muscleEngagement": { "Chest": 70, "Triceps": 20, "Shoulders": 10 },
+    "instructions": [
+      "Lie on bench with dumbbells in each hand",
+      "Start with arms extended above chest",
+      "Lower weights to chest level",
+      "Press back to starting position"
+    ],
+    "tips": ["Control the weight", "Keep feet planted", "Don't arch back excessively"]
+  }
+]

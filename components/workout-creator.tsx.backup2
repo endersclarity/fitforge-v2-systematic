@@ -1,0 +1,549 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Plus, Trash2, Play, Save, Timer, RotateCcw } from "lucide-react"
+
+interface WorkoutExercise {
+  id: string
+  name: string
+  sets: ExerciseSet[]
+  restTime: number
+  notes: string
+}
+
+interface ExerciseSet {
+  id: string
+  reps: number
+  weight: number
+  completed: boolean
+}
+
+interface Workout {
+  id: string
+  name: string
+  type: "A" | "B"
+  exercises: WorkoutExercise[]
+  createdAt: string
+}
+
+interface ActiveWorkout {
+  workout: Workout
+  currentExerciseIndex: number
+  currentSetIndex: number
+  startTime: Date
+  isResting: boolean
+  restStartTime?: Date
+}
+
+// Raw exercise data (same as exercise-library.tsx)
+const rawExerciseData = [
+  { Equipment: "Bodyweight", Exercise_Name: "Planks", Workout_Type: "Abs", Reps: 1 },
+  { Equipment: "Bench", Exercise_Name: "Spider_Planks", Workout_Type: "Abs", Reps: 2 },
+  { Equipment: "TRX", Exercise_Name: "Bench_Situps", Workout_Type: "Abs", Reps: 3 },
+  { Equipment: "Kettlebell", Exercise_Name: "Hanging_Knee_Raises", Workout_Type: "Abs", Reps: 4 },
+  { Equipment: "Dumbbell", Exercise_Name: "Shoulder_Shrugs", Workout_Type: "BackBiceps", Reps: 5 },
+  { Equipment: "OYA", Exercise_Name: "T_Row", Workout_Type: "BackBiceps", Reps: 6 },
+  { Equipment: "Pull-up_Bar", Exercise_Name: "Incline_Hammer_Curl", Workout_Type: "BackBiceps", Reps: 7 },
+  { Equipment: "Countertop", Exercise_Name: "Neutral_Grip_Pull-ups", Workout_Type: "BackBiceps", Reps: 8 },
+  { Equipment: "Plybox", Exercise_Name: "Bent_Over_Rows", Workout_Type: "BackBiceps", Reps: 9 },
+  { Equipment: "Barbell", Exercise_Name: "Row", Workout_Type: "BackBiceps", Reps: 10 },
+  { Equipment: "Dumbbell", Exercise_Name: "Renegade_Rows", Workout_Type: "BackBiceps", Reps: 11 },
+  { Equipment: "Dumbbell", Exercise_Name: "Single_Arm_Upright_Row", Workout_Type: "BackBiceps", Reps: 12 },
+  { Equipment: "TRX", Exercise_Name: "TRX_Bicep_Curl", Workout_Type: "BackBiceps", Reps: 13 },
+  { Equipment: "Pull-up_Bar", Exercise_Name: "Chin-Ups", Workout_Type: "BackBiceps", Reps: 14 },
+  { Equipment: "Cable", Exercise_Name: "Face_Pull", Workout_Type: "BackBiceps", Reps: 15 },
+  { Equipment: "Dumbbell", Exercise_Name: "Concentration_Curl", Workout_Type: "BackBiceps", Reps: 16 },
+  { Equipment: "Pull-up_Bar", Exercise_Name: "Wide_Grip_Pullups", Workout_Type: "BackBiceps", Reps: 17 },
+  { Equipment: "Barbell", Exercise_Name: "Bench_Press", Workout_Type: "ChestTriceps", Reps: 18 },
+  { Equipment: "TRX", Exercise_Name: "Trx_Reverse_Flys", Workout_Type: "ChestTriceps", Reps: 19 },
+  { Equipment: "Cable", Exercise_Name: "Tricep_Extension", Workout_Type: "ChestTriceps", Reps: 20 },
+  { Equipment: "TRX", Exercise_Name: "TRX_Pushup", Workout_Type: "ChestTriceps", Reps: 21 },
+  { Equipment: "Dumbbell", Exercise_Name: "Single_Arm_Bench", Workout_Type: "ChestTriceps", Reps: 22 },
+  { Equipment: "Dumbbell", Exercise_Name: "Single_Arm_Incline", Workout_Type: "ChestTriceps", Reps: 23 },
+  { Equipment: "Dumbbell", Exercise_Name: "Pullover", Workout_Type: "ChestTriceps", Reps: 24 },
+  { Equipment: "Bodyweight", Exercise_Name: "Claps", Workout_Type: "ChestTriceps", Reps: 25 },
+  { Equipment: "Bodyweight", Exercise_Name: "Pushup", Workout_Type: "ChestTriceps", Reps: 26 },
+  { Equipment: "Barbell", Exercise_Name: "Incline_Bench_Press", Workout_Type: "ChestTriceps", Reps: 27 },
+  { Equipment: "Dumbbell", Exercise_Name: "Shoulder_Press", Workout_Type: "ChestTriceps", Reps: 28 },
+  { Equipment: "Bodyweight", Exercise_Name: "Dips", Workout_Type: "ChestTriceps", Reps: 29 },
+  { Equipment: "Kettlebell", Exercise_Name: "Kettlebell_Halos", Workout_Type: "ChestTriceps", Reps: 30 },
+  { Equipment: "Kettlebell", Exercise_Name: "Kettlebell_Press", Workout_Type: "ChestTriceps", Reps: 31 },
+  { Equipment: "Kettlebell", Exercise_Name: "Goblet_Squats", Workout_Type: "Legs", Reps: 32 },
+  { Equipment: "Barbell", Exercise_Name: "Dead_Lifts", Workout_Type: "Legs", Reps: 33 },
+  { Equipment: "Bodyweight", Exercise_Name: "Calf_Raises", Workout_Type: "Legs", Reps: 34 },
+  { Equipment: "Bodyweight", Exercise_Name: "Glute_Bridges", Workout_Type: "Legs", Reps: 35 },
+  { Equipment: "Plybox", Exercise_Name: "Box_Step-ups", Workout_Type: "Legs", Reps: 36 },
+  { Equipment: "Barbell", Exercise_Name: "Stiff_Legged_Deadlifts", Workout_Type: "Legs", Reps: 37 },
+  { Equipment: "Kettlebell", Exercise_Name: "Kettlebell_Swings", Workout_Type: "Legs", Reps: 38 },
+];
+
+// Transform to format needed by workout creator
+const availableExercises = rawExerciseData.map(item => ({
+  id: String(item.Reps),
+  name: item.Exercise_Name.replace(/_/g, ' '),
+  category: item.Workout_Type === 'ChestTriceps' ? 'Chest/Triceps' : 
+            item.Workout_Type === 'BackBiceps' ? 'Back/Biceps' : 
+            item.Workout_Type
+}));
+
+export function WorkoutCreator() {
+  const [workouts, setWorkouts] = useState<Workout[]>([])
+  const [activeWorkout, setActiveWorkout] = useState<ActiveWorkout | null>(null)
+  const [isCreating, setIsCreating] = useState(false)
+  const [newWorkout, setNewWorkout] = useState<Partial<Workout>>({
+    name: "",
+    type: "A",
+    exercises: [],
+  })
+
+  useEffect(() => {
+    // Load workouts from localStorage
+    const savedWorkouts = JSON.parse(localStorage.getItem("workouts") || "[]")
+    setWorkouts(savedWorkouts)
+  }, [])
+
+  const saveWorkouts = (updatedWorkouts: Workout[]) => {
+    setWorkouts(updatedWorkouts)
+    localStorage.setItem("workouts", JSON.stringify(updatedWorkouts))
+  }
+
+  const createWorkout = () => {
+    if (!newWorkout.name || !newWorkout.exercises?.length) return
+
+    const workout: Workout = {
+      id: Date.now().toString(),
+      name: newWorkout.name,
+      type: newWorkout.type as "A" | "B",
+      exercises: newWorkout.exercises as WorkoutExercise[],
+      createdAt: new Date().toISOString(),
+    }
+
+    const updatedWorkouts = [...workouts, workout]
+    saveWorkouts(updatedWorkouts)
+    setNewWorkout({ name: "", type: "A", exercises: [] })
+    setIsCreating(false)
+  }
+
+  const addExerciseToWorkout = (exerciseName: string) => {
+    const exercise: WorkoutExercise = {
+      id: Date.now().toString(),
+      name: exerciseName,
+      sets: [
+        { id: "1", reps: 10, weight: 0, completed: false },
+        { id: "2", reps: 10, weight: 0, completed: false },
+        { id: "3", reps: 10, weight: 0, completed: false },
+      ],
+      restTime: 60,
+      notes: "",
+    }
+
+    setNewWorkout((prev) => ({
+      ...prev,
+      exercises: [...(prev.exercises || []), exercise],
+    }))
+  }
+
+  const startWorkout = (workout: Workout) => {
+    setActiveWorkout({
+      workout: { ...workout },
+      currentExerciseIndex: 0,
+      currentSetIndex: 0,
+      startTime: new Date(),
+      isResting: false,
+    })
+  }
+
+  const completeSet = () => {
+    if (!activeWorkout) return
+
+    const updatedWorkout = { ...activeWorkout }
+    const currentExercise = updatedWorkout.workout.exercises[updatedWorkout.currentExerciseIndex]
+    const currentSet = currentExercise.sets[updatedWorkout.currentSetIndex]
+
+    currentSet.completed = true
+    updatedWorkout.isResting = true
+    updatedWorkout.restStartTime = new Date()
+
+    // Move to next set or exercise
+    if (updatedWorkout.currentSetIndex < currentExercise.sets.length - 1) {
+      updatedWorkout.currentSetIndex++
+    } else if (updatedWorkout.currentExerciseIndex < updatedWorkout.workout.exercises.length - 1) {
+      updatedWorkout.currentExerciseIndex++
+      updatedWorkout.currentSetIndex = 0
+    }
+
+    setActiveWorkout(updatedWorkout)
+  }
+
+  const finishWorkout = () => {
+    if (!activeWorkout) return
+
+    const duration = Math.round((new Date().getTime() - activeWorkout.startTime.getTime()) / 1000 / 60)
+    const totalSets = activeWorkout.workout.exercises.reduce((sum, ex) => sum + ex.sets.length, 0)
+
+    const session = {
+      id: Date.now().toString(),
+      name: activeWorkout.workout.name,
+      date: new Date().toISOString(),
+      duration,
+      exercises: activeWorkout.workout.exercises.length,
+      totalSets,
+    }
+
+    const sessions = JSON.parse(localStorage.getItem("workoutSessions") || "[]")
+    sessions.push(session)
+    localStorage.setItem("workoutSessions", JSON.stringify(sessions))
+
+    setActiveWorkout(null)
+  }
+
+  if (activeWorkout) {
+    return (
+      <ActiveWorkoutView
+        activeWorkout={activeWorkout}
+        onCompleteSet={completeSet}
+        onFinishWorkout={finishWorkout}
+        onUpdateSet={(exerciseIndex, setIndex, field, value) => {
+          const updated = { ...activeWorkout }
+          const set = updated.workout.exercises[exerciseIndex].sets[setIndex]
+          ;(set as any)[field] = value
+          setActiveWorkout(updated)
+        }}
+      />
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">Workouts</h1>
+        <p className="text-muted-foreground">Create and manage your workout routines</p>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold">Your Workouts</h2>
+        <Button onClick={() => setIsCreating(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Create Workout
+        </Button>
+      </div>
+
+      {/* Workout List */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {workouts.map((workout) => (
+          <Card key={workout.id}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">{workout.name}</CardTitle>
+                <Badge variant={workout.type === "A" ? "default" : "secondary"}>{workout.type}</Badge>
+              </div>
+              <CardDescription>{workout.exercises.length} exercises</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                {workout.exercises.slice(0, 3).map((exercise) => (
+                  <div key={exercise.id} className="flex items-center justify-between text-sm">
+                    <span>{exercise.name}</span>
+                    <span className="text-muted-foreground">{exercise.sets.length} sets</span>
+                  </div>
+                ))}
+                {workout.exercises.length > 3 && (
+                  <p className="text-sm text-muted-foreground">+{workout.exercises.length - 3} more exercises</p>
+                )}
+              </div>
+              <Button className="w-full" onClick={() => startWorkout(workout)}>
+                <Play className="h-4 w-4 mr-2" />
+                Start Workout
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Create Workout Dialog */}
+      <Dialog open={isCreating} onOpenChange={setIsCreating}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create New Workout</DialogTitle>
+            <DialogDescription>Build your custom workout routine</DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Workout Name</Label>
+                <Input
+                  value={newWorkout.name || ""}
+                  onChange={(e) => setNewWorkout((prev) => ({ ...prev, name: e.target.value }))}
+                  placeholder="e.g., Upper Body A"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Type</Label>
+                <Select
+                  value={newWorkout.type}
+                  onValueChange={(value: "A" | "B") => setNewWorkout((prev) => ({ ...prev, type: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="A">Workout A</SelectItem>
+                    <SelectItem value="B">Workout B</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label>Add Exercises (38 Available)</Label>
+              <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto">
+                {availableExercises.map((exercise) => (
+                  <Button
+                    key={exercise.id}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addExerciseToWorkout(exercise.name)}
+                    className="text-xs"
+                  >
+                    <Plus className="h-3 w-3 mr-1" />
+                    {exercise.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {newWorkout.exercises && newWorkout.exercises.length > 0 && (
+              <div className="space-y-3">
+                <Label>Selected Exercises</Label>
+                <div className="space-y-2">
+                  {newWorkout.exercises.map((exercise, index) => (
+                    <div key={exercise.id} className="flex items-center justify-between p-2 border rounded">
+                      <span>{exercise.name}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-muted-foreground">{exercise.sets.length} sets</span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            const updated = newWorkout.exercises?.filter((_, i) => i !== index)
+                            setNewWorkout((prev) => ({ ...prev, exercises: updated }))
+                          }}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsCreating(false)}>
+                Cancel
+              </Button>
+              <Button onClick={createWorkout} disabled={!newWorkout.name || !newWorkout.exercises?.length}>
+                <Save className="h-4 w-4 mr-2" />
+                Create Workout
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  )
+}
+
+function ActiveWorkoutView({
+  activeWorkout,
+  onCompleteSet,
+  onFinishWorkout,
+  onUpdateSet,
+}: {
+  activeWorkout: ActiveWorkout
+  onCompleteSet: () => void
+  onFinishWorkout: () => void
+  onUpdateSet: (exerciseIndex: number, setIndex: number, field: string, value: any) => void
+}) {
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const [restTime, setRestTime] = useState(0)
+
+  // Destructure the values we need from the object
+  const { startTime, isResting, restStartTime } = activeWorkout;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // The logic inside here can still access the full `activeWorkout` object
+      // because it's available in the component's scope.
+      setElapsedTime(Math.floor((new Date().getTime() - activeWorkout.startTime.getTime()) / 1000))
+
+      if (activeWorkout.isResting && activeWorkout.restStartTime) {
+        const restElapsed = Math.floor((new Date().getTime() - activeWorkout.restStartTime.getTime()) / 1000)
+        setRestTime(restElapsed)
+      }
+    }, 1000)
+
+    return () => clearInterval(interval)
+    
+    // The dependency array now only contains the values that should trigger a reset of the interval.
+  }, [startTime, isResting, restStartTime])
+
+  const currentExercise = activeWorkout.workout.exercises[activeWorkout.currentExerciseIndex]
+  const currentSet = currentExercise?.sets[activeWorkout.currentSetIndex]
+  const isLastExercise = activeWorkout.currentExerciseIndex === activeWorkout.workout.exercises.length - 1
+  const isLastSet = activeWorkout.currentSetIndex === currentExercise?.sets.length - 1
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, "0")}`
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{activeWorkout.workout.name}</h1>
+          <p className="text-muted-foreground">
+            Exercise {activeWorkout.currentExerciseIndex + 1} of {activeWorkout.workout.exercises.length}
+          </p>
+        </div>
+        <div className="text-right">
+          <div className="text-2xl font-bold">{formatTime(elapsedTime)}</div>
+          <p className="text-sm text-muted-foreground">Total Time</p>
+        </div>
+      </div>
+
+      {activeWorkout.isResting && (
+        <Card className="border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Timer className="h-5 w-5 text-orange-600" />
+                <span className="font-medium">Rest Time</span>
+              </div>
+              <div className="text-xl font-bold text-orange-600">{formatTime(restTime)}</div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>{currentExercise?.name}</span>
+            <Badge>Set {activeWorkout.currentSetIndex + 1}</Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="text-center">
+              <Label className="text-sm">Reps</Label>
+              <Input
+                type="number"
+                value={currentSet?.reps || 0}
+                onChange={(e) =>
+                  onUpdateSet(
+                    activeWorkout.currentExerciseIndex,
+                    activeWorkout.currentSetIndex,
+                    "reps",
+                    Number.parseInt(e.target.value) || 0,
+                  )
+                }
+                className="text-center text-lg font-bold"
+              />
+            </div>
+            <div className="text-center">
+              <Label className="text-sm">Weight (lbs)</Label>
+              <Input
+                type="number"
+                value={currentSet?.weight || 0}
+                onChange={(e) =>
+                  onUpdateSet(
+                    activeWorkout.currentExerciseIndex,
+                    activeWorkout.currentSetIndex,
+                    "weight",
+                    Number.parseFloat(e.target.value) || 0,
+                  )
+                }
+                className="text-center text-lg font-bold"
+              />
+            </div>
+            <div className="text-center">
+              <Label className="text-sm">Rest (sec)</Label>
+              <div className="text-lg font-bold p-2 border rounded text-center">{currentExercise?.restTime || 60}</div>
+            </div>
+          </div>
+
+          <Button className="w-full" size="lg" onClick={onCompleteSet} disabled={currentSet?.completed}>
+            {currentSet?.completed ? "Set Completed" : "Complete Set"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* All Sets Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle>All Sets</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {activeWorkout.workout.exercises.map((exercise, exerciseIndex) => (
+              <div key={exercise.id} className="space-y-2">
+                <h4 className="font-medium">{exercise.name}</h4>
+                <div className="grid grid-cols-1 gap-2">
+                  {exercise.sets.map((set, setIndex) => (
+                    <div
+                      key={set.id}
+                      className={`flex items-center justify-between p-2 rounded border ${
+                        exerciseIndex === activeWorkout.currentExerciseIndex &&
+                        setIndex === activeWorkout.currentSetIndex
+                          ? "border-primary bg-primary/10"
+                          : set.completed
+                            ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
+                            : "border-border"
+                      }`}
+                    >
+                      <span className="text-sm">Set {setIndex + 1}</span>
+                      <div className="flex items-center space-x-4 text-sm">
+                        <span>{set.reps} reps</span>
+                        <span>{set.weight} lbs</span>
+                        {set.completed && (
+                          <Badge variant="secondary" className="text-xs">
+                            ✓
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex space-x-4">
+        <Button variant="outline" className="flex-1">
+          <RotateCcw className="h-4 w-4 mr-2" />
+          Reset Set
+        </Button>
+        <Button
+          className="flex-1"
+          onClick={onFinishWorkout}
+          variant={isLastExercise && isLastSet ? "default" : "outline"}
+        >
+          {isLastExercise && isLastSet ? "Finish Workout" : "End Early"}
+        </Button>
+      </div>
+    </div>
+  )
+}

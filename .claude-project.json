@@ -1,0 +1,105 @@
+{
+  "project_name": "FitForge V2 Systematic",
+  "project_type": "fitness_analytics_web_app",
+  "description": "Systematic approach to advanced personal workout tracker with muscle fatigue analytics, progressive overload targeting, and comprehensive exercise database",
+  "commands": {
+    "/dev": {
+      "description": "Development workflow and Docker commands",
+      "action": "Show development setup using Docker-based workflow"
+    },
+    "/docs": {
+      "description": "Access comprehensive project documentation",
+      "action": "Open FitForge-Development-Guide.md and related systematic documentation"
+    },
+    "/specs": {
+      "description": "Technical specifications and architecture",
+      "action": "Review FitForge-Technical-Specifications.md and system design"
+    },
+    "/style": {
+      "description": "Project style guide and standards",
+      "action": "Open FitForge-Style-Guide.md for coding and design standards"
+    },
+    "/journal": {
+      "description": "Implementation progress and decisions",
+      "action": "View FitForge-Implementation-Journal.md for development history"
+    },
+    "/exercises": {
+      "description": "Exercise database and data management",
+      "action": "Work with data/exercises.json and exercise-related components"
+    },
+    "/types": {
+      "description": "TypeScript interfaces and schemas",
+      "action": "Access schemas/typescript-interfaces.ts for type definitions"
+    },
+    "/analytics": {
+      "description": "Muscle fatigue analytics and AI features",
+      "action": "Work on lib/ai/ modules for fatigue analysis and progression"
+    },
+    "/components": {
+      "description": "React components and UI development",
+      "action": "Access components/ directory for UI development"
+    },
+    "/test": {
+      "description": "Testing and validation workflows",
+      "action": "Run test suites and validation scripts"
+    }
+  },
+  "structure_keymap": {
+    "📚 SYSTEMATIC DOCUMENTATION": {
+      "FitForge-Development-Guide.md": "Comprehensive development guide and methodology",
+      "FitForge-Technical-Specifications.md": "Technical architecture and system specifications", 
+      "FitForge-Style-Guide.md": "Coding standards and design principles",
+      "FitForge-Implementation-Journal.md": "Development progress and decision history",
+      "Development-Guide-Template.md": "Template and reference materials"
+    },
+    "🏗️ CORE APPLICATION": {
+      "app/": "Next.js application structure - pages and routing",
+      "components/": "React components - UI building blocks",
+      "lib/": "Core business logic and utilities",
+      "hooks/": "React hooks and state management",
+      "data/": "Exercise database and static data files"
+    },
+    "🔧 TYPE SYSTEM & SCHEMAS": {
+      "schemas/": "Database schemas and TypeScript interfaces",
+      "schemas/typescript-interfaces.ts": "Comprehensive type definitions",
+      "schemas/database-schema.sql": "Database structure definition",
+      "schemas/pydantic-models.py": "Python data models for backend"
+    },
+    "🚀 DEVELOPMENT & DEPLOYMENT": {
+      "package.json": "Project dependencies and npm scripts",
+      "next.config.mjs": "Next.js configuration",
+      "tailwind.config.ts": "Tailwind CSS configuration",
+      "tsconfig.json": "TypeScript compiler configuration"
+    },
+    "🧠 AI & ANALYTICS": {
+      "lib/ai/": "Fatigue analysis and workout generation algorithms",
+      "backend/": "Python backend for advanced analytics"
+    }
+  },
+  "key_files": {
+    "development_guide": "FitForge-Development-Guide.md",
+    "technical_specs": "FitForge-Technical-Specifications.md",
+    "style_guide": "FitForge-Style-Guide.md",
+    "implementation_journal": "FitForge-Implementation-Journal.md",
+    "type_definitions": "schemas/typescript-interfaces.ts",
+    "exercise_database": "data/exercises.json",
+    "main_config": "package.json"
+  },
+  "development_workflow": {
+    "methodology": "Systematic approach with comprehensive documentation",
+    "architecture": "Next.js frontend with optional Python analytics backend",
+    "database": "Supabase with PostgreSQL",
+    "styling": "Tailwind CSS with Radix UI components",
+    "testing": "Jest for unit tests, Playwright for e2e",
+    "deployment": "Docker-based development with production builds"
+  },
+  "isolation_boundary": {
+    "scope": "fitforge-v2-systematic directory only",
+    "external_references": "prohibited - all dependencies must be within this directory",
+    "documentation": "comprehensive systematic approach documentation included",
+    "self_contained": true
+  },
+  "tech_stack": "nextjs_react_typescript_supabase_analytics",
+  "development_focus": "systematic_fitness_analytics_with_comprehensive_documentation",
+  "current_status": "isolated_development_environment_active"
+}

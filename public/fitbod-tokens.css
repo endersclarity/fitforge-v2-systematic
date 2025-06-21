@@ -1,0 +1,22 @@
+
+:root {
+  --color-background: #121212;
+  --color-card: #1C1C1E;
+  --color-subtile: #2C2C2E;
+  --color-accent: #FF375F;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A1A1A3;
+
+  --radius-xl: 12px;
+
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+
+  --font-base-size: 16px;
+  --font-base-line: 24px;
+  --font-sm-size: 14px;
+  --font-sm-line: 20px;
+  --font-xs-size: 12px;
+  --font-xs-line: 18px;
+}

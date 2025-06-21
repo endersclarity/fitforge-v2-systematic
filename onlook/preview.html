@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitBot App - Onlook Generated</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-gray-900 text-white max-w-sm mx-auto">
+        <!-- Header -->
+        <div class="flex items-center justify-between p-4 pt-12">
+            <div class="text-red-500 text-xl">💪</div>
+            <div class="flex-1 mx-4">
+                <div class="bg-gray-800 rounded-full px-4 py-2 text-center">
+                    <span class="text-white font-medium">YOUR GYM</span>
+                    <span class="text-gray-400 ml-2">›</span>
+                </div>
+            </div>
+            <div class="text-gray-400">⋯</div>
+        </div>
+
+        <!-- Workout Title -->
+        <div class="px-4 mt-8 mb-6">
+            <h1 class="text-2xl font-bold">Back, Chest, Quadriceps, Lower Back</h1>
+        </div>
+
+        <!-- Muscle Group Icons -->
+        <div class="flex justify-between px-4 mb-6">
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
+                    <div class="w-8 h-8 bg-gray-600 rounded"></div>
+                </div>
+                <span class="text-sm font-medium">100%</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
+                    <div class="w-8 h-8 bg-gray-600 rounded"></div>
+                </div>
+                <span class="text-sm font-medium">100%</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
+                    <div class="w-8 h-8 bg-gray-600 rounded"></div>
+                </div>
+                <span class="text-sm font-medium">100%</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
+                    <div class="w-8 h-8 bg-gray-600 rounded"></div>
+                </div>
+                <span class="text-sm font-medium">100%</span>
+            </div>
+            <button class="flex flex-col items-center">
+                <div class="w-16 h-16 bg-gray-800 rounded-lg mb-2 flex items-center justify-center">
+                    <span class="text-gray-400">≡</span>
+                </div>
+                <span class="text-xs text-gray-400">Edit</span>
+            </button>
+        </div>
+
+        <!-- Add Exercise Button -->
+        <div class="px-4 mb-8">
+            <button class="flex items-center text-red-500">
+                <div class="w-8 h-8 border-2 border-red-500 rounded-full flex items-center justify-center mr-3">
+                    <span class="text-lg">+</span>
+                </div>
+                <span class="font-medium">Add an exercise</span>
+            </button>
+        </div>
+
+        <!-- Warm-up -->
+        <div class="px-4 mb-6">
+            <div class="flex items-center justify-between py-4 border-b border-gray-800">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 bg-gray-700 rounded mr-4"></div>
+                    <span class="font-medium">Warm-up</span>
+                </div>
+                <div class="flex items-center text-gray-400">
+                    <span class="mr-2">+6 MIN</span>
+                    <span>›</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise List -->
+        <div class="px-4 space-y-4 mb-8">
+            <div class="flex items-center py-4">
+                <div class="w-16 h-16 bg-gray-700 rounded-lg mr-4 flex items-center justify-center text-2xl">
+                    🏋️
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg">Dumbbell Row</h3>
+                    <p class="text-gray-400 text-sm">4 sets • 8 reps • 32.5 lb</p>
+                </div>
+                <div class="w-8 h-8 bg-gray-700 rounded ml-4"></div>
+            </div>
+            
+            <div class="flex items-center py-4">
+                <div class="w-16 h-16 bg-gray-700 rounded-lg mr-4 flex items-center justify-center text-2xl">
+                    💪
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-lg">Hammerstrength Chest Press</h3>
+                    <p class="text-gray-400 text-sm">4 sets • 10 reps • 50 lb</p>
+                </div>
+                <div class="w-8 h-8 bg-gray-700 rounded ml-4"></div>
+            </div>
+        </div>
+
+        <!-- Superset -->
+        <div class="px-4 mb-8">
+            <div class="flex items-center py-4">
+                <div class="w-8 h-8 flex items-center justify-center mr-4">
+                    <span class="text-gray-400">🔄</span>
+                </div>
+                <div>
+                    <span class="font-medium">Superset</span>
+                    <p class="text-gray-400 text-sm">4 ROUNDS</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Workout Button -->
+        <div class="px-4 mb-8">
+            <button class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-4 rounded-full transition-colors">
+                ▶ Start Workout
+            </button>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 max-w-sm mx-auto">
+            <div class="flex justify-around py-4">
+                <div class="flex flex-col items-center">
+                    <span class="text-red-500 mb-1">💪</span>
+                    <span class="text-xs text-red-500">Workout</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-gray-400 mb-1">⏱</span>
+                    <span class="text-xs text-gray-400">Recovery</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <span class="text-gray-400 mb-1">📅</span>
+                    <span class="text-xs text-gray-400">Log</span>
+                </div>
+            </div>
+            <div class="h-1 bg-white rounded-full mx-auto w-32 mb-2"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex items-center justify-between px-4 py-4 text-xs text-gray-400 mb-20">
+            <div class="flex items-center">
+                <span class="text-red-500 mr-1">❤</span>
+                <span>Fitbod</span>
+            </div>
+            <div class="flex items-center">
+                <span class="mr-2">curated by</span>
+                <span class="font-semibold">Mobbin</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

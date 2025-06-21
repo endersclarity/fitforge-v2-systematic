@@ -1,0 +1,529 @@
+[
+  {
+    "id": "single_arm_upright_row",
+    "name": "Single Arm Upright Row",
+    "category": "BackBiceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Trapezius": 60,
+      "Deltoids": 40,
+      "Biceps_Brachii": 20,
+      "Core": 15,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "trx_bicep_curl",
+    "name": "TRX Bicep Curl",
+    "category": "BackBiceps",
+    "equipment": "TRX",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Biceps_Brachii": 80,
+      "Brachialis": 15,
+      "Brachioradialis": 5,
+      "Core": 15,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "chin_ups",
+    "name": "Chin-Ups",
+    "category": "BackBiceps",
+    "equipment": "Pull-up_Bar",
+    "difficulty": "Advanced",
+    "variation": "B",
+    "muscleEngagement": {
+      "Latissimus_Dorsi": 85,
+      "Biceps_Brachii": 30,
+      "Rhomboids": 20,
+      "Trapezius": 15,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "face_pull",
+    "name": "Face Pull",
+    "category": "BackBiceps",
+    "equipment": "TRX",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Trapezius": 50,
+      "Rhomboids": 40,
+      "Rear_Deltoids": 40,
+      "Rotator_Cuff": 15
+    }
+  },
+  {
+    "id": "concentration_curl",
+    "name": "Concentration Curl",
+    "category": "BackBiceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Beginner",
+    "variation": "A",
+    "muscleEngagement": {
+      "Biceps_Brachii": 90,
+      "Brachialis": 10,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "wide_grip_pullups",
+    "name": "Wide Grip Pullups",
+    "category": "BackBiceps",
+    "equipment": "Pull-up_Bar",
+    "difficulty": "Advanced",
+    "variation": "A",
+    "muscleEngagement": {
+      "Latissimus_Dorsi": 90,
+      "Biceps_Brachii": 20,
+      "Rhomboids": 15,
+      "Trapezius": 15,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "shoulder_shrugs",
+    "name": "Shoulder Shrugs",
+    "category": "BackBiceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Beginner",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Trapezius": 80,
+      "Levator_Scapulae": 20
+    }
+  },
+  {
+    "id": "t_row",
+    "name": "T Row",
+    "category": "BackBiceps",
+    "equipment": "TRX",
+    "difficulty": "Intermediate",
+    "variation": "B",
+    "muscleEngagement": {
+      "Latissimus_Dorsi": 85,
+      "Rhomboids": 25,
+      "Trapezius": 15,
+      "Biceps_Brachii": 12,
+      "Grip_Forearms": 8
+    }
+  },
+  {
+    "id": "incline_hammer_curl",
+    "name": "Incline Hammer Curl",
+    "category": "BackBiceps",
+    "equipment": "Bench",
+    "difficulty": "Intermediate",
+    "variation": "B",
+    "muscleEngagement": {
+      "Biceps_Brachii": 70,
+      "Brachialis": 20,
+      "Brachioradialis": 10,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "neutral_grip_pullups",
+    "name": "Neutral Grip Pull-ups",
+    "category": "BackBiceps",
+    "equipment": "Pull-up_Bar",
+    "difficulty": "Advanced",
+    "variation": "B",
+    "muscleEngagement": {
+      "Latissimus_Dorsi": 85,
+      "Biceps_Brachii": 25,
+      "Rhomboids": 15,
+      "Trapezius": 15,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "bent_over_rows",
+    "name": "Bent Over Rows",
+    "category": "BackBiceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Intermediate",
+    "variation": "A",
+    "muscleEngagement": {
+      "Latissimus_Dorsi": 90,
+      "Rhomboids": 25,
+      "Trapezius": 20,
+      "Biceps_Brachii": 15,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "renegade_rows",
+    "name": "Renegade Rows",
+    "category": "BackBiceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Advanced",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Latissimus_Dorsi": 70,
+      "Rhomboids": 25,
+      "Trapezius": 20,
+      "Biceps_Brachii": 15,
+      "Core": 30,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "bench_press",
+    "name": "Bench Press",
+    "category": "ChestTriceps",
+    "equipment": "Bench",
+    "difficulty": "Intermediate",
+    "variation": "A",
+    "muscleEngagement": {
+      "Pectoralis_Major": 85,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 30,
+      "Serratus_Anterior": 10
+    }
+  },
+  {
+    "id": "trx_reverse_flys",
+    "name": "TRX Reverse Flys",
+    "category": "ChestTriceps",
+    "equipment": "TRX",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Rhomboids": 70,
+      "Trapezius": 40,
+      "Rear_Deltoids": 30,
+      "Core": 15
+    }
+  },
+  {
+    "id": "tricep_extension",
+    "name": "Tricep Extension",
+    "category": "ChestTriceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Intermediate",
+    "variation": "A",
+    "muscleEngagement": {
+      "Triceps_Brachii": 85,
+      "Anconeus": 30
+    }
+  },
+  {
+    "id": "trx_pushup",
+    "name": "TRX Pushup",
+    "category": "ChestTriceps",
+    "equipment": "TRX",
+    "difficulty": "Intermediate",
+    "variation": "A",
+    "muscleEngagement": {
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 30,
+      "Anterior_Deltoids": 25,
+      "Core": 25
+    }
+  },
+  {
+    "id": "single_arm_bench",
+    "name": "Single Arm Bench",
+    "category": "ChestTriceps",
+    "equipment": "Bench",
+    "difficulty": "Advanced",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 25,
+      "Core": 20
+    }
+  },
+  {
+    "id": "single_arm_incline",
+    "name": "Single Arm Incline",
+    "category": "ChestTriceps",
+    "equipment": "Bench",
+    "difficulty": "Advanced",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Pectoralis_Major": 75,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 30,
+      "Core": 20
+    }
+  },
+  {
+    "id": "pullover",
+    "name": "Pullover",
+    "category": "ChestTriceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Latissimus_Dorsi": 65,
+      "Pectoralis_Major": 35,
+      "Triceps_Brachii": 25,
+      "Serratus_Anterior": 15
+    }
+  },
+  {
+    "id": "claps",
+    "name": "Claps",
+    "category": "ChestTriceps",
+    "equipment": "Bodyweight",
+    "difficulty": "Advanced",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 20,
+      "Anterior_Deltoids": 20
+    }
+  },
+  {
+    "id": "pushup",
+    "name": "Pushup",
+    "category": "ChestTriceps",
+    "equipment": "Bodyweight",
+    "difficulty": "Beginner",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 30,
+      "Anterior_Deltoids": 25,
+      "Core": 15
+    }
+  },
+  {
+    "id": "incline_bench_press",
+    "name": "Incline Bench Press",
+    "category": "ChestTriceps",
+    "equipment": "Bench",
+    "difficulty": "Intermediate",
+    "variation": "B",
+    "muscleEngagement": {
+      "Pectoralis_Major": 75,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 35,
+      "Serratus_Anterior": 10
+    }
+  },
+  {
+    "id": "shoulder_press",
+    "name": "Shoulder Press",
+    "category": "ChestTriceps",
+    "equipment": "Dumbbell",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Deltoids": 80,
+      "Triceps_Brachii": 30,
+      "Trapezius": 20,
+      "Serratus_Anterior": 15
+    }
+  },
+  {
+    "id": "dips",
+    "name": "Dips",
+    "category": "ChestTriceps",
+    "equipment": "Bench",
+    "difficulty": "Advanced",
+    "variation": "B",
+    "muscleEngagement": {
+      "Pectoralis_Major": 65,
+      "Triceps_Brachii": 70,
+      "Anterior_Deltoids": 30,
+      "Core": 10
+    }
+  },
+  {
+    "id": "kettlebell_halos",
+    "name": "Kettlebell Halos",
+    "category": "ChestTriceps",
+    "equipment": "Kettlebell",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Deltoids": 60,
+      "Trapezius": 30,
+      "Triceps_Brachii": 25,
+      "Core": 30,
+      "Grip_Forearms": 15
+    }
+  },
+  {
+    "id": "kettlebell_press",
+    "name": "Kettlebell Press",
+    "category": "ChestTriceps",
+    "equipment": "Kettlebell",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Deltoids": 70,
+      "Triceps_Brachii": 40,
+      "Core": 35,
+      "Grip_Forearms": 15
+    }
+  },
+  {
+    "id": "goblet_squats",
+    "name": "Goblet Squats",
+    "category": "Legs",
+    "equipment": "Kettlebell",
+    "difficulty": "Beginner",
+    "variation": "A",
+    "muscleEngagement": {
+      "Quadriceps": 65,
+      "Gluteus_Maximus": 50,
+      "Hamstrings": 20,
+      "Core": 25,
+      "Grip_Forearms": 5
+    }
+  },
+  {
+    "id": "dead_lifts",
+    "name": "Dead Lifts",
+    "category": "Legs",
+    "equipment": "Dumbbell",
+    "difficulty": "Advanced",
+    "variation": "A",
+    "muscleEngagement": {
+      "Hamstrings": 70,
+      "Gluteus_Maximus": 90,
+      "Erector_Spinae": 60,
+      "Core": 30,
+      "Grip_Forearms": 25
+    }
+  },
+  {
+    "id": "calf_raises",
+    "name": "Calf Raises",
+    "category": "Legs",
+    "equipment": "Dumbbell",
+    "difficulty": "Beginner",
+    "variation": "A",
+    "muscleEngagement": {
+      "Gastrocnemius": 80,
+      "Soleus": 70
+    }
+  },
+  {
+    "id": "glute_bridges",
+    "name": "Glute Bridges",
+    "category": "Legs",
+    "equipment": "Bodyweight",
+    "difficulty": "Beginner",
+    "variation": "B",
+    "muscleEngagement": {
+      "Gluteus_Maximus": 90,
+      "Hamstrings": 40,
+      "Core": 20,
+      "Quadriceps": 10
+    }
+  },
+  {
+    "id": "box_step_ups",
+    "name": "Box Step-ups",
+    "category": "Legs",
+    "equipment": "Plybox",
+    "difficulty": "Intermediate",
+    "variation": "B",
+    "muscleEngagement": {
+      "Quadriceps": 65,
+      "Gluteus_Maximus": 85,
+      "Hamstrings": 30,
+      "Erector_Spinae": 15
+    }
+  },
+  {
+    "id": "stiff_legged_deadlifts",
+    "name": "Stiff Legged Deadlifts",
+    "category": "Legs",
+    "equipment": "Dumbbell",
+    "difficulty": "Advanced",
+    "variation": "B",
+    "muscleEngagement": {
+      "Gluteus_Maximus": 75,
+      "Hamstrings": 85,
+      "Erector_Spinae": 50,
+      "Core": 25,
+      "Grip_Forearms": 15
+    }
+  },
+  {
+    "id": "kettlebell_swings",
+    "name": "Kettlebell Swings",
+    "category": "Legs",
+    "equipment": "Kettlebell",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Gluteus_Maximus": 80,
+      "Hamstrings": 70,
+      "Core": 40,
+      "Shoulders": 15,
+      "Grip_Forearms": 15
+    }
+  },
+  {
+    "id": "hanging_knee_raises",
+    "name": "Hanging Knee Raises",
+    "category": "Abs",
+    "equipment": "Pull-up_Bar",
+    "difficulty": "Intermediate",
+    "variation": "A",
+    "muscleEngagement": {
+      "Rectus_Abdominis": 80,
+      "Hip_Flexors": 23,
+      "Obliques": 40,
+      "Grip_Forearms": 10
+    }
+  },
+  {
+    "id": "spider_planks",
+    "name": "Spider Planks",
+    "category": "Abs",
+    "equipment": "Bodyweight",
+    "difficulty": "Intermediate",
+    "variation": "A",
+    "muscleEngagement": {
+      "Rectus_Abdominis": 60,
+      "Transverse_Abdominis": 30,
+      "Obliques": 30,
+      "Erector_Spinae": 10,
+      "Shoulders": 10
+    }
+  },
+  {
+    "id": "planks",
+    "name": "Planks",
+    "category": "Abs",
+    "equipment": "Bodyweight",
+    "difficulty": "Beginner",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Transverse_Abdominis": 70,
+      "Rectus_Abdominis": 45,
+      "Obliques": 35,
+      "Shoulders": 25,
+      "Glutes": 20
+    }
+  },
+  {
+    "id": "bench_sit_ups",
+    "name": "Bench Sit-ups",
+    "category": "Abs",
+    "equipment": "Bench",
+    "difficulty": "Intermediate",
+    "variation": "A/B",
+    "muscleEngagement": {
+      "Rectus_Abdominis": 75,
+      "Hip_Flexors": 60,
+      "Obliques": 35,
+      "Transverse_Abdominis": 25,
+      "Core_Stabilizers": 20
+    }
+  }
+]

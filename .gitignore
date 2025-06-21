@@ -1,0 +1,6 @@
+.next/
+node_modules/
+*.log
+.env*
+tsconfig.tsbuildinfo
+onlook/project-*
