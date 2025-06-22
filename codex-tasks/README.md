@@ -32,7 +32,7 @@ cd codex-tasks/001-workout-logger
 ```
 
 ## Completed Tasks
-*None yet*
+- 004-ai-workout-generator
 
 ## Instructions for Codex
 
