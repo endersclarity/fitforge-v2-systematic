@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Minus, Dumbbell, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { workoutSetSchema, WorkoutSetFormData } from '../lib/workoutValidation';
-import { useWorkoutLogger } from '../hooks/useWorkoutLogger';
+import exercisesData from '../data/exercises.json';
 
 interface WorkoutLoggerProps {
   userId: string;
@@ -13,22 +13,17 @@ interface WorkoutLoggerProps {
   onSessionEnd?: (session: any) => void;
 }
 
-export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({ 
-  userId, 
-  onSetCompleted, 
-  onSessionEnd 
+export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
+  userId,
+  onSetCompleted,
+  onSessionEnd
 }) => {
-  const {
-    currentSession,
-    exercises,
-    isLoading,
-    error,
-    setCounters,
-    logSet,
-    clearSession,
-    loadExercises,
-    getCurrentSession
-  } = useWorkoutLogger(userId);
+  const [exercises, setExercises] = useState<{ id: string; name: string; category: string }[]>([])
+  const [currentSession, setCurrentSession] = useState<any | null>(null)
+  const [setCounters, setSetCounters] = useState<Record<string, number>>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [startTime, setStartTime] = useState<number | null>(null)
 
   const [lastWeights, setLastWeights] = useState<Record<string, number>>({});
   const [showSuccess, setShowSuccess] = useState(false);
@@ -57,9 +52,24 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
 
   // Load exercises and current session on mount
   useEffect(() => {
-    loadExercises();
-    getCurrentSession();
-  }, [loadExercises, getCurrentSession]);
+    setExercises(exercisesData as any);
+    const stored = localStorage.getItem('currentWorkoutSession');
+    if (stored) {
+      try {
+        const session = JSON.parse(stored);
+        setCurrentSession(session);
+        setSetCounters(
+          session.exercises.reduce((acc: Record<string, number>, ex: any) => {
+            acc[ex.id] = ex.sets.length;
+            return acc;
+          }, {})
+        );
+        setStartTime(new Date(session.date).getTime());
+      } catch (err) {
+        console.error('Failed to parse saved session', err);
+      }
+    }
+  }, []);
 
   // Auto-fill last weight when exercise changes
   useEffect(() => {
@@ -69,29 +79,52 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
   }, [selectedExerciseId, lastWeights, setValue]);
 
   const onSubmit = async (data: WorkoutSetFormData) => {
-    const result = await logSet(data);
-    
-    if (result) {
-      // Store last weight for this exercise
-      setLastWeights(prev => ({
-        ...prev,
-        [data.exerciseId]: data.weight
-      }));
+    setIsLoading(true);
+    try {
+      let session = currentSession;
+      let start = startTime;
+      if (!session) {
+        start = Date.now();
+        session = {
+          id: Date.now().toString(),
+          name: `Workout ${new Date().toLocaleDateString()}`,
+          date: new Date(start).toISOString(),
+          duration: 0,
+          exercises: [],
+          totalSets: 0
+        };
+      }
 
-      // Show success animation
+      let exercise = session.exercises.find((ex: any) => ex.id === data.exerciseId);
+      if (!exercise) {
+        const info = exercises.find(ex => ex.id === data.exerciseId);
+        exercise = { id: data.exerciseId, name: info?.name || '', category: info?.category || '', sets: [] };
+        session.exercises.push(exercise);
+      }
+
+      exercise.sets.push({ ...data });
+      session.totalSets += 1;
+      session.duration = Math.round((Date.now() - (start || Date.now())) / 60000);
+
+      setCurrentSession({ ...session });
+      setStartTime(start!);
+      setSetCounters(prev => ({ ...prev, [data.exerciseId]: (prev[data.exerciseId] || 0) + 1 }));
+      localStorage.setItem('currentWorkoutSession', JSON.stringify(session));
+
+      // Store last weight for this exercise
+      setLastWeights(prev => ({ ...prev, [data.exerciseId]: data.weight }));
+
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 1500);
 
-      // Reset form but keep exercise selection
-      reset({
-        exerciseId: data.exerciseId,
-        weight: data.weight,
-        reps: 8,
-        notes: ''
-      });
+      reset({ exerciseId: data.exerciseId, weight: data.weight, reps: 8, notes: '' });
 
-      // Call completion callback
-      onSetCompleted?.(result);
+      onSetCompleted?.(data);
+    } catch (err) {
+      console.error('Failed to log set', err);
+      setError('Failed to log set');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,10 +139,21 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
   };
 
   const handleClearSession = () => {
-    clearSession();
+    if (!currentSession) return;
+    const finished = {
+      ...currentSession,
+      duration: Math.round((Date.now() - (startTime || Date.now())) / 60000)
+    };
+    const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+    sessions.push(finished);
+    localStorage.setItem('workoutSessions', JSON.stringify(sessions));
+    localStorage.removeItem('currentWorkoutSession');
+    setCurrentSession(null);
+    setSetCounters({});
+    setStartTime(null);
     reset();
     setLastWeights({});
-    onSessionEnd?.(currentSession);
+    onSessionEnd?.(finished);
   };
 
   const selectedExercise = exercises.find(ex => ex.id === selectedExerciseId);
@@ -280,7 +324,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
       </form>
 
       {/* Current Session Summary */}
-      {currentSession && currentSession.sets.length > 0 && (
+      {currentSession && currentSession.totalSets > 0 && (
         <div className="mt-6 p-4 bg-gray-50 rounded-md">
           <h3 className="font-medium text-gray-900 mb-2">Current Workout</h3>
           <div className="space-y-1">
