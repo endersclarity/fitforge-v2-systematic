@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Minus, Dumbbell, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { workoutSetSchema, WorkoutSetFormData } from '../lib/workoutValidation';
-import { useWorkoutLogger } from '../hooks/useWorkoutLogger';
+import exercisesData from '../data/exercises.json';
 
 interface WorkoutLoggerProps {
   userId: string;
@@ -13,22 +13,120 @@ interface WorkoutLoggerProps {
   onSessionEnd?: (session: any) => void;
 }
 
-export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({ 
-  userId, 
-  onSetCompleted, 
-  onSessionEnd 
+type LoggedSet = { exerciseId: string; weight: number; reps: number; notes?: string }
+
+interface WorkoutSession {
+  id: string
+  name: string
+  date: string
+  duration: number
+  exercises: any[]
+  totalSets: number
+  total_volume: number
+  total_sets: number
+}
+
+export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
+  userId,
+  onSetCompleted,
+  onSessionEnd
 }) => {
-  const {
-    currentSession,
-    exercises,
-    isLoading,
-    error,
-    setCounters,
-    logSet,
-    clearSession,
-    loadExercises,
-    getCurrentSession
-  } = useWorkoutLogger(userId);
+  const [exercises, setExercises] = useState<Array<{ id: string; name: string; category: string }>>([])
+  const [currentSession, setCurrentSession] = useState<{
+    id: string
+    startTime: number
+    sets: LoggedSet[]
+  } | null>(null)
+  const [setCounters, setSetCounters] = useState<Record<string, number>>({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+
+  const saveWorkoutSession = (session: WorkoutSession) => {
+    const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]')
+    sessions.push(session)
+    localStorage.setItem('workoutSessions', JSON.stringify(sessions))
+  }
+
+  const getCurrentSession = () => {
+    const stored = localStorage.getItem('currentWorkoutSession')
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      setCurrentSession(parsed)
+      const counters: Record<string, number> = {}
+      parsed.sets.forEach((s: LoggedSet) => {
+        counters[s.exerciseId] = (counters[s.exerciseId] || 0) + 1
+      })
+      setSetCounters(counters)
+    }
+  }
+
+  const logSet = async (data: WorkoutSetFormData) => {
+    setIsLoading(true)
+    try {
+      const newSet: LoggedSet = {
+        exerciseId: data.exerciseId,
+        weight: data.weight,
+        reps: data.reps,
+        notes: data.notes,
+      }
+      let session = currentSession
+      if (!session) {
+        session = {
+          id: Date.now().toString(),
+          startTime: Date.now(),
+          sets: []
+        }
+      }
+      const updated = { ...session, sets: [...session.sets, newSet] }
+      setCurrentSession(updated)
+      setSetCounters(prev => ({
+        ...prev,
+        [data.exerciseId]: (prev[data.exerciseId] || 0) + 1,
+      }))
+      localStorage.setItem('currentWorkoutSession', JSON.stringify(updated))
+      setError(null)
+      return newSet
+    } catch (e) {
+      setError('Failed to log set')
+      return null
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const clearSession = () => {
+    if (!currentSession) return null
+    const endTime = Date.now()
+    const duration = Math.round((endTime - currentSession.startTime) / 1000 / 60)
+    const exerciseMap: Record<string, any> = {}
+    let totalVolume = 0
+    currentSession.sets.forEach(s => {
+      const ex = exercises.find(e => e.id === s.exerciseId)
+      if (!exerciseMap[s.exerciseId]) {
+        exerciseMap[s.exerciseId] = { id: s.exerciseId, name: ex?.name || s.exerciseId, sets: [], exerciseVolume: 0 }
+      }
+      exerciseMap[s.exerciseId].sets.push({ reps: s.reps, weight: s.weight, completed: true })
+      const vol = s.weight * s.reps
+      exerciseMap[s.exerciseId].exerciseVolume += vol
+      totalVolume += vol
+    })
+    const workoutSession: WorkoutSession = {
+      id: currentSession.id,
+      name: 'Workout',
+      date: new Date(endTime).toISOString(),
+      duration,
+      exercises: Object.values(exerciseMap),
+      totalSets: currentSession.sets.length,
+      total_volume: totalVolume,
+      total_sets: currentSession.sets.length,
+    }
+    saveWorkoutSession(workoutSession)
+    localStorage.removeItem('currentWorkoutSession')
+    setCurrentSession(null)
+    setSetCounters({})
+    return workoutSession
+  }
 
   const [lastWeights, setLastWeights] = useState<Record<string, number>>({});
   const [showSuccess, setShowSuccess] = useState(false);
@@ -39,8 +137,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
     formState: { errors },
     reset,
     watch,
-    setValue,
-    getValues
+    setValue
   } = useForm<WorkoutSetFormData>({
     resolver: zodResolver(workoutSetSchema),
     defaultValues: {
@@ -57,9 +154,9 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
 
   // Load exercises and current session on mount
   useEffect(() => {
-    loadExercises();
-    getCurrentSession();
-  }, [loadExercises, getCurrentSession]);
+    setExercises(exercisesData as any)
+    getCurrentSession()
+  }, [])
 
   // Auto-fill last weight when exercise changes
   useEffect(() => {
@@ -106,11 +203,13 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
   };
 
   const handleClearSession = () => {
-    clearSession();
-    reset();
-    setLastWeights({});
-    onSessionEnd?.(currentSession);
-  };
+    const finished = clearSession()
+    reset()
+    setLastWeights({})
+    if (finished) {
+      onSessionEnd?.(finished)
+    }
+  }
 
   const selectedExercise = exercises.find(ex => ex.id === selectedExerciseId);
   const currentSetNumber = selectedExerciseId ? (setCounters[selectedExerciseId] || 0) + 1 : 1;
