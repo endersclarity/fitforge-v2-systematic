@@ -11,6 +11,7 @@ const navItems = [
   { href: "/", label: "Dashboard", icon: Home },
   { href: "/push-pull-legs", label: "Start Workout", icon: Dumbbell },
   { href: "/muscle-explorer", label: "Exercise Library", icon: TrendingUp },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/workout-simple", label: "Quick Log", icon: Calendar },
 ]
 

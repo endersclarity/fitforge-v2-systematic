@@ -210,10 +210,16 @@ export function DashboardSimple() {
         <Button onClick={() => window.location.href = "/push-pull-legs"} className="flex-1 bg-[#FF375F] hover:bg-[#E63050] text-white">
           🏋️ Start Workout
         </Button>
+        <Button variant="outline" onClick={() => window.location.href = "/analytics"} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
+          📊 View Analytics
+        </Button>
+      </div>
+      
+      <div className="flex flex-col sm:flex-row gap-4">
         <Button variant="outline" onClick={() => window.location.href = "/muscle-explorer"} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
           📚 Browse Exercises
         </Button>
-        <Button variant="outline" onClick={() => window.location.href = "/workout-simple"} className="flex-1">
+        <Button variant="outline" onClick={() => window.location.href = "/workout-simple"} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
           ⚡ Quick Log
         </Button>
       </div>
