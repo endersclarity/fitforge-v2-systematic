@@ -32,7 +32,7 @@ cd codex-tasks/001-workout-logger
 ```
 
 ## Completed Tasks
-*None yet*
+* 005-exercise-search-beast - Exercise Search Beast component
 
 ## Instructions for Codex
 
