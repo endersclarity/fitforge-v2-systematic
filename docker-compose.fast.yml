@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       target: development
     ports:
-      - "3001:3000"
+      - "8080:3000"
     volumes:
       - .:/app
       - /app/node_modules
@@ -16,6 +16,8 @@ services:
       - NODE_ENV=development
       - NEXT_PUBLIC_API_URL=http://localhost:8000
       - CHOKIDAR_USEPOLLING=true
+      - NEXT_PUBLIC_SUPABASE_URL=https://placeholder.supabase.co
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder-key
     depends_on:
       - backend
     networks:
