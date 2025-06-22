@@ -48,18 +48,23 @@ class DatabaseManager:
                 logger.info("✅ Supabase client initialized")
             
             # Initialize direct PostgreSQL connection pool
-            if settings.DATABASE_URL:
-                self.pool = await asyncpg.create_pool(
-                    settings.DATABASE_URL,
-                    min_size=settings.DB_POOL_MIN_SIZE,
-                    max_size=settings.DB_POOL_MAX_SIZE,
-                    command_timeout=settings.DB_COMMAND_TIMEOUT,
-                    server_settings={
-                        'application_name': 'FitForge_Backend',
-                        'timezone': 'UTC'
-                    }
-                )
-                logger.info("✅ PostgreSQL connection pool initialized")
+            # Use nested database settings if DATABASE_URL not provided
+            db_url = settings.DATABASE_URL
+            if not db_url or db_url == "postgresql://postgres:password@localhost:5432/fitforge":
+                # Use component-based configuration
+                db_url = settings.database.connection_url
+                
+            self.pool = await asyncpg.create_pool(
+                db_url,
+                min_size=settings.database.POOL_MIN_SIZE,
+                max_size=settings.database.POOL_MAX_SIZE,
+                command_timeout=settings.database.COMMAND_TIMEOUT,
+                server_settings={
+                    'application_name': 'FitForge_Backend',
+                    'timezone': 'UTC'
+                }
+            )
+            logger.info("✅ PostgreSQL connection pool initialized")
             
             self._initialized = True
             

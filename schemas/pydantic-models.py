@@ -77,7 +77,7 @@ class UserBase(BaseModel):
     
     # Personal metrics for volume calculations
     height_inches: Optional[int] = Field(None, ge=1, le=119)
-    weight_lbs: Optional[Decimal] = Field(None, ge=Decimal('0.01'), le=Decimal('999.99'), decimal_places=2)
+    weight_lbs: Optional[Decimal] = Field(None, ge=Decimal('0.01'), le=Decimal('999.99'))
     age: Optional[int] = Field(None, ge=1, le=149)
     sex: Optional[Sex] = None
     
@@ -106,7 +106,7 @@ class UserUpdate(BaseModel):
     
     display_name: Optional[str] = Field(None, max_length=255)
     height_inches: Optional[int] = Field(None, ge=1, le=119)
-    weight_lbs: Optional[Decimal] = Field(None, ge=Decimal('0.01'), le=Decimal('999.99'), decimal_places=2)
+    weight_lbs: Optional[Decimal] = Field(None, ge=Decimal('0.01'), le=Decimal('999.99'))
     age: Optional[int] = Field(None, ge=1, le=149)
     sex: Optional[Sex] = None
     experience_level: Optional[ExperienceLevel] = None
@@ -290,13 +290,13 @@ class Workout(WorkoutBase):
     
     # Calculated session metrics
     duration_seconds: Optional[int] = None
-    total_volume_lbs: Decimal = Field(default=Decimal('0.00'), decimal_places=2)
+    total_volume_lbs: Decimal = Field(default=Decimal('0.00'))
     total_sets: int = 0
     total_reps: int = 0
     exercises_count: int = 0
     
     # Progressive overload tracking
-    volume_increase_percentage: Optional[Decimal] = Field(None, decimal_places=2)
+    volume_increase_percentage: Optional[Decimal] = Field(None)
     
     # System fields
     created_at: datetime
@@ -318,7 +318,7 @@ class WorkoutSetBase(BaseModel):
     
     set_number: int = Field(..., ge=1, le=20)
     reps: int = Field(..., ge=1, le=50)  # Prevents impossible rep counts
-    weight_lbs: Decimal = Field(..., ge=Decimal('0.00'), le=Decimal('500.00'), decimal_places=2)
+    weight_lbs: Decimal = Field(..., ge=Decimal('0.00'), le=Decimal('500.00'))
     
     # Performance metrics
     time_under_tension_seconds: Optional[int] = Field(None, gt=0)
@@ -326,9 +326,9 @@ class WorkoutSetBase(BaseModel):
     perceived_exertion: Optional[int] = Field(None, ge=1, le=10)
     
     # Progressive tracking
-    estimated_one_rep_max: Optional[Decimal] = Field(None, decimal_places=2)
+    estimated_one_rep_max: Optional[Decimal] = Field(None)
     is_personal_best: bool = False
-    improvement_vs_last: Optional[Decimal] = Field(None, decimal_places=2)
+    improvement_vs_last: Optional[Decimal] = Field(None)
     
     @field_validator('weight_lbs')
     @classmethod
@@ -356,13 +356,13 @@ class WorkoutSetUpdate(BaseModel):
     )
     
     reps: Optional[int] = Field(None, ge=1, le=50)
-    weight_lbs: Optional[Decimal] = Field(None, ge=Decimal('0.00'), le=Decimal('500.00'), decimal_places=2)
+    weight_lbs: Optional[Decimal] = Field(None, ge=Decimal('0.00'), le=Decimal('500.00'))
     time_under_tension_seconds: Optional[int] = Field(None, gt=0)
     rest_seconds: Optional[int] = Field(None, ge=0, le=600)
     perceived_exertion: Optional[int] = Field(None, ge=1, le=10)
-    estimated_one_rep_max: Optional[Decimal] = Field(None, decimal_places=2)
+    estimated_one_rep_max: Optional[Decimal] = Field(None)
     is_personal_best: Optional[bool] = None
-    improvement_vs_last: Optional[Decimal] = Field(None, decimal_places=2)
+    improvement_vs_last: Optional[Decimal] = Field(None)
     
     @field_validator('weight_lbs')
     @classmethod
@@ -384,7 +384,7 @@ class WorkoutSet(WorkoutSetBase):
     user_id: UUID
     
     # Calculated metrics
-    volume_lbs: Decimal = Field(..., decimal_places=2)  # Generated: weight_lbs * reps
+    volume_lbs: Decimal = Field(...)  # Generated: weight_lbs * reps
     
     # System fields
     created_at: datetime
@@ -407,11 +407,11 @@ class MuscleStateBase(BaseModel):
     muscle_group: str = Field(..., min_length=1, max_length=50)  # 'Push', 'Pull', 'Legs'
     
     # Fatigue calculation (0-100 scale)
-    fatigue_percentage: Decimal = Field(..., ge=Decimal('0.00'), le=Decimal('100.00'), decimal_places=2)
-    recovery_percentage: Decimal = Field(..., ge=Decimal('0.00'), le=Decimal('100.00'), decimal_places=2)
+    fatigue_percentage: Decimal = Field(..., ge=Decimal('0.00'), le=Decimal('100.00'))
+    recovery_percentage: Decimal = Field(..., ge=Decimal('0.00'), le=Decimal('100.00'))
     
     # Volume tracking (7-day rolling window)
-    weekly_volume_lbs: Decimal = Field(default=Decimal('0.00'), decimal_places=2)
+    weekly_volume_lbs: Decimal = Field(default=Decimal('0.00'))
     weekly_sets: int = Field(default=0, ge=0)
     weekly_frequency: int = Field(default=0, ge=0)  # How many days this week
     
@@ -420,8 +420,8 @@ class MuscleStateBase(BaseModel):
     expected_recovery_date: Optional[date] = None
     
     # Progressive overload recommendations
-    target_volume_increase_percentage: Decimal = Field(default=Decimal('3.00'), decimal_places=2)
-    recommended_next_weight: Optional[Decimal] = Field(None, decimal_places=2)
+    target_volume_increase_percentage: Decimal = Field(default=Decimal('3.00'))
+    recommended_next_weight: Optional[Decimal] = Field(None)
     recommended_next_reps: Optional[int] = Field(None, ge=1, le=50)
     
     # Associated workout
@@ -441,15 +441,15 @@ class MuscleStateUpdate(BaseModel):
         use_enum_values=True
     )
     
-    fatigue_percentage: Optional[Decimal] = Field(None, ge=Decimal('0.00'), le=Decimal('100.00'), decimal_places=2)
-    recovery_percentage: Optional[Decimal] = Field(None, ge=Decimal('0.00'), le=Decimal('100.00'), decimal_places=2)
-    weekly_volume_lbs: Optional[Decimal] = Field(None, decimal_places=2)
+    fatigue_percentage: Optional[Decimal] = Field(None, ge=Decimal('0.00'), le=Decimal('100.00'))
+    recovery_percentage: Optional[Decimal] = Field(None, ge=Decimal('0.00'), le=Decimal('100.00'))
+    weekly_volume_lbs: Optional[Decimal] = Field(None)
     weekly_sets: Optional[int] = Field(None, ge=0)
     weekly_frequency: Optional[int] = Field(None, ge=0)
     last_trained_date: Optional[date] = None
     expected_recovery_date: Optional[date] = None
-    target_volume_increase_percentage: Optional[Decimal] = Field(None, decimal_places=2)
-    recommended_next_weight: Optional[Decimal] = Field(None, decimal_places=2)
+    target_volume_increase_percentage: Optional[Decimal] = Field(None)
+    recommended_next_weight: Optional[Decimal] = Field(None)
     recommended_next_reps: Optional[int] = Field(None, ge=1, le=50)
     last_workout_id: Optional[UUID] = None
 

@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    networks:
+      - fitforge-dev
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: development
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - ./schemas:/app/schemas
+      - /app/__pycache__
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://fitforge_user:fitforge_pass@db:5432/fitforge_dev
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - db
+    networks:
+      - fitforge-dev
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=fitforge_dev
+      - POSTGRES_USER=fitforge_user
+      - POSTGRES_PASSWORD=fitforge_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./schemas/database-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    networks:
+      - fitforge-dev
+
+volumes:
+  postgres_data:
+
+networks:
+  fitforge-dev:
+    driver: bridge

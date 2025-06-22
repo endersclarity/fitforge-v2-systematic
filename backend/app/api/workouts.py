@@ -11,17 +11,57 @@ import sys
 import os
 from uuid import uuid4
 
-# Add schemas to Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "..", "schemas"))
-
-from pydantic_models import Workout, WorkoutCreate, WorkoutUpdate, WorkoutSet, WorkoutSetCreate, WorkoutSetUpdate
+from app.models.schemas import Workout, WorkoutCreate, WorkoutUpdate, WorkoutSet, WorkoutSetCreate, WorkoutSetUpdate
 from ..core.database import get_database, DatabaseManager, DatabaseUtils
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
-@router.get("/", response_model=List[Workout])
+@router.get(
+    "/",
+    response_model=List[Workout],
+    summary="List workout sessions",
+    description="Retrieve workout sessions with comprehensive filtering options. Supports filtering by user, workout type, date range, and completion status. Results are ordered by most recent first.",
+    response_description="List of workout sessions",
+    responses={
+        200: {
+            "description": "Workouts retrieved successfully",
+            "content": {
+                "application/json": {
+                    "example": [
+                        {
+                            "id": "123e4567-e89b-12d3-a456-426614174000",
+                            "user_id": "550e8400-e29b-41d4-a716-446655440000",
+                            "workout_type": "Push",
+                            "name": "Monday Morning Push Workout",
+                            "started_at": "2025-06-22T09:30:00Z",
+                            "completed_at": "2025-06-22T10:45:00Z",
+                            "duration_minutes": 75,
+                            "variation": "A",
+                            "notes": "Felt strong today, increased bench weight",
+                            "is_completed": True,
+                            "total_volume_lbs": 12500.0,
+                            "total_sets": 18,
+                            "created_at": "2025-06-22T09:30:00Z",
+                            "updated_at": "2025-06-22T10:45:00Z"
+                        }
+                    ]
+                }
+            }
+        },
+        500: {
+            "description": "Server error",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Failed to retrieve workouts: Database connection error"
+                    }
+                }
+            }
+        }
+    }
+)
 async def get_workouts(
     user_id: Optional[str] = Query(None, description="Filter by user ID"),
     workout_type: Optional[str] = Query(None, description="Filter by workout type"),
@@ -98,7 +138,47 @@ async def get_workouts(
         )
 
 
-@router.get("/{workout_id}", response_model=Workout)
+@router.get(
+    "/{workout_id}",
+    response_model=Workout,
+    summary="Get workout by ID",
+    description="Retrieve a specific workout session by its unique identifier. Includes all workout details and calculated metrics.",
+    responses={
+        200: {
+            "description": "Workout found and returned successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "id": "123e4567-e89b-12d3-a456-426614174000",
+                        "user_id": "550e8400-e29b-41d4-a716-446655440000",
+                        "workout_type": "Push",
+                        "name": "Monday Morning Push Workout",
+                        "started_at": "2025-06-22T09:30:00Z",
+                        "completed_at": "2025-06-22T10:45:00Z",
+                        "duration_minutes": 75,
+                        "variation": "A",
+                        "notes": "Felt strong today, increased bench weight",
+                        "is_completed": True,
+                        "total_volume_lbs": 12500.0,
+                        "total_sets": 18,
+                        "created_at": "2025-06-22T09:30:00Z",
+                        "updated_at": "2025-06-22T10:45:00Z"
+                    }
+                }
+            }
+        },
+        404: {
+            "description": "Workout not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Workout not found"
+                    }
+                }
+            }
+        }
+    }
+)
 async def get_workout(
     workout_id: str,
     db: DatabaseManager = Depends(get_database)

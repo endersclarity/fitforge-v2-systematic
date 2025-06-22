@@ -1220,45 +1220,82 @@ const Button: React.FC<ButtonProps> = ({ variant, size, loading, children }) => 
 ### Infrastructure & Deployment Strategy
 
 #### Development Environment
+✅ **OPERATIONAL** - Docker development environment with hot reload
+
+```bash
+# One-command startup for complete development stack
+./start-fitforge-v2-dev.sh
+
+# Services:
+# Frontend:      http://localhost:3001 (port 3000 blocked by Windows/WSL)
+# Backend API:   http://localhost:8000
+# API Docs:      http://localhost:8000/docs  
+# Database:      localhost:5432
+```
+
+**Docker Configuration** (`docker-compose.fast.yml`):
 ```yaml
-# docker-compose.yml for local development
 version: '3.8'
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
     ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_SUPABASE_URL=${SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - "3001:3000"  # Port 3001 due to Windows/WSL permissions
     volumes:
-      - ./frontend:/app
+      - .:/app
       - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+      target: development
     ports:
       - "8000:8000"
-    environment:
-      - SUPABASE_URL=${SUPABASE_URL}
-      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
-      - DATABASE_URL=${DATABASE_URL}
     volumes:
       - ./backend:/app
-    depends_on:
-      - postgres
+      - ./schemas:/app/schemas  # Critical: schemas mount for Pydantic models
+      - /app/__pycache__
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql://fitforge_user:fitforge_pass@db:5432/fitforge_dev
+      - PYTHONPATH=/app
 
-  postgres:
+  db:
     image: postgres:15
     environment:
       - POSTGRES_DB=fitforge_dev
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=fitforge_user
+      - POSTGRES_PASSWORD=fitforge_pass
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./schemas/database-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+```
+
+**Key Infrastructure Features:**
+- Hot reload for both frontend and backend
+- Automatic database schema initialization
+- Pydantic models properly mounted and accessible
+- Complete isolation within `fitforge-v2-systematic` directory
+- One-command startup with health checking
+
+**Critical Docker Infrastructure Details:**
+- **Schema Integration**: `./schemas:/app/schemas` volume mount ensures Pydantic models load correctly
+- **Import Helper**: `backend/app/models/schemas.py` provides clean access to all Pydantic models
+- **Hot Reload**: File watching enabled for both frontend and backend development
+- **Database Initialization**: Schema automatically loaded from `schemas/database-schema.sql`
+- **Port Handling**: Frontend uses 3001 due to Windows/WSL port permission issues
+
 ```
 
 #### Production Deployment
@@ -2505,8 +2542,46 @@ Transform the comprehensive planning from Steps 1-7 into working code through sy
 
 ### Development Environment Setup
 
-#### Initial Environment Configuration
+#### Docker-First Development (Current Setup) ✅ OPERATIONAL
 ```bash
+# One-command startup for complete development stack
+./start-fitforge-v2-dev.sh
+
+# What this provides:
+# - Backend API:   http://localhost:8000 (FastAPI with hot reload)
+# - Frontend:      http://localhost:3001 (Next.js with hot reload) 
+# - Database:      localhost:5432 (PostgreSQL with auto-schema)
+# - API Docs:      http://localhost:8000/docs
+```
+
+**Key Features of Docker Setup:**
+- **Hot reload** for both frontend and backend development
+- **Automatic schema loading** from `schemas/database-schema.sql`
+- **Pydantic model integration** via mounted `schemas/` directory
+- **Clean import structure** using `app/models/schemas.py` helper
+- **Port compatibility** (3001 for frontend due to Windows/WSL permissions)
+
+#### Production Environment (Supabase)
+```bash
+# For production deployment with Supabase:
+# 1. Create Supabase project 
+# 2. Upload database-schema.sql to Supabase SQL editor
+# 3. Configure environment variables:
+#    - SUPABASE_URL
+#    - SUPABASE_SERVICE_KEY
+#    - DATABASE_URL (Supabase PostgreSQL connection)
+# 4. Deploy frontend to Vercel with NEXT_PUBLIC_SUPABASE_URL
+# 5. Deploy backend to Railway/Render with Supabase connection
+
+# Hybrid Strategy Benefits:
+# - Fast local development with Docker
+# - Production-ready with Supabase auth/RLS
+# - Same schema compatibility between environments
+```
+
+#### Manual Setup (Alternative)
+```bash
+# If Docker is not available, manual setup:
 # 1. Project Structure Setup
 mkdir -p fitforge-v2-systematic/{backend,frontend,schemas,docs,scripts}
 
@@ -2521,8 +2596,8 @@ cd ../frontend/
 npx create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias "@/*"
 npm install @supabase/supabase-js @supabase/auth-helpers-nextjs
 
-# 4. Database Setup (Supabase)
-# Create Supabase project and configure environment variables
+# 4. Database Setup (Local PostgreSQL or Supabase)
+# Configure based on development preference
 ```
 
 #### Development Workflow Tools

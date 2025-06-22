@@ -1,0 +1,29 @@
+# Local development overrides
+# This file is automatically merged with docker-compose.fast.yml
+# Use this for local customizations without affecting the main compose file
+
+version: '3.8'
+
+services:
+  frontend:
+    # Override port mapping due to Windows/WSL permission issues
+    ports:
+      - "3001:3000"  # Use port 3001 locally instead of 3000
+    
+  backend:
+    # Uncomment to add local environment variables
+    # environment:
+    #   - DEBUG=true
+    
+    # Uncomment to override port mapping  
+    # ports:
+    #   - "8001:8000"  # Use port 8001 locally if 8000 is occupied
+    
+  db:
+    # Uncomment to override port mapping
+    # ports:
+    #   - "5433:5432"  # Use port 5433 locally if 5432 is occupied
+    
+    # Uncomment to add local database customizations
+    # environment:
+    #   - POSTGRES_DB=fitforge_local

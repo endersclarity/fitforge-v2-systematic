@@ -23,8 +23,8 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
 
-# HTTP client for external APIs
-httpx==0.25.2
+# HTTP client for external APIs - compatible with supabase requirements
+httpx==0.24.1
 aiohttp==3.9.1
 
 # Redis for caching and sessions (optional)
@@ -44,7 +44,7 @@ structlog==23.2.0
 pytest==7.4.3
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
-httpx==0.25.2  # For testing API endpoints
+# httpx==0.24.1 already defined above for compatibility
 
 # Code quality and formatting
 black==23.11.0
@@ -61,11 +61,11 @@ python-dateutil==2.8.2
 # Validation and parsing utilities
 email-validator==2.1.0
 
-# UUID utilities
-uuid==1.30
+# UUID utilities - built-in Python module, no need to install
+# uuid==1.30
 
-# Math and decimal handling
-decimal==1.70
+# Math and decimal handling - built-in Python module, no need to install  
+# decimal==1.70
 
 # Type hints for older Python versions
 typing-extensions==4.8.0
