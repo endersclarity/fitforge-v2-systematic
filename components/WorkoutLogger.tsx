@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Minus, Dumbbell, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { workoutSetSchema, WorkoutSetFormData } from '../lib/workoutValidation';
 import { MuscleEngagementDisplay } from './muscle-engagement-display';
+import { VolumeProgressionCalculator } from './volume-progression-calculator-adapted';
 import exercisesData from '../data/exercises-real.json';
 
 interface WorkoutLoggerProps {
@@ -285,6 +286,18 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         [data.exerciseId]: (prev[data.exerciseId] || 0) + 1
       }));
       saveCurrent(session);
+      
+      // Also save to set history for progression tracking
+      const setHistory = JSON.parse(localStorage.getItem('workoutSetHistory') || '[]');
+      const today = new Date().toISOString().split('T')[0];
+      let todaySession = setHistory.find((s: any) => s.date === today);
+      if (!todaySession) {
+        todaySession = { date: today, sets: [] };
+        setHistory.push(todaySession);
+      }
+      todaySession.sets.push(newSet);
+      localStorage.setItem('workoutSetHistory', JSON.stringify(setHistory));
+      
       return newSet;
     } catch (err) {
       setError('Failed to log set');
@@ -694,6 +707,11 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
           />
         </div>
       )}
+
+      {/* Volume Progression Calculator */}
+      <div className="mt-6">
+        <VolumeProgressionCalculator />
+      </div>
     </div>
   );
 };

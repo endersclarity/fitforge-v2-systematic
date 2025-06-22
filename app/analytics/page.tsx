@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { WorkoutHistoryAnalyzer } from '@/components/workout-history-analyzer-adapted';
+import { VolumeProgressionCalculator } from '@/components/volume-progression-calculator-adapted';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -30,10 +31,15 @@ export default function AnalyticsPage() {
 
         <WorkoutHistoryAnalyzer />
 
+        {/* Volume Progression Calculator */}
+        <div className="mt-8">
+          <VolumeProgressionCalculator />
+        </div>
+
         {/* Add placeholder for future analytics components */}
         <div className="mt-8 p-6 border border-[#2C2C2E] bg-[#1C1C1E]/50 rounded-xl text-center">
           <p className="text-[#A1A1A3]">
-            More analytics coming soon: Volume Progression, Muscle Balance Analysis, and Strength Charts
+            More analytics coming soon: Muscle Balance Analysis and Strength Charts
           </p>
         </div>
       </div>
