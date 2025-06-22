@@ -9,10 +9,9 @@ import { useTheme } from "next-themes"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: Home },
-  { href: "/exercises", label: "Exercises", icon: Dumbbell },
-  { href: "/workouts", label: "Workouts", icon: Calendar },
-  { href: "/progress", label: "Progress", icon: TrendingUp },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/push-pull-legs", label: "Start Workout", icon: Dumbbell },
+  { href: "/muscle-explorer", label: "Exercise Library", icon: TrendingUp },
+  { href: "/workout-simple", label: "Quick Log", icon: Calendar },
 ]
 
 export function Navigation() {

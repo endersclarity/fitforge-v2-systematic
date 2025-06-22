@@ -12,7 +12,7 @@ import { Plus, Trash2, Play, Save, Timer, RotateCcw, ArrowLeft, Loader2, Brain, 
 import { useWorkoutDraft } from "@/hooks/useWorkoutDraft"
 import { saveWorkoutSession } from "@/lib/session-storage"
 import { toast } from "sonner"
-import exercisesData from "../data/exercises.json"
+import exercisesData from "../data/exercises-real.json"
 
 interface WorkoutExercise {
   id: string

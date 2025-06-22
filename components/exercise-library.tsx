@@ -14,7 +14,7 @@ import { ExerciseActionDialog } from "@/components/ui/exercise-action-dialog"
 // Removed unused imports - now using centralized JSON data
 import { MuscleEngagementChart } from "@/components/ui/muscle-engagement-chart"
 import { QuickWorkoutBuilder } from "@/components/quick-workout-builder"
-import exercisesData from "../data/exercises.json"
+import exercisesData from "../data/exercises-real.json"
 
 interface Exercise {
   id: string

@@ -5,10 +5,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Minus, Dumbbell, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { workoutSetSchema, WorkoutSetFormData } from '../lib/workoutValidation';
-import exercisesData from '../data/exercises.json';
+import { MuscleEngagementDisplay } from './muscle-engagement-display';
+import exercisesData from '../data/exercises-real.json';
 
 interface WorkoutLoggerProps {
   userId: string;
+  initialCategory?: string;
   onSetCompleted?: (set: any) => void;
   onSessionEnd?: (session: any) => void;
 }
@@ -17,6 +19,10 @@ interface Exercise {
   id: string;
   name: string;
   category: string;
+  equipment?: string;
+  difficulty?: string;
+  variation?: string;
+  muscleEngagement?: Record<string, number>;
 }
 
 interface WorkoutSet {
@@ -44,17 +50,140 @@ interface WorkoutSession {
 
 export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
   userId,
+  initialCategory,
   onSetCompleted,
   onSessionEnd
 }) => {
   const [currentSession, setCurrentSession] = useState<CurrentSession | null>(null);
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [setCounters, setSetCounters] = useState<Record<string, number>>({});
 
   const [lastWeights, setLastWeights] = useState<Record<string, number>>({});
+  const [lastPerformance, setLastPerformance] = useState<Record<string, any>>({});
+  const [progressionRecommendations, setProgressionRecommendations] = useState<Record<string, any>>({});
+  const [weeklyVolume, setWeeklyVolume] = useState<number>(0);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Push/Pull/Legs category mapping
+  const categoryMapping = {
+    'all': 'All Exercises',
+    'push': 'Push Day (Chest, Shoulders, Triceps)',
+    'pull': 'Pull Day (Back, Biceps)',
+    'legs': 'Legs Day',
+    'core': 'Core & Abs'
+  };
+
+  const getWorkoutType = (category: string): string => {
+    switch (category) {
+      case 'ChestTriceps': return 'push';
+      case 'BackBiceps': return 'pull';
+      case 'Legs': return 'legs';
+      case 'Abs': return 'core';
+      default: return 'other';
+    }
+  };
+
+  // Progressive overload calculation functions
+  const getProgressionIncrement = (exerciseId: string): number => {
+    const exercise = exercises.find(ex => ex.id === exerciseId);
+    if (!exercise) return 5;
+
+    const workoutType = getWorkoutType(exercise.category);
+    // Upper body: +5 lbs, Lower body: +10 lbs, Core: +2.5 lbs
+    switch (workoutType) {
+      case 'legs': return 10;
+      case 'core': return 2.5;
+      default: return 5; // push/pull
+    }
+  };
+
+  const calculateProgression = (exerciseId: string, lastWeight: number, lastReps: number, targetReps: number): any => {
+    const increment = getProgressionIncrement(exerciseId);
+
+    // If user completed all target reps, recommend weight increase
+    if (lastReps >= targetReps) {
+      return {
+        type: 'weight_increase',
+        recommendedWeight: lastWeight + increment,
+        reason: `Completed ${lastReps}/${targetReps} reps - increase weight by ${increment} lbs`
+      };
+    }
+
+    // If user missed reps, maintain weight
+    if (lastReps < targetReps) {
+      return {
+        type: 'maintain_weight',
+        recommendedWeight: lastWeight,
+        reason: `Completed ${lastReps}/${targetReps} reps - maintain current weight`
+      };
+    }
+
+    return {
+      type: 'maintain_weight',
+      recommendedWeight: lastWeight,
+      reason: 'Continue with current weight'
+    };
+  };
+
+  const loadLastPerformanceData = () => {
+    try {
+      const sessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]');
+      const lastPerformanceData: Record<string, any> = {};
+      const recommendations: Record<string, any> = {};
+
+      // Find the most recent performance for each exercise
+      sessions.forEach((session: any) => {
+        if (session.sets && Array.isArray(session.sets)) {
+          session.sets.forEach((set: any) => {
+            const exerciseId = set.exerciseId;
+            if (exerciseId && !lastPerformanceData[exerciseId]) {
+              lastPerformanceData[exerciseId] = {
+                weight: set.weight,
+                reps: set.reps,
+                date: session.date,
+                sessionName: session.name
+              };
+
+              // Calculate progression recommendation
+              const progression = calculateProgression(exerciseId, set.weight, set.reps, 8);
+              recommendations[exerciseId] = progression;
+            }
+          });
+        }
+      });
+
+      setLastPerformance(lastPerformanceData);
+      setProgressionRecommendations(recommendations);
+
+      // Calculate weekly volume
+      calculateWeeklyVolume(sessions);
+    } catch (error) {
+      console.error('Error loading last performance data:', error);
+    }
+  };
+
+  const calculateWeeklyVolume = (sessions: any[]) => {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    let totalVolume = 0;
+    sessions.forEach((session: any) => {
+      const sessionDate = new Date(session.date);
+      if (sessionDate >= oneWeekAgo && session.sets && Array.isArray(session.sets)) {
+        session.sets.forEach((set: any) => {
+          if (set.weight && set.reps) {
+            totalVolume += set.weight * set.reps;
+          }
+        });
+      }
+    });
+
+    setWeeklyVolume(totalVolume);
+  };
 
   const {
     register,
@@ -80,7 +209,18 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
 
   // Load exercises and current session on mount
   useEffect(() => {
-    setExercises(exercisesData as Exercise[]);
+    const loadedExercises = exercisesData as Exercise[];
+    setExercises(loadedExercises);
+    setFilteredExercises(loadedExercises); // Initially show all exercises
+
+    // Set initial category if provided
+    if (initialCategory && initialCategory !== 'all') {
+      setSelectedCategory(initialCategory);
+    }
+
+    // Load last performance data for progression recommendations
+    loadLastPerformanceData();
+
     const stored = localStorage.getItem('currentWorkoutSession');
     if (stored) {
       try {
@@ -95,7 +235,19 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         /* ignore malformed data */
       }
     }
-  }, []);
+  }, [initialCategory]);
+
+  // Filter exercises by selected category
+  useEffect(() => {
+    if (selectedCategory === 'all') {
+      setFilteredExercises(exercises);
+    } else {
+      const filtered = exercises.filter(exercise =>
+        getWorkoutType(exercise.category) === selectedCategory
+      );
+      setFilteredExercises(filtered);
+    }
+  }, [selectedCategory, exercises]);
 
   // Auto-fill last weight when exercise changes
   useEffect(() => {
@@ -240,19 +392,37 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        {/* Workout Type Filter */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Workout Type
+          </label>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
+          >
+            {Object.entries(categoryMapping).map(([key, label]) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Exercise Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Exercise
+            Exercise ({filteredExercises.length} available)
           </label>
           <select
             {...register('exerciseId')}
             className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select an exercise</option>
-            {exercises.map(exercise => (
+            {filteredExercises.map(exercise => (
               <option key={exercise.id} value={exercise.id}>
-                {exercise.name} ({exercise.category})
+                {exercise.name} - {exercise.equipment} ({exercise.difficulty})
               </option>
             ))}
           </select>
@@ -263,9 +433,20 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
 
         {/* Weight Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Weight (lbs)
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-sm font-medium text-gray-700">
+              Weight (lbs)
+            </label>
+            {selectedExerciseId && progressionRecommendations[selectedExerciseId] && (
+              <button
+                type="button"
+                onClick={() => setValue('weight', progressionRecommendations[selectedExerciseId].recommendedWeight)}
+                className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200"
+              >
+                Use Recommended ({progressionRecommendations[selectedExerciseId].recommendedWeight} lbs)
+              </button>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -331,9 +512,58 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         {/* Set Number Display */}
         {selectedExercise && (
           <div className="p-3 bg-gray-50 rounded-md">
-            <p className="text-sm text-gray-600">
-              <span className="font-medium">{selectedExercise.name}</span> - Set #{currentSetNumber}
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">
+                  <span className="font-medium">{selectedExercise.name}</span> - Set #{currentSetNumber}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {categoryMapping[getWorkoutType(selectedExercise.category)]} • {selectedExercise.equipment}
+                </p>
+
+                {/* Progressive Overload Recommendations */}
+                {lastPerformance[selectedExercise.id] && (
+                  <div className="mt-2 p-2 bg-blue-50 rounded border border-blue-200">
+                    <p className="text-xs font-medium text-blue-800 mb-1">Last Performance:</p>
+                    <p className="text-xs text-blue-700">
+                      {lastPerformance[selectedExercise.id].weight} lbs × {lastPerformance[selectedExercise.id].reps} reps
+                    </p>
+                    {progressionRecommendations[selectedExercise.id] && (
+                      <div className="mt-1">
+                        <p className="text-xs font-medium text-green-800">Recommendation:</p>
+                        <p className="text-xs text-green-700">
+                          {progressionRecommendations[selectedExercise.id].recommendedWeight} lbs
+                          {progressionRecommendations[selectedExercise.id].type === 'weight_increase' && (
+                            <span className="ml-1 text-green-600">↗️ +{getProgressionIncrement(selectedExercise.id)} lbs</span>
+                          )}
+                        </p>
+                        <p className="text-xs text-gray-600 mt-1">
+                          {progressionRecommendations[selectedExercise.id].reason}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {!lastPerformance[selectedExercise.id] && (
+                  <div className="mt-2 p-2 bg-yellow-50 rounded border border-yellow-200">
+                    <p className="text-xs text-yellow-800">
+                      🆕 First time doing this exercise - start with a comfortable weight
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="text-right">
+                <div className={`px-2 py-1 rounded text-xs font-medium ${
+                  getWorkoutType(selectedExercise.category) === 'push' ? 'bg-red-100 text-red-700' :
+                  getWorkoutType(selectedExercise.category) === 'pull' ? 'bg-blue-100 text-blue-700' :
+                  getWorkoutType(selectedExercise.category) === 'legs' ? 'bg-green-100 text-green-700' :
+                  'bg-purple-100 text-purple-700'
+                }`}>
+                  {getWorkoutType(selectedExercise.category).toUpperCase()}
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -382,10 +612,66 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         </div>
       </form>
 
+      {/* Weekly Volume Tracking */}
+      <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-md border border-blue-200">
+        <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+          📊 Weekly Training Volume
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p className="text-sm text-gray-600">Total Volume (7 days)</p>
+            <p className="text-2xl font-bold text-blue-600">{weeklyVolume.toLocaleString()} lbs</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">Current Session Volume</p>
+            <p className="text-2xl font-bold text-purple-600">
+              {currentSession ?
+                currentSession.sets.reduce((total: number, set: any) =>
+                  total + (set.weight * set.reps), 0
+                ).toLocaleString() : 0} lbs
+            </p>
+          </div>
+        </div>
+        <div className="mt-2 text-xs text-gray-500">
+          Volume = Weight × Reps for all exercises. Higher volume indicates more training stimulus.
+        </div>
+      </div>
+
       {/* Current Session Summary */}
       {currentSession && currentSession.sets.length > 0 && (
         <div className="mt-6 p-4 bg-gray-50 rounded-md">
-          <h3 className="font-medium text-gray-900 mb-2">Current Workout</h3>
+          <h3 className="font-medium text-gray-900 mb-3">Current Workout</h3>
+
+          {/* Workout Type Breakdown */}
+          <div className="mb-3">
+            {(() => {
+              const workoutTypes = {};
+              Object.entries(setCounters).forEach(([exerciseId, count]) => {
+                const exercise = exercises.find(ex => ex.id === exerciseId);
+                if (exercise) {
+                  const type = getWorkoutType(exercise.category);
+                  workoutTypes[type] = (workoutTypes[type] || 0) + count;
+                }
+              });
+
+              return Object.entries(workoutTypes).length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {Object.entries(workoutTypes).map(([type, sets]) => (
+                    <div key={type} className={`px-2 py-1 rounded text-xs font-medium ${
+                      type === 'push' ? 'bg-red-100 text-red-700' :
+                      type === 'pull' ? 'bg-blue-100 text-blue-700' :
+                      type === 'legs' ? 'bg-green-100 text-green-700' :
+                      'bg-purple-100 text-purple-700'
+                    }`}>
+                      {type.toUpperCase()}: {sets} sets
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Exercise Details */}
           <div className="space-y-1">
             {Object.entries(setCounters).map(([exerciseId, count]) => {
               const exercise = exercises.find(ex => ex.id === exerciseId);
@@ -396,6 +682,16 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
               ) : null;
             })}
           </div>
+        </div>
+      )}
+
+      {/* Muscle Engagement Visualization */}
+      {selectedExercise && (
+        <div className="mt-6">
+          <MuscleEngagementDisplay
+            exerciseName={selectedExercise.name}
+            muscleEngagement={selectedExercise.muscleEngagement}
+          />
         </div>
       )}
     </div>

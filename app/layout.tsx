@@ -4,19 +4,20 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navigation } from "@/components/navigation"
+import { Footer } from "@/components/footer"
 import { Toaster } from "@/components/ui/sonner"
 import { AuthProvider } from "@/lib/auth-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "FitForge",
-  description: "Advanced fitness tracking with muscle fatigue analytics and progressive overload targeting",
-  keywords: "fitness, workout tracker, muscle fatigue, progressive overload, exercise library",
+  title: "FitForge - Smart Fitness Tracking",
+  description: "localStorage-first fitness tracker with Push/Pull/Legs organization, progressive overload intelligence, and muscle engagement visualization",
+  keywords: "fitness, workout tracker, progressive overload, push pull legs, muscle engagement, localStorage",
   authors: [{ name: "FitForge Team" }],
   openGraph: {
-    title: "FitForge - Advanced Fitness Tracking",
-    description: "Track workouts with muscle fatigue analytics and progressive overload intelligence",
+    title: "FitForge - Smart Fitness Tracking",
+    description: "Track workouts with Push/Pull/Legs organization and progressive overload intelligence",
     type: "website",
   },
 }
@@ -30,12 +31,13 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
-            <div className="min-h-screen bg-[#121212]">
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+            <div className="min-h-screen bg-gray-50 flex flex-col">
               <Navigation />
-              <main className="container mx-auto px-4 py-8 max-w-7xl">{children}</main>
+              <main className="flex-1">{children}</main>
+              <Footer />
             </div>
-            <Toaster richColors theme="dark" />
+            <Toaster richColors theme="light" />
           </ThemeProvider>
         </AuthProvider>
       </body>
