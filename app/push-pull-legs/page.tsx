@@ -92,13 +92,13 @@ export default function PushPullLegsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-white mb-4">
             Push / Pull / Legs Training
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-[#A1A1A3] max-w-2xl mx-auto">
             Choose your workout type for optimal muscle group targeting and recovery.
             Each workout focuses on specific muscle groups for maximum effectiveness.
           </p>
@@ -107,24 +107,24 @@ export default function PushPullLegsPage() {
         {/* Workout Type Cards */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {workoutTypes.map((type) => (
-            <Card key={type.id} className={`${type.lightColor} border-2 hover:shadow-lg transition-shadow cursor-pointer`}>
+            <Card key={type.id} className="bg-[#1C1C1E] border-[#2C2C2E] hover:bg-[#2C2C2E] transition-all cursor-pointer">
               <CardHeader className="text-center">
                 <div className="text-4xl mb-2">{type.icon}</div>
-                <CardTitle className={type.textColor}>{type.name}</CardTitle>
-                <CardDescription>{type.description}</CardDescription>
+                <CardTitle className="text-white">{type.name}</CardTitle>
+                <CardDescription className="text-[#A1A1A3]">{type.description}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  <Badge variant="outline" className={type.textColor}>
+                  <Badge variant="outline" className="text-white border-[#3C3C3E]">
                     {type.exercises.length} exercises
                   </Badge>
                 </div>
                 
                 <div className="space-y-2">
-                  <h4 className="font-medium text-sm text-gray-700">Target Muscles:</h4>
+                  <h4 className="font-medium text-sm text-[#A1A1A3]">Target Muscles:</h4>
                   <div className="flex flex-wrap gap-1">
                     {type.muscles.map((muscle) => (
-                      <span key={muscle} className="text-xs bg-white px-2 py-1 rounded">
+                      <span key={muscle} className="text-xs bg-[#2C2C2E] text-white px-2 py-1 rounded">
                         {muscle}
                       </span>
                     ))}
@@ -132,7 +132,7 @@ export default function PushPullLegsPage() {
                 </div>
 
                 <Button 
-                  className={`w-full ${type.color} hover:opacity-90`}
+                  className="w-full bg-[#FF375F] hover:bg-[#E63050] text-white"
                   onClick={() => startWorkout(type.id)}
                 >
                   <Dumbbell className="w-4 h-4 mr-2" />
@@ -144,31 +144,31 @@ export default function PushPullLegsPage() {
         </div>
 
         {/* Training Tips */}
-        <Card className="bg-white">
+        <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2 text-white">
+              <Target className="w-5 h-5 text-[#FF375F]" />
               Push/Pull/Legs Training Tips
             </CardTitle>
           </CardHeader>
           <CardContent className="grid md:grid-cols-3 gap-6">
             <div>
-              <h3 className="font-semibold text-red-700 mb-2">Push Day Strategy</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-[#FF375F] mb-2">Push Day Strategy</h3>
+              <p className="text-sm text-[#A1A1A3]">
                 Focus on pressing movements. Start with compound exercises like bench press, 
                 then move to isolation work for triceps and shoulders.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-blue-700 mb-2">Pull Day Strategy</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-[#3B82F6] mb-2">Pull Day Strategy</h3>
+              <p className="text-sm text-[#A1A1A3]">
                 Emphasize pulling movements. Begin with pull-ups or rows, then target 
                 biceps and rear delts with focused exercises.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-green-700 mb-2">Legs Day Strategy</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-[#10B981] mb-2">Legs Day Strategy</h3>
+              <p className="text-sm text-[#A1A1A3]">
                 Train the largest muscle groups. Start with squats or deadlifts, 
                 then work on isolation exercises for complete leg development.
               </p>

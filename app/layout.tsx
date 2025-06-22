@@ -28,16 +28,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning className="dark">
+      <body className={`${inter.className} bg-[#121212] text-white`}>
         <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
-            <div className="min-h-screen bg-gray-50 flex flex-col">
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+            <div className="min-h-screen bg-[#121212] flex flex-col">
               <Navigation />
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
-            <Toaster richColors theme="light" />
+            <Toaster richColors theme="dark" />
           </ThemeProvider>
         </AuthProvider>
       </body>

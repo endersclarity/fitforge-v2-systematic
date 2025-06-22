@@ -95,13 +95,13 @@ export default function MuscleExplorerPage() {
   const filteredExercises = getFilteredExercises();
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-white mb-4">
             💪 Muscle Engagement Explorer
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-[#A1A1A3] max-w-2xl mx-auto">
             Discover which exercises target specific muscles and explore detailed muscle engagement data.
           </p>
         </div>
@@ -110,17 +110,17 @@ export default function MuscleExplorerPage() {
           {/* Left Panel - Filters and Exercise List */}
           <div className="lg:col-span-2 space-y-6">
             {/* Search and Filters */}
-            <Card>
+            <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Search className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-white">
+                  <Search className="w-5 h-5 text-[#FF375F]" />
                   Exercise Filters
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Search */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-white mb-1">
                     Search Exercises
                   </label>
                   <input
@@ -128,19 +128,19 @@ export default function MuscleExplorerPage() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Search by name, category, or equipment..."
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border border-[#2C2C2E] rounded-xl focus:ring-4 focus:ring-[#FF375F]/20 focus:border-[#FF375F] bg-[#2C2C2E] text-white placeholder-[#A1A1A3]"
                   />
                 </div>
 
                 {/* Muscle Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-white mb-1">
                     Target Muscle
                   </label>
                   <select
                     value={selectedMuscle}
                     onChange={(e) => setSelectedMuscle(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    className="w-full p-2 border border-[#2C2C2E] rounded-xl focus:ring-4 focus:ring-[#FF375F]/20 focus:border-[#FF375F] bg-[#2C2C2E] text-white"
                   >
                     <option value="all">All Muscles</option>
                     {allMuscles.map(muscle => (

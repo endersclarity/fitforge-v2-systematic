@@ -71,15 +71,15 @@ export function DashboardSimple() {
   return (
     <div className="space-y-8 p-4 md:p-8" data-testid="app-loaded">
       <div className="flex flex-col space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">FitForge Dashboard</h1>
-        <p className="text-muted-foreground">Your fitness journey at a glance</p>
+        <h1 className="text-4xl font-bold tracking-tight text-white">FitForge Dashboard</h1>
+        <p className="text-[#A1A1A3]">Your fitness journey at a glance</p>
       </div>
 
       {/* Welcome Message for New Users */}
       {recentWorkouts.length === 0 && (
-        <Alert>
-          <Dumbbell className="h-4 w-4" />
-          <AlertDescription>
+        <Alert className="bg-[#1C1C1E] border-[#2C2C2E]">
+          <Dumbbell className="h-4 w-4 text-[#FF375F]" />
+          <AlertDescription className="text-[#A1A1A3]">
             Welcome to FitForge! Ready to start your fitness journey? Choose a workout type below to begin logging your exercises with smart progression tracking.
           </AlertDescription>
         </Alert>
@@ -87,33 +87,33 @@ export function DashboardSimple() {
 
       {/* Weekly Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Workouts This Week</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-white">Workouts This Week</CardTitle>
+            <Activity className="h-4 w-4 text-[#A1A1A3]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{weeklyStats.workouts}</div>
+            <div className="text-2xl font-bold text-white">{weeklyStats.workouts}</div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Time</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-white">Total Time</CardTitle>
+            <Clock className="h-4 w-4 text-[#A1A1A3]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{weeklyStats.totalTime} min</div>
+            <div className="text-2xl font-bold text-white">{weeklyStats.totalTime} min</div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Exercises Done</CardTitle>
-            <Dumbbell className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-white">Exercises Done</CardTitle>
+            <Dumbbell className="h-4 w-4 text-[#A1A1A3]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{weeklyStats.exercisesCompleted}</div>
+            <div className="text-2xl font-bold text-white">{weeklyStats.exercisesCompleted}</div>
           </CardContent>
         </Card>
         
@@ -175,29 +175,29 @@ export function DashboardSimple() {
               <CardTitle className="text-lg text-blue-800">🎯 Smart Organization</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-[#A1A1A3]">
                 Push/Pull/Legs workout system with 37 exercises organized by muscle groups for optimal training.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-green-200 bg-green-50">
+          <Card className="border-[#2C2C2E] bg-[#1C1C1E]">
             <CardHeader>
-              <CardTitle className="text-lg text-green-800">📈 Progressive Overload</CardTitle>
+              <CardTitle className="text-lg text-white">📈 Progressive Overload</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-[#A1A1A3]">
                 Formula-based progression recommendations. Automatically suggests weight increases based on your performance.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-purple-200 bg-purple-50">
+          <Card className="border-[#2C2C2E] bg-[#1C1C1E]">
             <CardHeader>
-              <CardTitle className="text-lg text-purple-800">💪 Muscle Targeting</CardTitle>
+              <CardTitle className="text-lg text-white">💪 Muscle Targeting</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-purple-700">
+              <p className="text-sm text-[#A1A1A3]">
                 Visual muscle engagement maps show exactly which muscles each exercise targets for better planning.
               </p>
             </CardContent>
@@ -207,10 +207,10 @@ export function DashboardSimple() {
 
       {/* Quick Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
-        <Button onClick={() => window.location.href = "/push-pull-legs"} className="flex-1">
+        <Button onClick={() => window.location.href = "/push-pull-legs"} className="flex-1 bg-[#FF375F] hover:bg-[#E63050] text-white">
           🏋️ Start Workout
         </Button>
-        <Button variant="outline" onClick={() => window.location.href = "/muscle-explorer"} className="flex-1">
+        <Button variant="outline" onClick={() => window.location.href = "/muscle-explorer"} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
           📚 Browse Exercises
         </Button>
         <Button variant="outline" onClick={() => window.location.href = "/workout-simple"} className="flex-1">

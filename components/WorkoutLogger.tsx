@@ -451,7 +451,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
             <button
               type="button"
               onClick={() => adjustWeight(-0.25)}
-              className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="p-2 border border-[#2C2C2E] rounded-xl hover:bg-[#2C2C2E] bg-[#1C1C1E]"
             >
               <Minus className="w-4 h-4" />
             </button>
@@ -461,12 +461,12 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
               step="0.25"
               min="0"
               max="500"
-              className="flex-1 p-3 border border-gray-300 rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 p-3 border border-[#2C2C2E] rounded-xl text-center focus:ring-4 focus:ring-[#FF375F]/20 focus:border-[#FF375F] bg-[#2C2C2E] text-white"
             />
             <button
               type="button"
               onClick={() => adjustWeight(0.25)}
-              className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="p-2 border border-[#2C2C2E] rounded-xl hover:bg-[#2C2C2E] bg-[#1C1C1E]"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -485,7 +485,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
             <button
               type="button"
               onClick={() => adjustReps(-1)}
-              className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="p-2 border border-[#2C2C2E] rounded-xl hover:bg-[#2C2C2E] bg-[#1C1C1E]"
             >
               <Minus className="w-4 h-4" />
             </button>
@@ -494,50 +494,50 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
               type="number"
               min="1"
               max="50"
-              className="flex-1 p-3 border border-gray-300 rounded-md text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 p-3 border border-[#2C2C2E] rounded-xl text-center focus:ring-4 focus:ring-[#FF375F]/20 focus:border-[#FF375F] bg-[#2C2C2E] text-white"
             />
             <button
               type="button"
               onClick={() => adjustReps(1)}
-              className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="p-2 border border-[#2C2C2E] rounded-xl hover:bg-[#2C2C2E] bg-[#1C1C1E]"
             >
               <Plus className="w-4 h-4" />
             </button>
           </div>
           {errors.reps && (
-            <p className="mt-1 text-sm text-red-600">{errors.reps.message}</p>
+            <p className="mt-1 text-sm text-red-400">{errors.reps.message}</p>
           )}
         </div>
 
         {/* Set Number Display */}
         {selectedExercise && (
-          <div className="p-3 bg-gray-50 rounded-md">
+          <div className="p-3 bg-[#2C2C2E] rounded-xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-white">
                   <span className="font-medium">{selectedExercise.name}</span> - Set #{currentSetNumber}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-[#A1A1A3]">
                   {categoryMapping[getWorkoutType(selectedExercise.category)]} • {selectedExercise.equipment}
                 </p>
 
                 {/* Progressive Overload Recommendations */}
                 {lastPerformance[selectedExercise.id] && (
-                  <div className="mt-2 p-2 bg-blue-50 rounded border border-blue-200">
-                    <p className="text-xs font-medium text-blue-800 mb-1">Last Performance:</p>
-                    <p className="text-xs text-blue-700">
+                  <div className="mt-2 p-2 bg-blue-500/10 rounded border border-blue-500/20">
+                    <p className="text-xs font-medium text-blue-400 mb-1">Last Performance:</p>
+                    <p className="text-xs text-blue-300">
                       {lastPerformance[selectedExercise.id].weight} lbs × {lastPerformance[selectedExercise.id].reps} reps
                     </p>
                     {progressionRecommendations[selectedExercise.id] && (
                       <div className="mt-1">
-                        <p className="text-xs font-medium text-green-800">Recommendation:</p>
-                        <p className="text-xs text-green-700">
+                        <p className="text-xs font-medium text-green-400">Recommendation:</p>
+                        <p className="text-xs text-green-300">
                           {progressionRecommendations[selectedExercise.id].recommendedWeight} lbs
                           {progressionRecommendations[selectedExercise.id].type === 'weight_increase' && (
-                            <span className="ml-1 text-green-600">↗️ +{getProgressionIncrement(selectedExercise.id)} lbs</span>
+                            <span className="ml-1 text-green-400">↗️ +{getProgressionIncrement(selectedExercise.id)} lbs</span>
                           )}
                         </p>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <p className="text-xs text-[#A1A1A3] mt-1">
                           {progressionRecommendations[selectedExercise.id].reason}
                         </p>
                       </div>
@@ -546,8 +546,8 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
                 )}
 
                 {!lastPerformance[selectedExercise.id] && (
-                  <div className="mt-2 p-2 bg-yellow-50 rounded border border-yellow-200">
-                    <p className="text-xs text-yellow-800">
+                  <div className="mt-2 p-2 bg-yellow-500/10 rounded border border-yellow-500/20">
+                    <p className="text-xs text-yellow-400">
                       🆕 First time doing this exercise - start with a comfortable weight
                     </p>
                   </div>
@@ -555,10 +555,10 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
               </div>
               <div className="text-right">
                 <div className={`px-2 py-1 rounded text-xs font-medium ${
-                  getWorkoutType(selectedExercise.category) === 'push' ? 'bg-red-100 text-red-700' :
-                  getWorkoutType(selectedExercise.category) === 'pull' ? 'bg-blue-100 text-blue-700' :
-                  getWorkoutType(selectedExercise.category) === 'legs' ? 'bg-green-100 text-green-700' :
-                  'bg-purple-100 text-purple-700'
+                  getWorkoutType(selectedExercise.category) === 'push' ? 'bg-red-500/20 text-red-400' :
+                  getWorkoutType(selectedExercise.category) === 'pull' ? 'bg-blue-500/20 text-blue-400' :
+                  getWorkoutType(selectedExercise.category) === 'legs' ? 'bg-green-500/20 text-green-400' :
+                  'bg-purple-500/20 text-purple-400'
                 }`}>
                   {getWorkoutType(selectedExercise.category).toUpperCase()}
                 </div>
@@ -569,17 +569,17 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
 
         {/* Notes */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-white mb-1">
             Notes (optional)
           </label>
           <textarea
             {...register('notes')}
             placeholder="How did this set feel?"
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-3 border border-[#2C2C2E] rounded-xl focus:ring-4 focus:ring-[#FF375F]/20 focus:border-[#FF375F] bg-[#2C2C2E] text-white placeholder-[#A1A1A3]"
             rows={2}
           />
           {errors.notes && (
-            <p className="mt-1 text-sm text-red-600">{errors.notes.message}</p>
+            <p className="mt-1 text-sm text-red-400">{errors.notes.message}</p>
           )}
         </div>
 
@@ -588,7 +588,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 bg-[#FF375F] text-white py-3 px-4 rounded-xl hover:bg-[#E63050] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 font-medium"
           >
             {isLoading ? (
               <>
@@ -604,7 +604,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
             <button
               type="button"
               onClick={handleClearSession}
-              className="px-4 py-3 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-3 border border-[#2C2C2E] rounded-xl hover:bg-[#2C2C2E] bg-[#1C1C1E] text-white"
             >
               End Session
             </button>
@@ -613,18 +613,18 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
       </form>
 
       {/* Weekly Volume Tracking */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-md border border-blue-200">
-        <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+      <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-[#2C2C2E]">
+        <h3 className="font-medium text-white mb-2 flex items-center gap-2">
           📊 Weekly Training Volume
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-600">Total Volume (7 days)</p>
-            <p className="text-2xl font-bold text-blue-600">{weeklyVolume.toLocaleString()} lbs</p>
+            <p className="text-sm text-[#A1A1A3]">Total Volume (7 days)</p>
+            <p className="text-2xl font-bold text-blue-400">{weeklyVolume.toLocaleString()} lbs</p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">Current Session Volume</p>
-            <p className="text-2xl font-bold text-purple-600">
+            <p className="text-sm text-[#A1A1A3]">Current Session Volume</p>
+            <p className="text-2xl font-bold text-purple-400">
               {currentSession ?
                 currentSession.sets.reduce((total: number, set: any) =>
                   total + (set.weight * set.reps), 0
@@ -632,15 +632,15 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
             </p>
           </div>
         </div>
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-[#A1A1A3]">
           Volume = Weight × Reps for all exercises. Higher volume indicates more training stimulus.
         </div>
       </div>
 
       {/* Current Session Summary */}
       {currentSession && currentSession.sets.length > 0 && (
-        <div className="mt-6 p-4 bg-gray-50 rounded-md">
-          <h3 className="font-medium text-gray-900 mb-3">Current Workout</h3>
+        <div className="mt-6 p-4 bg-[#2C2C2E] rounded-xl">
+          <h3 className="font-medium text-white mb-3">Current Workout</h3>
 
           {/* Workout Type Breakdown */}
           <div className="mb-3">
@@ -658,10 +658,10 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
                 <div className="flex flex-wrap gap-2 mb-2">
                   {Object.entries(workoutTypes).map(([type, sets]) => (
                     <div key={type} className={`px-2 py-1 rounded text-xs font-medium ${
-                      type === 'push' ? 'bg-red-100 text-red-700' :
-                      type === 'pull' ? 'bg-blue-100 text-blue-700' :
-                      type === 'legs' ? 'bg-green-100 text-green-700' :
-                      'bg-purple-100 text-purple-700'
+                      type === 'push' ? 'bg-red-500/20 text-red-400' :
+                      type === 'pull' ? 'bg-blue-500/20 text-blue-400' :
+                      type === 'legs' ? 'bg-green-500/20 text-green-400' :
+                      'bg-purple-500/20 text-purple-400'
                     }`}>
                       {type.toUpperCase()}: {sets} sets
                     </div>
@@ -676,7 +676,7 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
             {Object.entries(setCounters).map(([exerciseId, count]) => {
               const exercise = exercises.find(ex => ex.id === exerciseId);
               return exercise ? (
-                <p key={exerciseId} className="text-sm text-gray-600">
+                <p key={exerciseId} className="text-sm text-[#A1A1A3]">
                   {exercise.name}: {count} sets logged
                 </p>
               ) : null;

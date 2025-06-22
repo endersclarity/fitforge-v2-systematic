@@ -19,13 +19,13 @@ export function Navigation() {
   const { theme, setTheme } = useTheme()
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="border-b border-[#2C2C2E] bg-[#1C1C1E]/95 backdrop-blur supports-[backdrop-filter]:bg-[#1C1C1E]/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-8">
             <Link href="/" className="flex items-center space-x-2">
-              <Dumbbell className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold">FitForge</span>
+              <Dumbbell className="h-6 w-6 text-[#FF375F]" />
+              <span className="text-xl font-bold text-white">FitForge</span>
             </Link>
 
             <div className="hidden md:flex items-center space-x-6">
@@ -37,8 +37,8 @@ export function Navigation() {
                     href={item.href}
                     data-testid={`nav-${item.label.toLowerCase().replace(' ', '-')}`}
                     className={cn(
-                      "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-primary",
-                      pathname === item.href ? "text-primary" : "text-muted-foreground",
+                      "flex items-center space-x-2 text-sm font-medium transition-colors hover:text-[#FF375F]",
+                      pathname === item.href ? "text-[#FF375F]" : "text-[#A1A1A3]",
                     )}
                   >
                     <Icon className="h-4 w-4" />
