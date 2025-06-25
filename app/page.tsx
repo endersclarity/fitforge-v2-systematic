@@ -1,5 +1,5 @@
-import { DashboardSimple } from "@/components/dashboard-simple"
+import { FitbodHome } from "@/components/fitbod-home"
 
 export default function Home() {
-  return <DashboardSimple />
+  return <FitbodHome />
 }
