@@ -79,8 +79,62 @@
         "dependencies": [
           6
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Define Template Data Structure and Types",
+            "description": "Create TypeScript interfaces for workout templates including name, description, duration, target muscles, and exercise lists",
+            "dependencies": [],
+            "details": "Define interfaces in types/workout.ts or similar location. Include fields for templateId, name, description, estimatedDuration (minutes), targetMuscles (array), exerciseIds (array), difficulty level, and any metadata needed for the 6 pre-built templates",
+            "status": "done",
+            "testStrategy": "Verify type definitions compile correctly and can be used to create valid template objects"
+          },
+          {
+            "id": 2,
+            "title": "Create Template Card Component",
+            "description": "Build a reusable TemplateCard component that displays individual workout template information with proper styling",
+            "dependencies": [
+              1
+            ],
+            "details": "Create components/template-card.tsx using Calm Design System tokens from styles/calm-tokens.css. Include template name (heading), description text, duration badge, target muscles list, hover states with elevation changes, and selection state styling. Reference equipment-filter.tsx for consistent design patterns",
+            "status": "done",
+            "testStrategy": "Test card renders correctly with sample data, hover states work, and selection highlighting is visible"
+          },
+          {
+            "id": 3,
+            "title": "Implement Grid Layout System",
+            "description": "Create responsive grid layout for template cards that adapts between 2x3 and 3x2 configurations based on viewport",
+            "dependencies": [
+              2
+            ],
+            "details": "Use CSS Grid or Flexbox to create responsive layout in workout-template-selector.tsx. Implement breakpoints for mobile (1 column), tablet (2 columns), and desktop (3 columns). Ensure proper spacing using Calm Design tokens and maintain consistent card sizes",
+            "status": "done",
+            "testStrategy": "Verify grid responds correctly at different viewport sizes and maintains proper spacing"
+          },
+          {
+            "id": 4,
+            "title": "Add Selection State Management",
+            "description": "Implement state management for template selection with proper React hooks and callback handling",
+            "dependencies": [
+              3
+            ],
+            "details": "Use useState hook to track selected template ID, implement click handlers on template cards, ensure only one template can be selected at a time, add visual feedback for selected state, and create onSelect callback prop that passes selected template data to parent component",
+            "status": "done",
+            "testStrategy": "Test single selection behavior, verify onSelect callback fires with correct template data"
+          },
+          {
+            "id": 5,
+            "title": "Create Mock Template Data and Integration",
+            "description": "Generate mock data for the 6 workout templates and integrate the complete selector component",
+            "dependencies": [
+              4
+            ],
+            "details": "Create mock data file with 6 diverse workout templates (e.g., Upper Body Power, Lower Body Strength, Full Body HIIT, Core & Cardio, Push/Pull Split, Beginner Basics). Each should have realistic names, descriptions, durations (30-90 min), and target muscle groups. Export WorkoutTemplateSelector component with proper props interface",
+            "status": "done",
+            "testStrategy": "Verify all 6 templates display correctly, selection works for each template, and component integrates smoothly with parent components"
+          }
+        ]
       },
       {
         "id": 8,
@@ -189,7 +243,7 @@
     ],
     "metadata": {
       "created": "2025-06-25T16:20:00.000Z",
-      "updated": "2025-06-25T17:22:43.291Z",
+      "updated": "2025-06-25T18:25:48.514Z",
       "description": "Tasks for master context"
     }
   }

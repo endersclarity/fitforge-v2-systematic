@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight } from "lucide-react"
 import { calculateMuscleVolume, getRecentWorkoutData } from "@/lib/muscle-volume-calculator"
 import { WorkoutRoutineDisplay } from "@/components/workout-routine-display"
+import { WorkoutTemplateSelector } from "@/components/workout-template-selector"
 import exercisesData from '@/data/exercises-real.json'
 
 interface MuscleGroup {
@@ -46,6 +47,8 @@ export function FitbodHome() {
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<string | null>(null)
   const [muscleVolumes, setMuscleVolumes] = useState<Record<string, number>>({})
   const [showWorkoutRoutine, setShowWorkoutRoutine] = useState(false)
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null)
 
   // Calculate muscle volumes from recent workouts
   useEffect(() => {
@@ -66,6 +69,12 @@ export function FitbodHome() {
   }
 
   const handleStartWorkout = () => {
+    setShowTemplateSelector(true)
+  }
+
+  const handleTemplateSelect = (template: any) => {
+    setSelectedTemplate(template)
+    setShowTemplateSelector(false)
     setShowWorkoutRoutine(true)
   }
 
@@ -75,13 +84,26 @@ export function FitbodHome() {
     alert(`Starting workout: ${template.name}`)
   }
 
-  // Show workout routine if user clicked "Start Workout"
-  if (showWorkoutRoutine) {
+  // Show template selector if user clicked "Start Workout"
+  if (showTemplateSelector) {
+    return (
+      <WorkoutTemplateSelector 
+        onBack={() => setShowTemplateSelector(false)}
+        onTemplateSelect={handleTemplateSelect}
+      />
+    )
+  }
+
+  // Show workout routine if user selected a template
+  if (showWorkoutRoutine && selectedTemplate) {
     return (
       <WorkoutRoutineDisplay 
-        onBack={() => setShowWorkoutRoutine(false)}
+        onBack={() => {
+          setShowWorkoutRoutine(false)
+          setSelectedTemplate(null)
+        }}
         onStartWorkout={handleWorkoutStart}
-        selectedTemplate="pushA" // Default to Push A routine
+        selectedTemplate={selectedTemplate.id}
       />
     )
   }
