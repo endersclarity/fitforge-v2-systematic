@@ -159,7 +159,7 @@
         "dependencies": [
           8
         ],
-        "status": "pending",
+        "status": "in-progress",
         "subtasks": [
           {
             "id": 1,
@@ -212,6 +212,33 @@
             "details": "Test that equipment filters properly filter template exercises, muscle volume calculations include all template exercises, and the visualization updates correctly. Fix any edge cases where template data structure differs from manually added exercises.",
             "status": "pending",
             "testStrategy": "Integration test with various templates containing different equipment requirements and muscle groups, verify filters and visualizations work correctly"
+          },
+          {
+            "id": 6,
+            "title": "🔍 CHECKPOINT: User can verify template data transforms correctly",
+            "description": "User opens browser console at localhost:8080, selects a template, and sees properly formatted workout queue data logged to console before navigation",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 9
+          },
+          {
+            "id": 7,
+            "title": "🔍 CHECKPOINT: User can see template selection actually navigates to workout logging",
+            "description": "User clicks Start Workout → selects any template → clicks Start Workout → should navigate to /workouts-simple with working exercise list (no more alert popup)",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 9
+          },
+          {
+            "id": 8,
+            "title": "🔍 CHECKPOINT: User can complete end-to-end workout session from template",
+            "description": "User selects template → starts workout → logs multiple sets → finishes workout → sees completed session saved to localStorage. Full functional flow working.",
+            "details": "",
+            "status": "pending",
+            "dependencies": [],
+            "parentTaskId": 9
           }
         ]
       },
@@ -292,11 +319,132 @@
         ],
         "status": "pending",
         "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Create FitForge Splash Screen with Intake Flow Detection",
+        "description": "Build a colorful splash screen that checks localStorage for user profile data and routes to intake form or main app accordingly.",
+        "details": "Create app/page.tsx as the root splash screen component displaying the colorful splash image from public/splashscreen_bunq.png. Implement localStorage check for user profile data with console logging for debugging. Create routing logic that navigates to intake form if no profile exists, or main app if profile is found. Reference flows/logging-in/flow-analysis.md for design patterns and user flow insights. Implement polished transitions using CSS animations or Framer Motion. Add loading states and error handling for localStorage access. Ensure responsive design works across mobile and desktop viewports using Calm Design System tokens.",
+        "testStrategy": "Test user sees colorful splash image at localhost:8080 on page load, verify routing logic outputs to console showing profile check results, test user with empty localStorage gets routed to intake form, test user with existing profile data gets routed to main app, validate smooth transitions between splash and target screens, test responsive design on various screen sizes, and ensure accessibility compliance with proper alt text and ARIA labels",
+        "status": "in-progress",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Splash Screen Component with Image Display",
+            "description": "Build the root app/page.tsx component that displays the colorful splash image from public/splashscreen_bunq.png with proper styling and responsive design",
+            "dependencies": [],
+            "details": "Create app/page.tsx as the main entry point. Import and display the splash image using Next.js Image component. Apply CSS styling using Calm Design System tokens from styles/calm-tokens.css for consistent theming. Ensure the splash screen fills the viewport and looks good on mobile and desktop. Add initial mounting animation for smooth appearance.",
+            "status": "done",
+            "testStrategy": "Verify splash screen renders correctly at localhost:8080, test responsive behavior at different viewport sizes, confirm image loads properly"
+          },
+          {
+            "id": 2,
+            "title": "Implement LocalStorage Profile Detection Logic",
+            "description": "Add functionality to check localStorage for existing user profile data with proper error handling and console logging for debugging",
+            "dependencies": [
+              1
+            ],
+            "details": "Within app/page.tsx, implement useEffect hook to check localStorage for user profile data on component mount. Add try-catch blocks for safe localStorage access. Include detailed console.log statements showing profile check results. Define the expected profile data structure based on existing app patterns.",
+            "status": "done",
+            "testStrategy": "Test with and without profile data in localStorage, verify console logs show correct detection results, confirm error handling works when localStorage is unavailable"
+          },
+          {
+            "id": 3,
+            "title": "Create Routing Logic for Conditional Navigation",
+            "description": "Implement navigation logic that routes users to either the intake form or main app based on profile existence",
+            "dependencies": [
+              2
+            ],
+            "details": "Use Next.js useRouter to handle navigation after profile check completes. Route to intake form path if no profile exists, or to main app dashboard if profile is found. Add a delay to ensure splash screen is visible for at least 2-3 seconds for better UX. Handle edge cases like corrupted profile data.",
+            "status": "in-progress",
+            "testStrategy": "Test navigation flows both with and without profile data, verify correct routing destinations, ensure navigation timing feels natural"
+          },
+          {
+            "id": 4,
+            "title": "Add Loading States and Transition Animations",
+            "description": "Implement smooth transitions and loading indicators during the profile check and navigation process",
+            "dependencies": [
+              3
+            ],
+            "details": "Add loading state management using React state hooks. Implement fade-out animation for splash screen before navigation using CSS transitions or Framer Motion. Show subtle loading indicator during localStorage check if needed. Ensure transitions follow patterns from flows/logging-in/flow-analysis.md for consistency.",
+            "status": "pending",
+            "testStrategy": "Verify smooth visual transitions between states, test animation performance on different devices, ensure no jarring visual jumps"
+          },
+          {
+            "id": 5,
+            "title": "Polish Error Handling and Edge Cases",
+            "description": "Add comprehensive error handling for localStorage failures and implement fallback behaviors for edge cases",
+            "dependencies": [
+              4
+            ],
+            "details": "Handle scenarios where localStorage is disabled or throws exceptions. Add fallback navigation to intake form if profile check fails. Implement timeout handling if localStorage operations take too long. Add user-friendly error states that maintain the visual polish of the splash screen. Log all errors to console for debugging.",
+            "status": "pending",
+            "testStrategy": "Test with localStorage disabled, simulate slow localStorage operations, verify graceful degradation in error scenarios"
+          },
+          {
+            "id": 6,
+            "title": "🔍 CHECKPOINT: User sees colorful splash image at localhost:8080",
+            "description": "User navigates to localhost:8080 and sees the rainbow splash screen image displayed properly with responsive design",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 16
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Create Master Roadmap with Phase Overview and Development Strategy",
+        "description": "Develop a comprehensive master roadmap document that provides navigable overview of all 5 development phases, architectural decisions, and migration strategies to avoid re-reading the full Development Guide.",
+        "details": "Create flows/memory-bank/master_roadmap.md as the central navigation document for the entire FitForge development lifecycle. Structure with 5 main sections: Phase 1 (Foundation/Templates) covering basic workout functionality and template system, Phase 2 (Enhanced UX) for improved user interactions and flows, Phase 3 (Intelligence) introducing AI-driven exercise recommendations, Phase 4 (Advanced Analytics & AI) with comprehensive muscle fatigue analytics, and Phase 5 (Backend Integration) for database migration and cloud services. Each phase section should include: key objectives, architectural decision points, success criteria, estimated timeline, task dependencies, and specific references to Development Guide sections. Include migration strategy section detailing localStorage to database transition plan with data preservation approach. Add cross-reference table mapping current tasks to their respective phases and a quick-start navigation index for developers. Use clear markdown formatting with collapsible sections and internal linking for easy navigation.",
+        "testStrategy": "Verify roadmap accurately represents all 5 phases from Development Guide, validate all internal links work correctly, ensure task-to-phase mappings are accurate by cross-referencing existing tasks, test document navigation flow provides clear path finding, verify architectural decision points align with technical requirements, and confirm migration strategy is technically feasible and includes data preservation steps",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Phase 4: Advanced Analytics & AI Implementation",
+        "description": "Implement sophisticated muscle recovery analytics, AI-powered workout generation, and progressive overload optimization with real-time fatigue visualization and intelligent exercise recommendations.",
+        "details": "Create comprehensive analytics system with multiple components: 1) Muscle Recovery Model (lib/muscle-recovery-model.ts) implementing 5-day recovery tracking with 48-72 hour windows per muscle group using engagement percentages from exercises-real.json. 2) AI Workout Generator (lib/ai-workout-generator.ts) that considers user profile, available equipment, muscle recovery states, and progressive overload principles to generate optimal workouts. 3) Progressive Overload Optimizer (lib/progressive-overload.ts) with algorithms for 3% volume increases through weight/rep adjustments based on performance history. 4) Advanced Fatigue Calculator (lib/advanced-fatigue-calculator.ts) using scientific muscle engagement data to calculate precise fatigue scores across all muscle groups. 5) Real-time Muscle Heat Map (components/muscle-heat-map.tsx) with SVG anatomical visualization showing color-coded fatigue states. 6) Intelligent Workout Suggestions (lib/intelligent-suggestions.ts) that analyzes equipment availability, muscle recovery, and user goals to recommend optimal exercise selection and ordering. Integrate all components with existing workout builder and logger systems while maintaining performance with localStorage data persistence.",
+        "testStrategy": "Test muscle recovery calculations accurately reflect 48-72 hour windows and engagement percentages from exercise data. Verify AI workout generator produces logical workouts considering all input parameters (profile, equipment, recovery, progressive overload). Validate progressive overload algorithms correctly calculate 3% volume increases and track performance trends. Test advanced fatigue calculator produces consistent and accurate muscle fatigue scores. Verify muscle heat map renders correctly with real-time updates and proper color coding for different fatigue levels. Test intelligent suggestions provide relevant and achievable exercise recommendations. Ensure all analytics components integrate seamlessly with existing workout builder and logger without performance degradation. Validate localStorage persistence of analytics data and recovery state across sessions.",
+        "status": "pending",
+        "dependencies": [
+          6,
+          7,
+          9,
+          11,
+          14
+        ],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Phase 5: Backend Integration & Sync Implementation",
+        "description": "Migrate from localStorage to Supabase PostgreSQL with FastAPI backend, implementing real-time sync, authentication, and production-ready architecture.",
+        "details": "Implement comprehensive backend integration in multiple stages: 1) Database Schema Migration - Create PostgreSQL schemas matching existing localStorage data structures (users, workouts, exercises, templates) with proper foreign key relationships and indexes. 2) Supabase Setup - Configure Supabase project with Row Level Security policies, authentication providers, and real-time subscriptions. 3) FastAPI Backend - Build Python API with SQLAlchemy ORM, Pydantic validation schemas, and endpoints for all workout operations (CRUD for workouts, templates, user profiles). 4) Authentication Integration - Implement Supabase Auth with email/password and social providers, protecting all API routes. 5) Data Migration Utilities - Create migration scripts to transfer existing localStorage data to PostgreSQL without data loss. 6) Real-time Sync - Implement WebSocket connections for live workout updates across devices using Supabase real-time subscriptions. 7) Offline Support - Add service workers and local caching for offline functionality with sync on reconnection. 8) Enhanced Error Handling - Implement comprehensive error boundaries, retry logic, and user-friendly error messages. 9) Production Deployment - Set up Docker containers, environment configuration, and CI/CD pipeline for professional deployment. Use existing TypeScript interfaces from Task 6 as foundation for backend schemas.",
+        "testStrategy": "Test database schema creation and data integrity with foreign key constraints. Verify data migration preserves all localStorage workout history and user profiles without corruption. Test authentication flows including registration, login, logout, and password reset. Validate all API endpoints with proper error handling and status codes. Test real-time sync across multiple browser sessions and devices. Verify offline functionality works correctly with data sync on reconnection. Test Row Level Security policies prevent unauthorized data access. Validate WebSocket connections handle disconnections gracefully. Test production deployment with load testing and monitoring. Ensure all existing frontend functionality continues to work with new backend integration.",
+        "status": "pending",
+        "dependencies": [
+          6,
+          7,
+          9,
+          11,
+          16,
+          17,
+          18
+        ],
+        "priority": "low",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-06-25T16:20:00.000Z",
-      "updated": "2025-06-25T18:48:50.609Z",
+      "updated": "2025-06-25T20:08:06.161Z",
       "description": "Tasks for master context"
     }
   }

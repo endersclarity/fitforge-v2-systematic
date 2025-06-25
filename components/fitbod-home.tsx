@@ -80,8 +80,24 @@ export function FitbodHome() {
 
   const handleWorkoutStart = (template: any) => {
     console.log('Starting workout with template:', template)
-    // TODO: Navigate to workout builder with selected template
-    alert(`Starting workout: ${template.name}`)
+    
+    // Convert template exercises to workout queue format expected by WorkoutLoggerEnhanced
+    const workoutQueue = template.exercises.map((templateExercise: any) => {
+      const exerciseData = exercisesData.find((ex: any) => ex.id === templateExercise.exerciseId)
+      return {
+        id: templateExercise.exerciseId,
+        name: exerciseData?.name || templateExercise.exerciseId.replace(/_/g, ' '),
+        category: exerciseData?.category || 'Unknown',
+        equipment: exerciseData?.equipment || 'Unknown',
+        difficulty: exerciseData?.difficulty || 'Intermediate'
+      }
+    })
+
+    // Save workout queue to localStorage for WorkoutLoggerEnhanced
+    localStorage.setItem('workoutQueue', JSON.stringify(workoutQueue))
+    
+    // Navigate to the workout logger
+    window.location.href = '/workouts-simple'
   }
 
   // Show template selector if user clicked "Start Workout"
