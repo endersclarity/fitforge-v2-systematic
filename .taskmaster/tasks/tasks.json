@@ -358,7 +358,7 @@
               2
             ],
             "details": "Use Next.js useRouter to handle navigation after profile check completes. Route to intake form path if no profile exists, or to main app dashboard if profile is found. Add a delay to ensure splash screen is visible for at least 2-3 seconds for better UX. Handle edge cases like corrupted profile data.",
-            "status": "in-progress",
+            "status": "done",
             "testStrategy": "Test navigation flows both with and without profile data, verify correct routing destinations, ensure navigation timing feels natural"
           },
           {
@@ -444,7 +444,7 @@
     ],
     "metadata": {
       "created": "2025-06-25T16:20:00.000Z",
-      "updated": "2025-06-25T20:08:06.161Z",
+      "updated": "2025-06-25T20:24:59.516Z",
       "description": "Tasks for master context"
     }
   }
