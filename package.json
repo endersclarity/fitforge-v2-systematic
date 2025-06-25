@@ -25,6 +25,7 @@
     "test:self-improve": "bash scripts/self-improving-test-cycle.sh"
   },
   "dependencies": {
+    "@anthropic-ai/claude-code": "^1.0.34",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",
@@ -75,6 +76,7 @@
     "react-resizable-panels": "^2.1.7",
     "react-virtualized-auto-sizer": "^1.0.24",
     "react-window": "^1.8.10",
+    "reactjs-human-body": "^0.0.8",
     "recharts": "latest",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.5.5",

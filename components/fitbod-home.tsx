@@ -1,9 +1,12 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronRight } from "lucide-react"
+import { calculateMuscleVolume, getRecentWorkoutData } from "@/lib/muscle-volume-calculator"
+import { WorkoutRoutineDisplay } from "@/components/workout-routine-display"
+import exercisesData from '@/data/exercises-real.json'
 
 interface MuscleGroup {
   id: string
@@ -41,6 +44,15 @@ const muscleGroups: MuscleGroup[] = [
 
 export function FitbodHome() {
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<string | null>(null)
+  const [muscleVolumes, setMuscleVolumes] = useState<Record<string, number>>({})
+  const [showWorkoutRoutine, setShowWorkoutRoutine] = useState(false)
+
+  // Calculate muscle volumes from recent workouts
+  useEffect(() => {
+    const { sessions } = getRecentWorkoutData()
+    const volumes = calculateMuscleVolume(sessions, exercisesData as any[], 7)
+    setMuscleVolumes(volumes)
+  }, [])
 
   const handleMuscleGroupSelect = (muscleGroupId: string) => {
     setSelectedMuscleGroup(muscleGroupId)
@@ -53,12 +65,43 @@ export function FitbodHome() {
     window.location.href = '/workouts-simple'
   }
 
+  const handleStartWorkout = () => {
+    setShowWorkoutRoutine(true)
+  }
+
+  const handleWorkoutStart = (template: any) => {
+    console.log('Starting workout with template:', template)
+    // TODO: Navigate to workout builder with selected template
+    alert(`Starting workout: ${template.name}`)
+  }
+
+  // Show workout routine if user clicked "Start Workout"
+  if (showWorkoutRoutine) {
+    return (
+      <WorkoutRoutineDisplay 
+        onBack={() => setShowWorkoutRoutine(false)}
+        onStartWorkout={handleWorkoutStart}
+        selectedTemplate="pushA" // Default to Push A routine
+      />
+    )
+  }
+
   return (
     <div className="min-h-screen bg-[#121212] text-white">
       {/* Header */}
       <div className="px-6 py-8">
         <h1 className="text-3xl font-bold mb-2">Ready to workout?</h1>
         <p className="text-[#A1A1A3] text-lg">Choose a muscle group to get started</p>
+      </div>
+
+      {/* Start Workout Button */}
+      <div className="px-6 mb-6">
+        <Button 
+          onClick={handleStartWorkout}
+          className="w-full bg-[#FF375F] hover:bg-[#E63050] text-white h-16 text-lg font-semibold"
+        >
+          🏋️ Start Workout
+        </Button>
       </div>
 
       {/* Muscle Group Selection */}
@@ -85,6 +128,19 @@ export function FitbodHome() {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* Recent Activity Summary */}
+      <div className="px-6 mt-8">
+        <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
+        <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
+          <CardContent className="p-4">
+            <div className="text-center text-[#A1A1A3]">
+              <p className="text-lg">Ready to start logging workouts</p>
+              <p className="text-sm mt-1">Your muscle activity will appear here</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Quick Actions */}

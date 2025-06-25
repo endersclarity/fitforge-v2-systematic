@@ -36,7 +36,7 @@ export function EquipmentFilter({
       setIsEquipmentFilterEnabled(true)
       onEquipmentChange(savedEquipment)
     }
-  }, [onEquipmentChange])
+  }, [])
 
   const handleEquipmentToggle = (enabled: boolean) => {
     setIsEquipmentFilterEnabled(enabled)

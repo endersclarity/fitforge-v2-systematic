@@ -7,6 +7,10 @@ Provides React UI components following Fitbod design patterns with comprehensive
 * `FitbodHome`: Main workout selection interface
   * `handleMuscleGroupSelect`: Navigate to exercise selection by muscle group
   * `handleQuickStart`: Direct access to workout logger
+* `WorkoutBuilder`: Sophisticated workout planning interface
+  * `plannedSets`: Real-time set planning with weights/reps
+  * `muscleVisualization`: Live muscle volume calculations
+  * `handleStartWorkout`: Save planned workout and begin execution
 * `WorkoutLoggerEnhanced`: Complete workout tracking interface
   * `logSet`: Record individual exercise sets with weight/reps
   * `saveWorkout`: Persist workout to localStorage
@@ -21,6 +25,8 @@ Provides React UI components following Fitbod design patterns with comprehensive
 * Files: 
   * `fitbod-home.tsx` - Main workout selection with muscle group cards
   * `workout-logger-enhanced.tsx` - Complete set logging interface
+  * `workout-builder.tsx` - Two-column workout planning with real-time muscle visualization
+  * `filter-dropdown.tsx` - Portal-based equipment filtering with z-index management
   * `dashboard/` - Analytics components with recharts integration
   * `ui/` - 40+ shadcn/ui components with custom Fitbod styling
   * `visualization/` - Muscle anatomy and heatmap components
@@ -34,9 +40,9 @@ Provides React UI components following Fitbod design patterns with comprehensive
   * `WorkoutSession`: Date, exercises, total volume, duration
 
 ## Current Implementation Status
-* Completed: Core workout logging, dashboard analytics, Fitbod-style UI components
-* In Progress: Equipment filtering for exercise selection
-* Pending: Workout templates, enhanced set logging with timers
+* Completed: Core workout logging, dashboard analytics, Fitbod-style UI components, equipment filtering with portal-based z-index solution, workout builder with real-time muscle volume visualization
+* In Progress: Workout templates and routine system
+* Pending: Enhanced set logging with timers, dashboard redesign
 
 ## Implementation Plans & Tasks
 * `implementation_plan_equipment_filtering.md`
@@ -51,6 +57,7 @@ Provides React UI components following Fitbod design patterns with comprehensive
 
 ## Mini Dependency Tracker
 ---mini_tracker_start---
-Dependencies: data/exercises-real.json, lib/muscle-volume-calculator.ts, styles/calm-tokens.css
-Dependents: app/page.tsx, app/workouts-simple/page.tsx, app/dashboard/page.tsx
+Dependencies: data/exercises-real.json, lib/planned-muscle-volume.ts, hooks/useRealTimeMuscleVolume.ts, styles/calm-tokens.css
+Dependents: app/page.tsx, app/workouts-simple/page.tsx, app/dashboard/page.tsx, app/exercises/[muscleGroup]/page.tsx
+New Files: components/workout-builder.tsx, components/filter-dropdown.tsx, lib/planned-muscle-volume.ts, hooks/useRealTimeMuscleVolume.ts
 ---mini_tracker_end---

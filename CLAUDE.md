@@ -1,146 +1,128 @@
-# FitForge V2 Systematic - Isolated Development Environment
+# FitForge V2 Systematic
 
-## 🚨 **ISOLATION BOUNDARY - CRITICAL RULES**
+**Advanced workout tracking with comprehensive UI flow analysis and design patterns.**
 
-**MANDATORY:** This project operates in complete isolation within the `fitforge-v2-systematic` directory.
+## 🚨 **MANDATORY DEVELOPMENT WORKFLOW - NO EXCEPTIONS**
 
-- ❌ **NEVER** reference files outside this directory
-- ❌ **NEVER** use `../` paths that escape this boundary  
-- ❌ **NEVER** look in parent directories for context
-- ✅ **ALWAYS** work exclusively within fitforge-v2-systematic
-- ✅ **ALWAYS** use relative paths within this directory only
+### 📋 **BEFORE ANY DEVELOPMENT WORK - REQUIRED CHECKLIST**
 
-## 📚 **COMPREHENSIVE DOCUMENTATION SYSTEM**
+**ALWAYS START WITH:**
+1. `npx task-master list` - Check TaskMaster status and current tasks
+2. `npx task-master next` - Get recommended next task based on dependencies
+3. `git checkout -b feature/task-name` - Create feature branch (NEVER work on main)
+4. Reference `DEVELOPMENT-WORKFLOW.md` for complete 10-step process
 
-This project uses a systematic approach with extensive documentation:
+**TESTING ENVIRONMENT:**
+- ✅ **ONLY**: localhost:8080 (Docker container)
+- ❌ **FORBIDDEN**: npm run dev, localhost:3000, local testing
 
-### **Primary Documentation Files:**
-- `FitForge-Development-Guide.md` - Complete development methodology and practices
-- `FitForge-Technical-Specifications.md` - System architecture and technical details
-- `FitForge-Style-Guide.md` - Coding standards and design principles  
-- `FitForge-Implementation-Journal.md` - Development progress and decisions
-- `Development-Guide-Template.md` - Templates and reference materials
+**TASK MANAGEMENT:**
+- ✅ **ONLY**: TaskMaster commands and task references
+- ❌ **FORBIDDEN**: Claude todos, manual task lists, "quick tasks"
 
-### **Before ANY Development Work:**
-1. **Read the documentation first** - Comprehensive guides exist for methodology
-2. **Follow the systematic approach** - Don't improvise, follow established patterns
-3. **Reference the implementation journal** - Understand what's been done and why
-4. **Respect the architecture** - Technical specifications define the system design
+**GIT WORKFLOW:**
+- ✅ **ONLY**: Feature branches → main merge → cleanup
+- ❌ **FORBIDDEN**: Direct commits to main, working without branches
 
-## 🏗️ **PROJECT STRUCTURE**
+### 🚨 **VIOLATION CONSEQUENCES**
+**If I deviate from this workflow:** STOP immediately and redirect to proper process
+**If I suggest Claude todos:** STOP and use TaskMaster instead
+**If I suggest local testing:** STOP and use Docker container at localhost:8080
 
-### **Type System:**
-- `schemas/typescript-interfaces.ts` - Complete TypeScript type definitions
-- `schemas/database-schema.sql` - Database structure
-- `schemas/pydantic-models.py` - Python backend models
-
-### **Data & Content:**
-- `data/exercises.json` - Exercise database (self-contained)
-- `data/exercises-real.json` - Real exercise data
-
-### **Application Structure:**
-- `app/` - Next.js application pages and routing
-- `components/` - React UI components
-- `lib/` - Core business logic and utilities
-- `hooks/` - React hooks and state management
-
-### **Development Tools:**
-- `package.json` - All dependencies (no external package references)
-- Docker-based development workflow
-- Comprehensive testing with Jest and Playwright
-
-## 🚀 **DEVELOPMENT COMMANDS**
-
+### 🎯 **MANDATORY DAILY COMMANDS**
 ```bash
-# Docker-based development (preferred method)
-./start-fitforge-docker.sh
+# Session startup (REQUIRED)
+npx task-master list              # Check current task status
+npx task-master next              # Get next logical task
+git branch                        # Verify current branch
+docker ps                         # Confirm container running
 
-# Testing
-npm run test           # Jest unit tests
-npm run test:e2e       # Playwright e2e tests
-npm run test:fast      # Fast test suite
-
-# Building
-npm run build          # Production build
-npm run lint           # Code linting
+# Task workflow (REQUIRED)
+npx task-master set-status --id=X --status=in-progress    # Start task
+git checkout -b feature/task-name                         # Create branch
+# ... development work ...
+curl localhost:8080                                       # Test in container
+git add . && git commit -m "feat: description"           # Commit work
+git checkout main && git merge feature/task-name         # Merge to main
+npx task-master set-status --id=X --status=done          # Complete task
 ```
 
-## 🧠 **AI & ANALYTICS FEATURES**
+**Reference Document**: `DEVELOPMENT-WORKFLOW.md` - Complete systematic process
 
-- Advanced muscle fatigue analytics in `lib/ai/`
-- Progressive overload algorithms
-- Exercise recommendation system
-- Comprehensive muscle engagement tracking
+## 🚀 **Quick Start**
+- **System Overview**: `flows/memory-bank/system_manifest.md` ← Architecture overview
+- **Project Roadmap**: `flows/memory-bank/project_roadmap.md` - Development phases and milestones
+- **Current Implementation**: Task 1 from Equipment Filtering implementation plan
+- **Development**: `./start-fitforge-v2-dev.sh` (Docker on :8080) or `npm run dev`
 
-## ⚠️ **CRITICAL DEVELOPMENT NOTES**
+## 📁 **HDTA Documentation Structure**
+- `flows/memory-bank/system_manifest.md` - Complete system architecture
+- `flows/memory-bank/project_roadmap.md` - Strategic development timeline
+- `flows/memory-bank/*_module.md` - 5 core modules: Components, Data, AI/Analytics, Flows, Backend
+- `flows/memory-bank/implementation_plan_*.md` - Feature development plans
+- `flows/memory-bank/task_*.md` - Specific actionable tasks
 
-1. **Respect Existing Architecture** - Don't "fix" imports or structure without understanding intent
-2. **Follow Systematic Approach** - Use established documentation and methodology
-3. **Maintain Isolation** - Never escape the fitforge-v2-systematic boundary
-4. **Docker First** - Use Docker-based development workflow as primary method
-5. **Test Thoroughly** - Comprehensive test suite exists for validation
+## 🏗️ **Core Files**
+- `app/` - Next.js application
+- `components/` - React UI components  
+- `data/exercises-real.json` - Exercise database
+- `flows/` - UI pattern reference library
+- `styles/calm-tokens.css` - Design system
 
-## 🚨 **MANDATORY SCHEMA-FIRST DEVELOPMENT - NO EXCEPTIONS**
-
-**BEFORE writing ANY code that touches the database, you MUST:**
-
-1. **Check the actual database schema first** using direct database queries:
-   ```bash
-   # For PostgreSQL databases
-   docker exec [container] psql -d [db] -c "\d+ [table_name]"
-   
-   # For project databases - verify live schema via API
-   curl -s "http://localhost:3000/api/endpoint" | grep -o '"[a-z_]*":"[^"]*"'
-   ```
-
-2. **Show me the EXACT column names, types, and constraints**
-
-3. **Create/verify TypeScript interfaces match the actual schema**
-
-4. **ONLY THEN write code** using the verified column names
-
-**DO NOT assume column names. DO NOT guess schema structure. DO NOT write code first and debug later.**
-
-**If you write code without first showing me the verified schema, I will stop you and make you start over.**
-
-**EXAMPLE:** If touching the workouts table, first run:
+## 🚀 **Development Commands**
 ```bash
-SELECT column_name, data_type, is_nullable FROM information_schema.columns 
-WHERE table_name = 'workouts' ORDER BY ordinal_position;
-```
-Then show me output and confirm interface matches before any INSERT/UPDATE/SELECT code.
-
-**FORBIDDEN PATTERNS:**
-- ❌ Hand-coding function parameters based on "common sense"
-- ❌ Guessing column names without checking actual database
-- ❌ Creating functions first, discovering schema issues during testing
-- ❌ Assuming TypeScript interfaces are accurate without verification
-
-**VIOLATION CONSEQUENCE:** If you write code without first showing verified schema, STOP immediately and start over with schema verification.
-
-**MANDATORY DATABASE INTERACTION RULES:**
-```python
-# ✅ CORRECT: Parameterized queries with verified column names
-async def get_workout(db, workout_id):
-    query = "SELECT * FROM workouts WHERE id = $1"
-    return await db.execute_query(query, workout_id)
-
-# ❌ FORBIDDEN: Dynamic query building or unverified columns
-# f"SELECT * FROM workouts WHERE target_area = '{area}'"  # target_area doesn't exist!
-# f"AND user_id = ${param_count}"  # SQL injection risk!
+./start-fitforge-v2-dev.sh   # Docker development (recommended) - localhost:8080
+npm run dev                  # Local development - localhost:3000
+npm run build                # Production build
+docker ps                    # Check if Docker containers are running
 ```
 
-## 📋 **SLASH COMMANDS AVAILABLE**
+## ⚠️ **Development Notes**
+- Project uses localStorage for data persistence (no database currently)
+- Equipment filtering and workout templates are next priorities
+- Reference Fitbod flows in `/flows/` for UI patterns
+- Follow Calm design tokens in `styles/calm-tokens.css`
 
-- `/docs` - Access comprehensive documentation
-- `/specs` - Technical specifications
-- `/style` - Style guide and standards
-- `/journal` - Implementation history
-- `/exercises` - Exercise database work
-- `/types` - TypeScript interfaces
-- `/analytics` - AI and analytics features
-- `/components` - UI development
-- `/test` - Testing workflows
+---
+
+## 🛠️ **AVAILABLE CLI TOOLS FOR FITFORGE DEVELOPMENT**
+
+### **Image Processing & OCR Tools**
+```bash
+# OCR text extraction from images  
+tesseract image.png output.txt                    # Basic OCR
+~/bin/ocr-screenshot [filename]                   # OCR latest screenshot or specific file
+~/bin/ocr-crop-screenshot [w] [h] [x] [y] [file]  # Crop and OCR (defaults: 330x1000+0+0)
+
+# Image manipulation with ImageMagick
+convert image.png -crop WxH+X+Y output.png        # Crop images
+convert image.png -resize 50% smaller.png         # Resize images  
+identify image.png                                 # Get image info
+
+# Manual cropping helper
+~/bin/crop-image input.png output.png w h x y     # Crop with explicit parameters
+```
+
+### **Data Processing Tools**
+```bash
+# JSON processing and formatting
+jq '.key' file.json                               # Extract JSON values
+jq '.' file.json                                  # Pretty-print JSON
+echo '{"test": "value"}' | jq '.test'             # Process JSON from stdin
+
+# PDF text extraction
+pdftotext document.pdf output.txt                 # Extract text from PDF
+pdftotext -layout document.pdf -                  # Extract with layout to stdout
+
+# QR code generation
+qrencode -o qr.png "text to encode"               # Generate QR code image
+```
+
+### **FitForge-Specific Use Cases**
+- **UI flow analysis**: Use `~/bin/ocr-crop-screenshot` to extract text from Mobbin screenshots
+- **Exercise data processing**: Use `jq` to manipulate exercise JSON files
+- **Image assets**: Use ImageMagick to resize/crop exercise images for components
+- **Flow documentation**: OCR screenshots to document user flows and UI patterns
 
 ---
 

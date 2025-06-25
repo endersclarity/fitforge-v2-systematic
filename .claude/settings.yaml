@@ -1,0 +1,34 @@
+project_context: |
+  FitForge V2 Systematic - Advanced Workout Tracking Application
+  
+  Project Type: Next.js React TypeScript application with comprehensive fitness analytics
+  
+  Key Data Files:
+  - data/exercises-real.json - Complete exercise database with muscle engagement
+  - Exercise images and muscle group targeting data
+  - Workout templates and routines (to be implemented)
+  
+  Development Focus:
+  - Workout flow implementation (dashboard → exercise selection → logging → analytics)
+  - UI flow analysis using Mobbin screenshots for reference
+  - Muscle engagement tracking and progressive overload algorithms
+  - Fitbod-inspired design patterns and user experience
+  
+  Available Tools for FitForge:
+  - /ocr-flows - Extract UI patterns from Mobbin reference screenshots
+  - /data-analyze - Analyze exercise database and workout data
+  - Use global commands for general development tasks
+
+project_specific_workflows: |
+  Common FitForge Tasks:
+  - Use /ocr-flows to extract UI flow structures from Mobbin screenshots
+  - Use /data-analyze data/exercises-real.json to understand exercise database
+  - Use /plan for complex feature implementation (workout templates, analytics)
+  - Follow systematic approach documented in project CLAUDE.md files
+
+architecture_notes: |
+  - Isolated development environment (no external references)
+  - Comprehensive documentation system in project root
+  - Type-safe development with schemas/typescript-interfaces.ts
+  - Component-based UI following Calm design tokens
+  - localStorage-based data persistence with analytics integration

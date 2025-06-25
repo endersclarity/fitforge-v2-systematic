@@ -1,0 +1,196 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 6,
+        "title": "Create Workout Template Data Structure",
+        "description": "Define and implement the core data structure for workout templates (Push A/B, Pull A/B, Legs A/B) with exercise mappings",
+        "details": "Create a JSON data structure defining 6 workout templates with exercise IDs mapped from the existing 38-exercise database. Include template metadata like name, description, and target muscle groups. Store in data/workout-templates.json and create TypeScript interfaces in schemas/typescript-interfaces.ts. Each template should contain: id, name, description, exercises array with exerciseId and suggested sets/reps, targetMuscles array, and estimatedDuration.",
+        "testStrategy": "Validate JSON structure with schema validation, verify all exercise IDs exist in exercises-real.json, test TypeScript interfaces compile correctly, and ensure template data loads properly in components",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Analyze Exercise Database and Map Categories",
+            "description": "Review data/exercises-real.json to understand the 38 exercises and categorize them by movement patterns (push/pull/legs) and muscle groups",
+            "dependencies": [],
+            "details": "Create a mapping document that categorizes all 38 exercises into push movements (chest, shoulders, triceps), pull movements (back, biceps), and leg movements (quads, hamstrings, glutes). Note primary and secondary muscle groups for each exercise.",
+            "status": "done",
+            "testStrategy": "Verify that all 38 exercises are categorized and no exercise appears in multiple primary categories"
+          },
+          {
+            "id": 2,
+            "title": "Design Workout Template Schema",
+            "description": "Create TypeScript interfaces for workout templates including all required fields and nested structures",
+            "dependencies": [
+              1
+            ],
+            "details": "Define interfaces in schemas/typescript-interfaces.ts for WorkoutTemplate with fields: id (string), name (string), description (string), exercises (array of {exerciseId: string, sets: number, reps: string, restSeconds: number}), targetMuscles (string[]), estimatedDuration (number in minutes), workoutType (enum: 'push' | 'pull' | 'legs'), variant ('A' | 'B')",
+            "status": "done",
+            "testStrategy": "Compile TypeScript to ensure interfaces are syntactically correct and properly typed"
+          },
+          {
+            "id": 3,
+            "title": "Create Push A/B Templates",
+            "description": "Implement Push A and Push B workout templates with appropriate exercise selection and rep schemes",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Push A: Focus on compound movements (bench press, overhead press) with 4-6 rep range. Push B: Include more isolation work (flyes, lateral raises) with 8-12 rep range. Each template should have 5-7 exercises with proper volume distribution.",
+            "status": "done",
+            "testStrategy": "Validate that Push A and B have different exercise selections with minimal overlap and appropriate volume for intermediate lifters"
+          },
+          {
+            "id": 4,
+            "title": "Create Pull A/B and Legs A/B Templates",
+            "description": "Implement Pull A/B and Legs A/B workout templates following similar variation principles",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "Pull A: Vertical pulls emphasis (pull-ups, lat pulldowns). Pull B: Horizontal pulls emphasis (rows). Legs A: Quad-dominant (squats, lunges). Legs B: Hip-dominant (deadlifts, hip thrusts). Each with 5-7 exercises.",
+            "status": "done",
+            "testStrategy": "Ensure each template targets the intended muscle groups and follows progressive overload principles"
+          },
+          {
+            "id": 5,
+            "title": "Create and Validate workout-templates.json",
+            "description": "Compile all 6 templates into data/workout-templates.json and validate against TypeScript interfaces",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "Create the JSON file with all 6 templates, ensuring proper formatting and data integrity. Include realistic estimated durations (45-75 minutes) based on exercise count and rest periods. Validate JSON structure matches TypeScript interfaces.",
+            "status": "done",
+            "testStrategy": "Use JSON schema validation and TypeScript type checking to ensure data consistency. Test import in a component to verify usability."
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Build Template Selection Interface Component",
+        "description": "Create a React component for selecting from the 6 pre-built workout templates with clear visual design",
+        "details": "Create components/workout-template-selector.tsx using Calm Design System tokens. Display templates in a responsive grid (2x3 or 3x2) with cards showing template name, brief description, estimated duration, and target muscles. Include hover states and selection highlighting. Use existing design patterns from equipment-filter.tsx for consistency. Implement template selection state management and onSelect callback prop.",
+        "testStrategy": "Test component renders all 6 templates correctly, verify responsive layout on mobile/desktop, validate selection state management, ensure accessibility with proper ARIA labels, and test integration with parent components",
+        "priority": "high",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Redesign Dashboard Navigation to Workout-Centric Model",
+        "description": "Replace muscle group cards with action-focused navigation emphasizing workout templates and core actions",
+        "details": "Update components/fitbod-home.tsx to remove muscle group navigation cards and replace with workout-centric actions: 'Start Workout' (leads to template selection), 'Plan Workout' (advanced builder), 'View History', 'Body Stats'. Use existing Calm Design System for consistency. Maintain the workout logger enhanced component integration but change entry points to be template-driven. Keep existing localStorage integration intact.",
+        "testStrategy": "Verify muscle group cards are completely removed, test all navigation actions work correctly, ensure existing localStorage functionality remains intact, validate responsive design, and confirm workout logger integration still functions",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Template-to-Builder Integration",
+        "description": "Create seamless data flow from template selection to existing workout builder with pre-populated exercises",
+        "details": "Modify components/workout-builder.tsx to accept template data as props and pre-populate with template exercises. Create utility functions in lib/ to transform template data into workout builder format. Ensure existing equipment filtering and muscle volume visualization continue to work with template-sourced exercises. Implement URL routing or state management to pass template selection context to builder.",
+        "testStrategy": "Test template data correctly populates workout builder, verify equipment filtering works with template exercises, ensure muscle volume visualization displays correctly, test navigation flow from template selection to builder, and validate existing builder functionality remains unchanged",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Rest Timer Component with Customizable Duration",
+        "description": "Create a rest timer that automatically starts after set completion with customizable duration and localStorage persistence",
+        "details": "Create components/rest-timer.tsx with countdown display, pause/resume functionality, and audio/visual completion notification. Default to 60-90 seconds with user customization. Store timer preferences in localStorage. Integrate with WorkoutLoggerEnhanced component to auto-start after set completion. Include circular progress indicator and prominent time display using Calm Design System typography and colors.",
+        "testStrategy": "Test timer accuracy and precision, verify localStorage persistence of preferences, validate auto-start integration with set completion, test pause/resume functionality, ensure responsive design, and verify completion notifications work properly",
+        "priority": "medium",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Add Visual Progress Indicators for Set Completion",
+        "description": "Implement real-time visual progress tracking showing completed vs remaining sets with clear status indicators",
+        "details": "Enhance components/workout-logger-enhanced.tsx with progress indicators showing: completed sets (green checkmarks), current set (highlighted), remaining sets (outlined). Add overall workout progress bar showing percentage completion across all exercises. Use existing Calm Design System colors and implement smooth transitions for state changes. Include numerical progress display (e.g., '3 of 12 sets complete').",
+        "testStrategy": "Test progress indicators update correctly when sets are completed, verify visual consistency with design system, validate smooth transitions and animations, test overall progress calculation accuracy, and ensure indicators work across different screen sizes",
+        "priority": "medium",
+        "dependencies": [
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Optimize Set Completion User Experience Flow",
+        "description": "Streamline the workout logging interaction for faster, more intuitive set completion with immediate feedback",
+        "details": "Refactor WorkoutLoggerEnhanced set completion to single-tap interaction with immediate visual feedback. Implement optimistic UI updates, large touch targets for mobile use, and clear completion animations. Add undo functionality for accidental completions. Ensure weight/rep entry is streamlined with number pad optimization and smart defaults based on previous sets.",
+        "testStrategy": "Test single-tap completion works reliably, verify immediate visual feedback, validate undo functionality, test touch target sizes on mobile devices, ensure optimistic UI updates don't cause data inconsistencies, and verify accessibility compliance",
+        "priority": "medium",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Relocate Equipment Filters to Exercise List Pages",
+        "description": "Move equipment filtering from workout builder to exercise list pages with horizontal filter bar layout",
+        "details": "Move components/equipment-filter.tsx to exercise list pages (app/exercises/[muscleGroup]/page.tsx). Redesign as horizontal filter bar with multiple filter options: All, Equipment, Target Muscle, Available Equipment. Maintain existing equipment filtering logic but adapt UI for horizontal layout. Ensure filter state persists across page navigation using localStorage or URL parameters.",
+        "testStrategy": "Test equipment filters work correctly on exercise list pages, verify horizontal layout is responsive, validate filter state persistence across navigation, ensure existing equipment filtering logic remains functional, and test filter combination behavior",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Muscle Fatigue Intelligence Algorithm",
+        "description": "Create intelligent exercise ordering based on muscle recovery analysis from recent workout history",
+        "details": "Create lib/muscle-fatigue-intelligence.ts with algorithm to analyze recent workout data and calculate muscle recovery states. Use existing muscle engagement percentages from exercises-real.json to determine muscle load. Implement 48-72 hour recovery windows per muscle group. Create scoring system to prioritize exercises targeting recovered muscles over fatigued ones. Integrate with exercise list sorting.",
+        "testStrategy": "Test algorithm correctly calculates muscle fatigue from workout history, verify recovery time calculations are accurate, validate exercise prioritization logic, test with various workout history scenarios, and ensure performance with large datasets",
+        "priority": "low",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Add Enhanced Filter Options with Muscle Fatigue Integration",
+        "description": "Expand filter options to include muscle fatigue-based filtering and intelligent exercise discovery",
+        "details": "Extend horizontal filter bar to include 'Muscle Fatigue' filter option that shows exercises targeting recovered muscles first. Update filter logic to support multiple simultaneous filters (Equipment + Fatigue, Target Muscle + Available Equipment). Implement filter chips UI showing active filters with easy removal. Ensure filter combinations work logically together and provide meaningful exercise subsets.",
+        "testStrategy": "Test all filter combinations work correctly, verify muscle fatigue filtering produces logical results, validate multiple filter selection UI behavior, test filter chip removal functionality, ensure filter logic performance with complex combinations, and verify user experience is intuitive",
+        "priority": "low",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-06-25T16:20:00.000Z",
+      "updated": "2025-06-25T17:22:43.291Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

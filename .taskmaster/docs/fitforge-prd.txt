@@ -1,0 +1,255 @@
+# FitForge V2 - Systematic Development PRD
+
+## Core Principle: Planning Mindset Over Vibe Coding
+**"You need to adopt the mindset of a thinker and let AI simply be the weapon that you wield to get things done."**
+
+### The Problem We're Solving
+**"Take the mental equation out of working out"** - Replace complex workout planning with intelligent, streamlined experience.
+
+*This core mission is defined in the FitForge Development Guide and should inform every implementation decision. All features must align with the strategic vision of becoming a "Smart Excel Replacement" that serves sophisticated fitness tracking needs.*
+
+### Current Project Status
+- **Working MVP**: Dashboard + exercise selection + workout logging + localStorage persistence
+- **Recent Achievements**: Equipment filtering, workout builder with real-time muscle volume visualization
+- **Architecture**: Next.js/React with 38-exercise database and Calm Design System
+
+---
+
+## Phase-Based Development Strategy
+
+### Phase 1: Foundation - Workout-Centric Navigation
+**Goal**: Replace muscle group focus with workout template system
+
+*DEVELOPMENT GUIDE ALIGNMENT: Implements the A/B variation system defined in the guide: "Push/Pull/Legs day structure with exercise variations - Example: 12 push exercises → alternate between 6 + 6 for muscle confusion"*
+
+*FITBOD FLOW REFERENCES:*
+- **Primary Pattern**: `flows/workout/routine-options/flow-analysis.md` - Shows pre-built routine with muscle groups, recovery status, exercise list
+- **Dashboard Pattern**: `flows/workout/flow-analysis.md` - Workout-centric navigation structure
+- **Exercise Structure**: `flows/workout/adding-an-exercise/flow-analysis.md` - Exercise selection and management
+
+#### Phase 1 Scope
+**What's IN Phase 1:**
+- Replace muscle group cards with workout template selection (Push/Pull/Legs A/B)
+- Implement A/B variation logic per Development Guide specifications
+- Redesign dashboard with workout-centric navigation options
+- Simple template-to-builder integration using existing infrastructure
+- Include progressive overload principles in template design
+
+**What's NOT in Phase 1:**
+- Complex template generation algorithms
+- Advanced A/B variation logic
+- Template customization beyond basic equipment filtering
+- Historical workout template tracking
+
+#### Phase 1 Success Criteria
+- [ ] Users can select from 6 pre-built templates (Push A/B, Pull A/B, Legs A/B)
+- [ ] Templates implement A/B variation system per Development Guide specifications
+- [ ] Template data includes progressive overload principles (3% volume increase rule)
+- [ ] Dashboard navigation focuses on actions: "Start Workout", "Plan Workout", "View History", etc.
+- [ ] Template selection flows seamlessly to existing workout builder
+- [ ] No muscle group cards remain in primary navigation
+- [ ] Existing equipment filtering and muscle volume visualization still work
+- [ ] Data structures designed for future full-stack integration (align with TypeScript interfaces)
+
+#### Phase 1 Implementation Plan
+```
+Phase 1: Foundation
+├── Step 1.1: Create Template Selection Interface
+│   ├── Technical: React component with 6 template options
+│   ├── Dependencies: None (builds on existing components)
+│   └── UX: Simple grid/list with clear template names
+├── Step 1.2: Redesign Dashboard Navigation  
+│   ├── Technical: Update FitbodHome component
+│   ├── Dependencies: Step 1.1 completed
+│   └── UX: Action-focused buttons replace muscle group cards
+└── Step 1.3: Template-to-Builder Integration
+    ├── Technical: Pass template data to existing WorkoutBuilder
+    ├── Dependencies: Steps 1.1 and 1.2 completed
+    └── UX: Seamless flow from template selection to planning
+```
+
+---
+
+### Phase 2: Enhanced UX - Logging & Timing
+**Goal**: Improve workout execution experience with feedback and pacing
+
+*FITBOD FLOW REFERENCES:*
+- **Set Logging**: `flows/workout/routine-options/starting-workout/logging-a-set/flow-analysis.md` - Rest timers, progress tracking
+- **Workout Progress**: `flows/workout/routine-options/starting-workout/finishing-workout/flow-analysis.md` - Completion flows
+
+#### Phase 2 Scope
+**What's IN Phase 2:**
+- Rest timers between sets (60-90 seconds default, customizable)
+- Visual progress indicators for set completion status
+- Enhanced UX flow for marking sets complete
+- Integration with existing WorkoutLoggerEnhanced component
+
+**What's NOT in Phase 2:**
+- Advanced timer customization per exercise
+- Audio/vibration notifications
+- Complex progress analytics
+- Social sharing of workout progress
+
+#### Phase 2 Success Criteria
+- [ ] Rest timer automatically starts after completing a set
+- [ ] Visual progress shows completed vs remaining sets clearly
+- [ ] Timer duration is customizable and persists in localStorage
+- [ ] Set completion UX is intuitive and fast
+- [ ] Progress indicators update in real-time
+
+#### Phase 2 Implementation Plan
+```
+Phase 2: Enhanced UX
+├── Step 2.1: Implement Rest Timers
+│   ├── Technical: Timer state management, localStorage persistence
+│   ├── Dependencies: Phase 1 completed
+│   └── UX: Prominent countdown with pause/resume functionality
+├── Step 2.2: Add Progress Indicators
+│   ├── Technical: Progress calculation and visual components
+│   ├── Dependencies: Step 2.1 in progress
+│   └── UX: Clear visual feedback for workout completion status
+└── Step 2.3: Optimize Set Completion Flow
+    ├── Technical: Streamline WorkoutLoggerEnhanced interactions
+    ├── Dependencies: Steps 2.1 and 2.2 completed
+    └── UX: One-tap set completion with immediate feedback
+```
+
+---
+
+### Phase 3: Intelligence - Filtering & Fatigue
+**Goal**: Add smart exercise discovery and muscle recovery awareness
+
+*DEVELOPMENT GUIDE ALIGNMENT: Implements muscle fatigue intelligence from the guide: "Real-time muscle heat map showing recovery status" and "Smart exercise alternatives when muscles are overtaxed"*
+
+*FITBOD FLOW REFERENCES:*
+- **Equipment Filtering**: `flows/workout/adding-an-exercise/filtering-by-available-equipment/flow-analysis.md` - Horizontal filter layout
+- **Exercise Selection**: `flows/workout/adding-an-exercise/exercises-by-target-muscle/flow-analysis.md` - Muscle-based filtering
+- **Recovery Intelligence**: `flows/recovery/flow-analysis.md` - Muscle recovery status and visualization
+
+#### Phase 3 Scope
+**What's IN Phase 3:**
+- Move equipment filters to exercise list pages with horizontal layout
+- Implement muscle fatigue intelligence for exercise ordering
+- Add "Available Equipment" and "Muscle Fatigue" filter options
+- Priority ordering based on muscle recovery states
+
+**What's NOT in Phase 3:**
+- Complex fatigue modeling algorithms
+- Machine learning-based recommendations
+- Integration with external fitness tracking devices
+- Advanced recovery analytics dashboard
+
+#### Phase 3 Success Criteria
+- [ ] Equipment filters relocated to exercise pages in horizontal layout
+- [ ] Exercises automatically ordered by muscle fatigue intelligence
+- [ ] Filter options include: All | Equipment | Target Muscle | Available Equipment | Muscle Fatigue
+- [ ] Recent workout data influences exercise priority ordering
+- [ ] Filter state persists across sessions
+
+#### Phase 3 Implementation Plan
+```
+Phase 3: Intelligence
+├── Step 3.1: Relocate Equipment Filters
+│   ├── Technical: Move filter components to exercise list pages
+│   ├── Dependencies: Phase 2 completed
+│   └── UX: Horizontal filter bar with multiple options
+├── Step 3.2: Implement Muscle Fatigue Intelligence
+│   ├── Technical: Algorithm for muscle recovery analysis
+│   ├── Dependencies: Step 3.1 in progress
+│   └── UX: Intelligent exercise ordering without user configuration
+└── Step 3.3: Enhanced Filter Options
+    ├── Technical: Additional filter logic and state management
+    ├── Dependencies: Steps 3.1 and 3.2 completed
+    └── UX: Comprehensive but not overwhelming filter options
+```
+
+---
+
+## Evaluator-Optimizer Framework
+
+### Self-Evaluation Questions for Each Phase
+1. **Scope Adherence**: "Did we stay within the defined scope boundaries?"
+2. **Success Criteria**: "Are all success criteria measurably complete?"
+3. **Dependencies**: "Have all dependencies been properly addressed?"
+4. **UX Integration**: "Does this phase integrate seamlessly with existing UX?"
+5. **Technical Debt**: "Have we maintained code quality and avoided shortcuts?"
+
+### Phase Completion Protocol
+1. **Self-Evaluation**: Review phase against success criteria
+2. **Gap Identification**: Document any incomplete or suboptimal elements
+3. **Optimization**: Address gaps before proceeding to next phase
+4. **Documentation Update**: Update CURRENT-STATUS.md with completed phase
+5. **Next Phase Planning**: Prepare context for following phase
+
+---
+
+## Architecture Constraints & Principles
+
+### Technical Foundations
+- **Frontend**: Next.js/React with TypeScript
+- **Data Persistence**: localStorage (current), designed for future FastAPI + Supabase migration
+- **Exercise Database**: 38 exercises with muscle engagement percentages (per Development Guide)
+- **Design System**: Calm Design tokens and components
+- **Performance**: Debounced real-time calculations
+- **Data Validation**: Aligned with TypeScript interfaces for future Pydantic integration
+
+### Development Philosophy
+- **Development Guide Alignment**: Every feature must serve the "Take the mental equation out of working out" mission
+- **Portfolio Quality**: All implementations must demonstrate professional development capabilities
+- **Scientific Foundation**: Features based on exercise science principles (3% progressive overload, muscle engagement data)
+- **Incremental Delivery**: Each phase provides user value while building toward full-stack vision
+- **Foundation Building**: Build on existing infrastructure, design for future scalability
+- **Scope Discipline**: Resist feature creep within phases
+- **Quality Gates**: No phase advances without meeting success criteria AND Development Guide alignment
+- **User-Centric**: Every change improves actual workout experience for target personas
+
+---
+
+## Success Metrics
+
+### Phase 1 Metrics
+- Template selection usage > 80% vs custom workout creation
+- Dashboard navigation clarity (user testing feedback)
+- Zero regressions in existing workout builder functionality
+
+### Phase 2 Metrics  
+- Rest timer usage in >70% of logged sets
+- Set completion time improvement vs baseline
+- User-reported satisfaction with logging UX
+
+### Phase 3 Metrics
+- Exercise discovery improvement through filtering
+- Muscle fatigue-based ordering adoption rate
+- Reduced time from exercise selection to workout start
+
+---
+
+## Anti-Vibe Coding Guardrails
+
+### Forbidden Patterns
+- ❌ Adding features not in current phase scope
+- ❌ Complex architectural changes without planning
+- ❌ Implementing future phase features "while we're here"
+- ❌ Skipping success criteria validation
+- ❌ Breaking existing functionality for new features
+
+### Required Practices
+- ✅ Complete current phase before starting next
+- ✅ Validate all success criteria before phase completion
+- ✅ **Development Guide Alignment Check**: Every task must reference relevant Development Guide sections
+- ✅ **Fitbod Flow Reference**: Every UI component must reference specific flow analysis before implementation
+- ✅ **Portfolio Quality Validation**: Implementation must demonstrate professional development skills
+- ✅ **Scientific Principle Integration**: Features must align with exercise science from the guide
+- ✅ Maintain existing functionality during changes
+- ✅ Document decisions and trade-offs
+- ✅ Use CURRENT-STATUS.md for day-to-day task management
+
+### Development Guide Integration Requirements
+- **Pre-Implementation**: Review relevant Development Guide sections before starting any task
+- **Quality Gate**: Validate that implementation serves the "Smart Excel Replacement" vision
+- **Data Design**: Ensure all data structures support future full-stack migration
+- **Feature Justification**: Every feature must align with target personas and core mission
+
+---
+
+**This PRD provides systematic structure for Task Master while maintaining strict alignment with the FitForge Development Guide's strategic vision and technical principles. CURRENT-STATUS.md remains the operational reference for daily development work.**

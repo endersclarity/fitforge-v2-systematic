@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Plus, Dumbbell, Users, Clock } from "lucide-react"
+import { CleanFilterBar, FilterState } from '@/components/clean-filter-bar'
+import { WorkoutBuilder } from '@/components/workout-builder'
+import { WorkoutExercise } from '@/schemas/typescript-interfaces'
+import { filterExercisesByEquipment } from '@/lib/equipment-filter'
 import exercisesData from '@/data/exercises-real.json'
 
 interface Exercise {
@@ -19,13 +23,6 @@ interface Exercise {
   tips: string[]
 }
 
-interface WorkoutExercise {
-  id: string
-  name: string
-  category: string
-  equipment: string
-  difficulty: string
-}
 
 export default function ExerciseSelection() {
   const params = useParams()
@@ -33,8 +30,15 @@ export default function ExerciseSelection() {
   const muscleGroup = params.muscleGroup as string
   
   const [exercises, setExercises] = useState<Exercise[]>([])
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([])
   const [workoutQueue, setWorkoutQueue] = useState<WorkoutExercise[]>([])
   const [addedExercises, setAddedExercises] = useState<Set<string>>(new Set())
+  const [currentFilter, setCurrentFilter] = useState<FilterState>({ 
+    equipment: [], 
+    targetMuscle: [], 
+    muscleFatigue: [] 
+  })
+  const [showWorkoutBuilder, setShowWorkoutBuilder] = useState(false)
 
   // Map URL movement patterns to exercise categories
   const categoryMapping: Record<string, string[]> = {
@@ -53,10 +57,11 @@ export default function ExerciseSelection() {
 
   useEffect(() => {
     const categories = categoryMapping[muscleGroup] || []
-    const filteredExercises = exercisesData.filter(exercise => 
+    const exercisesByCategory = exercisesData.filter(exercise => 
       categories.some(cat => exercise.category.includes(cat))
     )
-    setExercises(filteredExercises)
+    setExercises(exercisesByCategory)
+    setFilteredExercises(exercisesByCategory) // Initialize filtered list
 
     // Load existing workout queue from localStorage
     const savedQueue = localStorage.getItem('workoutQueue')
@@ -66,6 +71,55 @@ export default function ExerciseSelection() {
       setAddedExercises(new Set(queue.map((ex: WorkoutExercise) => ex.id)))
     }
   }, [muscleGroup])
+
+  // Apply filtering when filter state changes
+  useEffect(() => {
+    let filtered = [...exercises]
+
+    // Filter by equipment
+    if (currentFilter.equipment.length > 0) {
+      filtered = filtered.filter(exercise => 
+        currentFilter.equipment.includes(exercise.equipment)
+      )
+    }
+
+    // Filter by target muscle
+    if (currentFilter.targetMuscle.length > 0) {
+      filtered = filtered.filter(exercise => {
+        if (!exercise.muscleEngagement) return false
+        
+        const exerciseMuscles = Object.keys(exercise.muscleEngagement).map(muscle => 
+          muscle
+            .replace(/_/g, ' ')
+            .replace('Pectoralis Major', 'Chest')
+            .replace('Deltoids Anterior', 'Front Shoulders')
+            .replace('Deltoids Posterior', 'Rear Shoulders')
+            .replace('Deltoids Lateral', 'Side Shoulders')
+            .replace('Latissimus Dorsi', 'Lats')
+            .replace('Triceps Brachii', 'Triceps')
+            .replace('Biceps Brachii', 'Biceps')
+            .replace('Quadriceps', 'Quads')
+            .replace('Hamstrings', 'Hamstrings')
+            .replace('Gastrocnemius', 'Calves')
+            .replace('Gluteus Maximus', 'Glutes')
+            .replace('Erector Spinae', 'Lower Back')
+            .replace('Rectus Abdominis', 'Abs')
+        )
+        
+        return currentFilter.targetMuscle.some(targetMuscle => 
+          exerciseMuscles.includes(targetMuscle)
+        )
+      })
+    }
+
+    // Future: Filter by muscle fatigue
+
+    setFilteredExercises(filtered)
+  }, [exercises, currentFilter])
+
+  const handleFilterChange = (filter: FilterState) => {
+    setCurrentFilter(filter)
+  }
 
   const addToWorkout = (exercise: Exercise) => {
     if (addedExercises.has(exercise.id)) return
@@ -97,6 +151,16 @@ export default function ExerciseSelection() {
 
   const goToWorkout = () => {
     if (workoutQueue.length === 0) return
+    router.push('/workouts-simple')
+  }
+
+  const handlePlanWorkout = () => {
+    if (workoutQueue.length === 0) return
+    setShowWorkoutBuilder(true)
+  }
+
+  const handleStartPlannedWorkout = () => {
+    setShowWorkoutBuilder(false)
     router.push('/workouts-simple')
   }
 
@@ -159,26 +223,46 @@ export default function ExerciseSelection() {
             </Button>
             <div>
               <h1 className="text-2xl font-bold">{muscleGroupTitles[muscleGroup]}</h1>
-              <p className="text-[#A1A1A3] text-sm">{exercises.length} exercises available</p>
+              <p className="text-[#A1A1A3] text-sm">
+                {(currentFilter.equipment.length === 0 && currentFilter.targetMuscle.length === 0)
+                  ? `${exercises.length} exercises available`
+                  : `${filteredExercises.length} of ${exercises.length} exercises`
+                }
+              </p>
             </div>
           </div>
           
           {workoutQueue.length > 0 && (
-            <Button 
-              onClick={goToWorkout}
-              className="bg-[#FF375F] hover:bg-[#E63050] text-white font-semibold"
-            >
-              <Dumbbell className="h-4 w-4 mr-2" />
-              Start Workout ({workoutQueue.length})
-            </Button>
+            <div className="flex space-x-2">
+              <Button 
+                onClick={handlePlanWorkout}
+                className="bg-[#FF375F] hover:bg-[#E63050] text-white font-semibold"
+              >
+                <Dumbbell className="h-4 w-4 mr-2" />
+                Plan Workout ({workoutQueue.length})
+              </Button>
+              <Button
+                variant="outline"
+                onClick={goToWorkout}
+                className="bg-[#2C2C2E] border-[#3C3C3E] text-white hover:bg-[#3C3C3E]"
+              >
+                Quick Start
+              </Button>
+            </div>
           )}
         </div>
       </div>
 
+      {/* Clean Filter Bar */}
+      <CleanFilterBar 
+        onFilterChange={handleFilterChange}
+        className="sticky top-[73px] z-9"
+      />
+
       {/* Exercise Gallery Grid - ChatGPT Calm Design System */}
       <div style={{ padding: 'var(--calm-space-m)' }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ gap: 'var(--calm-space-m)' }}>
-          {exercises.map((exercise) => {
+          {filteredExercises.map((exercise) => {
             const isAdded = addedExercises.has(exercise.id)
             const primaryMuscle = getPrimaryMuscle(exercise.muscleEngagement)
             const muscleTargeting = getMuscleTargeting(exercise.muscleEngagement || {})
@@ -396,11 +480,18 @@ export default function ExerciseSelection() {
       </div>
 
       {/* Empty State */}
-      {exercises.length === 0 && (
+      {filteredExercises.length === 0 && (
         <div className="flex flex-col items-center justify-center h-64 text-center">
           <Dumbbell className="h-12 w-12 text-[#A1A1A3] mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">No exercises found</h3>
-          <p className="text-[#A1A1A3]">No exercises available for this muscle group yet.</p>
+          <h3 className="text-xl font-semibold text-white mb-2">
+            {exercises.length === 0 ? 'No exercises found' : 'No exercises match your filters'}
+          </h3>
+          <p className="text-[#A1A1A3]">
+            {exercises.length === 0 
+              ? 'No exercises available for this muscle group yet.'
+              : 'Try adjusting your filters to see more exercises.'
+            }
+          </p>
         </div>
       )}
 
@@ -437,6 +528,15 @@ export default function ExerciseSelection() {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* Workout Builder Modal */}
+      {showWorkoutBuilder && (
+        <WorkoutBuilder
+          exercises={workoutQueue}
+          onStartWorkout={handleStartPlannedWorkout}
+          onClose={() => setShowWorkoutBuilder(false)}
+        />
       )}
     </div>
   )

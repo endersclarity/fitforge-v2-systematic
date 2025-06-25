@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Plus, Minus, Clock, CheckCircle, Dumbbell, Timer } from "lucide-react"
+import { WorkoutPlan, PlannedSet } from '@/schemas/typescript-interfaces'
 
 interface WorkoutExercise {
   id: string
@@ -47,6 +48,8 @@ export function WorkoutLoggerEnhanced() {
   const [startTime] = useState(new Date().toISOString())
   const [elapsedTime, setElapsedTime] = useState(0)
   const [isWorkoutComplete, setIsWorkoutComplete] = useState(false)
+  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null)
+  const [plannedSets, setPlannedSets] = useState<PlannedSet[]>([])
 
   // Timer effect
   useEffect(() => {
@@ -60,12 +63,30 @@ export function WorkoutLoggerEnhanced() {
     return () => clearInterval(timer)
   }, [startTime])
 
-  // Load workout queue on mount
+  // Load workout queue and planned sets on mount
   useEffect(() => {
     const savedQueue = localStorage.getItem('workoutQueue')
     if (savedQueue) {
       const queue = JSON.parse(savedQueue)
       setWorkoutQueue(queue)
+      
+      // Load planned workout if available
+      const savedPlan = localStorage.getItem('workout-plan')
+      if (savedPlan) {
+        const plan: WorkoutPlan = JSON.parse(savedPlan)
+        setWorkoutPlan(plan)
+        setPlannedSets(plan.plannedSets)
+        
+        // Set initial weight/reps from first planned set if available
+        if (plan.plannedSets.length > 0 && queue.length > 0) {
+          const firstExercisePlannedSets = plan.plannedSets.filter(set => set.exerciseId === queue[0].id)
+          if (firstExercisePlannedSets.length > 0) {
+            const firstSet = firstExercisePlannedSets[0]
+            setCurrentWeight(firstSet.targetWeight.toString())
+            setCurrentReps(firstSet.targetReps.toString())
+          }
+        }
+      }
       
       if (queue.length === 0) {
         // No exercises selected, redirect back
@@ -75,6 +96,15 @@ export function WorkoutLoggerEnhanced() {
       router.push('/')
     }
   }, [router])
+
+  // Get planned values for current exercise and set
+  const getCurrentPlannedSet = (exerciseId: string, setNumber: number): PlannedSet | null => {
+    return plannedSets.find(set => set.exerciseId === exerciseId && set.setNumber === setNumber) || null
+  }
+
+  const getExercisePlannedSets = (exerciseId: string): PlannedSet[] => {
+    return plannedSets.filter(set => set.exerciseId === exerciseId).sort((a, b) => a.setNumber - b.setNumber)
+  }
 
   const currentExercise = workoutQueue[currentExerciseIndex]
   const exerciseSets = sets.filter(set => set.exerciseId === currentExercise?.id)
@@ -93,9 +123,17 @@ export function WorkoutLoggerEnhanced() {
 
     setSets(prev => [...prev, newSet])
     
-    // Clear inputs for next set
-    setCurrentReps('')
-    // Keep weight for convenience
+    // Auto-populate next planned set values if available
+    const nextSetNumber = exerciseSets.length + 2 // +2 because we just added one
+    const nextPlannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
+    
+    if (nextPlannedSet) {
+      setCurrentWeight(nextPlannedSet.targetWeight.toString())
+      setCurrentReps(nextPlannedSet.targetReps.toString())
+    } else {
+      setCurrentReps('')
+      // Keep weight for convenience if no planned set
+    }
   }
 
   const removeSet = (setId: string) => {
@@ -104,9 +142,24 @@ export function WorkoutLoggerEnhanced() {
 
   const nextExercise = () => {
     if (currentExerciseIndex < workoutQueue.length - 1) {
-      setCurrentExerciseIndex(prev => prev + 1)
-      setCurrentWeight('')
-      setCurrentReps('')
+      const newIndex = currentExerciseIndex + 1
+      setCurrentExerciseIndex(newIndex)
+      
+      // Load planned values for first set of next exercise
+      const nextExercise = workoutQueue[newIndex]
+      if (nextExercise) {
+        const firstPlannedSet = getCurrentPlannedSet(nextExercise.id, 1)
+        if (firstPlannedSet) {
+          setCurrentWeight(firstPlannedSet.targetWeight.toString())
+          setCurrentReps(firstPlannedSet.targetReps.toString())
+        } else {
+          setCurrentWeight('')
+          setCurrentReps('')
+        }
+      } else {
+        setCurrentWeight('')
+        setCurrentReps('')
+      }
     }
   }
 
@@ -264,10 +317,71 @@ export function WorkoutLoggerEnhanced() {
           </CardHeader>
         </Card>
 
+        {/* Planned Sets Preview */}
+        {workoutPlan && getExercisePlannedSets(currentExercise.id).length > 0 && (
+          <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
+            <CardHeader>
+              <CardTitle className="text-lg text-white">Planned Workout</CardTitle>
+              <CardDescription className="text-[#A1A1A3]">
+                Your planned sets for this exercise
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {getExercisePlannedSets(currentExercise.id).map((plannedSet, index) => {
+                  const isCompleted = exerciseSets.length > index
+                  const actualSet = exerciseSets[index]
+                  
+                  return (
+                    <div key={plannedSet.id} className={`flex items-center justify-between p-3 rounded-lg border ${
+                      isCompleted 
+                        ? 'bg-[#1E3A1E] border-green-800/30' 
+                        : 'bg-[#2C2C2E] border-[#3C3C3E]'
+                    }`}>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-sm font-medium text-white">Set {plannedSet.setNumber}</span>
+                        <div className="text-sm text-[#A1A1A3]">
+                          {currentExercise.equipment !== 'Bodyweight' && (
+                            <span>{plannedSet.targetWeight} lb × </span>
+                          )}
+                          <span>{plannedSet.targetReps} reps</span>
+                        </div>
+                      </div>
+                      
+                      {isCompleted && actualSet && (
+                        <div className="text-sm">
+                          <span className="text-green-400">
+                            {currentExercise.equipment !== 'Bodyweight' && (
+                              <span>{actualSet.weight} lb × </span>
+                            )}
+                            <span>{actualSet.reps} reps</span>
+                          </span>
+                        </div>
+                      )}
+                      
+                      {!isCompleted && exerciseSets.length === index && (
+                        <Badge className="bg-[#FF375F] text-white text-xs">Current</Badge>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Set Input */}
         <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
           <CardHeader>
-            <CardTitle className="text-lg text-white">Add Set</CardTitle>
+            <CardTitle className="text-lg text-white">
+              {(() => {
+                const nextSetNumber = exerciseSets.length + 1
+                const plannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
+                return plannedSet ? `Set ${nextSetNumber} (Planned: ${
+                  currentExercise.equipment !== 'Bodyweight' ? `${plannedSet.targetWeight} lb × ` : ''
+                }${plannedSet.targetReps} reps)` : `Add Set ${nextSetNumber}`
+              })()}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -292,6 +406,24 @@ export function WorkoutLoggerEnhanced() {
                 />
               </div>
             </div>
+            
+            {/* Quick Fill Planned Values Button */}
+            {(() => {
+              const nextSetNumber = exerciseSets.length + 1
+              const plannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
+              return plannedSet ? (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setCurrentWeight(plannedSet.targetWeight.toString())
+                    setCurrentReps(plannedSet.targetReps.toString())
+                  }}
+                  className="w-full bg-[#2C2C2E] border-[#3C3C3E] text-[#A1A1A3] hover:bg-[#3C3C3E] hover:text-white"
+                >
+                  Use Planned Values ({currentExercise.equipment !== 'Bodyweight' ? `${plannedSet.targetWeight} lb × ` : ''}{plannedSet.targetReps} reps)
+                </Button>
+              ) : null
+            })()}
             
             <Button
               onClick={addSet}
