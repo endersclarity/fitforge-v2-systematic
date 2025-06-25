@@ -1,0 +1,415 @@
+{
+  "exerciseAnalysis": {
+    "totalExercises": 38,
+    "categoriesFound": ["BackBiceps", "ChestTriceps", "Legs", "Abs"],
+    "movementPatterns": {
+      "push": "ChestTriceps",
+      "pull": "BackBiceps", 
+      "legs": "Legs",
+      "core": "Abs"
+    }
+  },
+  "pushMovements": {
+    "description": "Chest, shoulders, triceps dominant exercises",
+    "category": "ChestTriceps",
+    "count": 15,
+    "exercises": [
+      {
+        "id": "bench_press",
+        "name": "Bench Press",
+        "primaryMuscles": ["Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Anterior_Deltoids"],
+        "variation": "A",
+        "equipment": "Bench",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "incline_bench_press", 
+        "name": "Incline Bench Press",
+        "primaryMuscles": ["Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Anterior_Deltoids"],
+        "variation": "B",
+        "equipment": "Bench",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "shoulder_press",
+        "name": "Shoulder Press", 
+        "primaryMuscles": ["Deltoids"],
+        "secondaryMuscles": ["Triceps_Brachii", "Trapezius"],
+        "variation": "A/B",
+        "equipment": "Dumbbell",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "pushup",
+        "name": "Pushup",
+        "primaryMuscles": ["Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Anterior_Deltoids", "Core"],
+        "variation": "A/B",
+        "equipment": "Bodyweight",
+        "difficulty": "Beginner"
+      },
+      {
+        "id": "trx_pushup",
+        "name": "TRX Pushup",
+        "primaryMuscles": ["Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Anterior_Deltoids", "Core"],
+        "variation": "A",
+        "equipment": "TRX", 
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "dips",
+        "name": "Dips",
+        "primaryMuscles": ["Triceps_Brachii", "Pectoralis_Major"],
+        "secondaryMuscles": ["Anterior_Deltoids"],
+        "variation": "B",
+        "equipment": "Bench",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "tricep_extension",
+        "name": "Tricep Extension",
+        "primaryMuscles": ["Triceps_Brachii"],
+        "secondaryMuscles": ["Anconeus"],
+        "variation": "A",
+        "equipment": "Dumbbell",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "single_arm_bench",
+        "name": "Single Arm Bench",
+        "primaryMuscles": ["Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Anterior_Deltoids", "Core"],
+        "variation": "A/B",
+        "equipment": "Bench",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "single_arm_incline",
+        "name": "Single Arm Incline", 
+        "primaryMuscles": ["Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Anterior_Deltoids", "Core"],
+        "variation": "A/B",
+        "equipment": "Bench",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "claps",
+        "name": "Claps",
+        "primaryMuscles": ["Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Anterior_Deltoids"],
+        "variation": "A/B",
+        "equipment": "Bodyweight",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "kettlebell_press",
+        "name": "Kettlebell Press",
+        "primaryMuscles": ["Deltoids"],
+        "secondaryMuscles": ["Triceps_Brachii", "Core"],
+        "variation": "A/B",
+        "equipment": "Kettlebell",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "kettlebell_halos",
+        "name": "Kettlebell Halos",
+        "primaryMuscles": ["Deltoids"],
+        "secondaryMuscles": ["Trapezius", "Triceps_Brachii", "Core"],
+        "variation": "A/B",
+        "equipment": "Kettlebell",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "pullover",
+        "name": "Pullover",
+        "primaryMuscles": ["Latissimus_Dorsi", "Pectoralis_Major"],
+        "secondaryMuscles": ["Triceps_Brachii", "Serratus_Anterior"],
+        "variation": "A/B",
+        "equipment": "Dumbbell",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "trx_reverse_flys",
+        "name": "TRX Reverse Flys",
+        "primaryMuscles": ["Rhomboids"],
+        "secondaryMuscles": ["Trapezius", "Rear_Deltoids", "Core"],
+        "variation": "A/B",
+        "equipment": "TRX",
+        "difficulty": "Intermediate"
+      }
+    ]
+  },
+  "pullMovements": {
+    "description": "Back, biceps, rear deltoids dominant exercises",
+    "category": "BackBiceps",
+    "count": 12,
+    "exercises": [
+      {
+        "id": "wide_grip_pullups",
+        "name": "Wide Grip Pullups",
+        "primaryMuscles": ["Latissimus_Dorsi"],
+        "secondaryMuscles": ["Biceps_Brachii", "Rhomboids", "Trapezius"],
+        "variation": "A",
+        "equipment": "Pull-up_Bar",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "chin_ups",
+        "name": "Chin-Ups",
+        "primaryMuscles": ["Latissimus_Dorsi"],
+        "secondaryMuscles": ["Biceps_Brachii", "Rhomboids", "Trapezius"],
+        "variation": "B",
+        "equipment": "Pull-up_Bar", 
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "neutral_grip_pullups",
+        "name": "Neutral Grip Pull-ups",
+        "primaryMuscles": ["Latissimus_Dorsi"],
+        "secondaryMuscles": ["Biceps_Brachii", "Rhomboids", "Trapezius"],
+        "variation": "B",
+        "equipment": "Pull-up_Bar",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "bent_over_rows",
+        "name": "Bent Over Rows",
+        "primaryMuscles": ["Latissimus_Dorsi"],
+        "secondaryMuscles": ["Rhomboids", "Trapezius", "Biceps_Brachii"],
+        "variation": "A",
+        "equipment": "Dumbbell",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "t_row",
+        "name": "T Row",
+        "primaryMuscles": ["Latissimus_Dorsi"],
+        "secondaryMuscles": ["Rhomboids", "Trapezius", "Biceps_Brachii"],
+        "variation": "B",
+        "equipment": "TRX",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "renegade_rows",
+        "name": "Renegade Rows",
+        "primaryMuscles": ["Latissimus_Dorsi"],
+        "secondaryMuscles": ["Rhomboids", "Trapezius", "Biceps_Brachii", "Core"],
+        "variation": "A/B",
+        "equipment": "Dumbbell",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "concentration_curl",
+        "name": "Concentration Curl",
+        "primaryMuscles": ["Biceps_Brachii"],
+        "secondaryMuscles": ["Brachialis"],
+        "variation": "A",
+        "equipment": "Dumbbell",
+        "difficulty": "Beginner"
+      },
+      {
+        "id": "trx_bicep_curl", 
+        "name": "TRX Bicep Curl",
+        "primaryMuscles": ["Biceps_Brachii"],
+        "secondaryMuscles": ["Brachialis", "Brachioradialis", "Core"],
+        "variation": "A/B",
+        "equipment": "TRX",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "incline_hammer_curl",
+        "name": "Incline Hammer Curl",
+        "primaryMuscles": ["Biceps_Brachii"],
+        "secondaryMuscles": ["Brachialis", "Brachioradialis"],
+        "variation": "B",
+        "equipment": "Bench",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "face_pull",
+        "name": "Face Pull",
+        "primaryMuscles": ["Trapezius", "Rhomboids"],
+        "secondaryMuscles": ["Rear_Deltoids", "Rotator_Cuff"],
+        "variation": "A/B",
+        "equipment": "TRX",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "shoulder_shrugs",
+        "name": "Shoulder Shrugs",
+        "primaryMuscles": ["Trapezius"],
+        "secondaryMuscles": ["Levator_Scapulae"],
+        "variation": "A/B",
+        "equipment": "Dumbbell",
+        "difficulty": "Beginner"
+      },
+      {
+        "id": "single_arm_upright_row",
+        "name": "Single Arm Upright Row",
+        "primaryMuscles": ["Trapezius"],
+        "secondaryMuscles": ["Deltoids", "Biceps_Brachii", "Core"],
+        "variation": "A/B",
+        "equipment": "Dumbbell",
+        "difficulty": "Intermediate"
+      }
+    ]
+  },
+  "legMovements": {
+    "description": "Quadriceps, hamstrings, glutes dominant exercises",
+    "category": "Legs",
+    "count": 7,
+    "exercises": [
+      {
+        "id": "goblet_squats",
+        "name": "Goblet Squats",
+        "primaryMuscles": ["Quadriceps", "Gluteus_Maximus"],
+        "secondaryMuscles": ["Hamstrings", "Core"],
+        "variation": "A",
+        "equipment": "Kettlebell",
+        "difficulty": "Beginner"
+      },
+      {
+        "id": "dead_lifts",
+        "name": "Dead Lifts",
+        "primaryMuscles": ["Gluteus_Maximus", "Hamstrings"],
+        "secondaryMuscles": ["Erector_Spinae", "Core"],
+        "variation": "A",
+        "equipment": "Dumbbell",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "stiff_legged_deadlifts",
+        "name": "Stiff Legged Deadlifts",
+        "primaryMuscles": ["Hamstrings", "Gluteus_Maximus"],
+        "secondaryMuscles": ["Erector_Spinae", "Core"],
+        "variation": "B",
+        "equipment": "Dumbbell",
+        "difficulty": "Advanced"
+      },
+      {
+        "id": "glute_bridges",
+        "name": "Glute Bridges",
+        "primaryMuscles": ["Gluteus_Maximus"],
+        "secondaryMuscles": ["Hamstrings", "Core"],
+        "variation": "B",
+        "equipment": "Bodyweight",
+        "difficulty": "Beginner"
+      },
+      {
+        "id": "box_step_ups",
+        "name": "Box Step-ups",
+        "primaryMuscles": ["Quadriceps", "Gluteus_Maximus"],
+        "secondaryMuscles": ["Hamstrings", "Erector_Spinae"],
+        "variation": "B",
+        "equipment": "Plybox",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "kettlebell_swings",
+        "name": "Kettlebell Swings",
+        "primaryMuscles": ["Gluteus_Maximus", "Hamstrings"],
+        "secondaryMuscles": ["Core", "Shoulders"],
+        "variation": "A/B",
+        "equipment": "Kettlebell",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "calf_raises",
+        "name": "Calf Raises",
+        "primaryMuscles": ["Gastrocnemius", "Soleus"],
+        "secondaryMuscles": [],
+        "variation": "A",
+        "equipment": "Dumbbell",
+        "difficulty": "Beginner"
+      }
+    ]
+  },
+  "coreMovements": {
+    "description": "Abdominals, core stabilizers, hip flexors",
+    "category": "Abs", 
+    "count": 4,
+    "exercises": [
+      {
+        "id": "planks",
+        "name": "Planks",
+        "primaryMuscles": ["Transverse_Abdominis", "Rectus_Abdominis"],
+        "secondaryMuscles": ["Obliques", "Shoulders", "Glutes"],
+        "variation": "A/B",
+        "equipment": "Bodyweight",
+        "difficulty": "Beginner"
+      },
+      {
+        "id": "hanging_knee_raises",
+        "name": "Hanging Knee Raises",
+        "primaryMuscles": ["Rectus_Abdominis"],
+        "secondaryMuscles": ["Hip_Flexors", "Obliques"],
+        "variation": "A",
+        "equipment": "Pull-up_Bar",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "spider_planks",
+        "name": "Spider Planks",
+        "primaryMuscles": ["Rectus_Abdominis"],
+        "secondaryMuscles": ["Transverse_Abdominis", "Obliques", "Erector_Spinae"],
+        "variation": "A",
+        "equipment": "Bodyweight",
+        "difficulty": "Intermediate"
+      },
+      {
+        "id": "bench_sit_ups",
+        "name": "Bench Sit-ups",
+        "primaryMuscles": ["Rectus_Abdominis"],
+        "secondaryMuscles": ["Hip_Flexors", "Obliques", "Transverse_Abdominis"],
+        "variation": "A/B",
+        "equipment": "Bench",
+        "difficulty": "Intermediate"
+      }
+    ]
+  },
+  "templateRecommendations": {
+    "pushA": {
+      "focus": "Compound movements, heavier loads",
+      "repRange": "4-6 reps",
+      "suggestedExercises": ["bench_press", "shoulder_press", "tricep_extension", "pushup", "trx_reverse_flys"]
+    },
+    "pushB": {
+      "focus": "Isolation work, volume training", 
+      "repRange": "8-12 reps",
+      "suggestedExercises": ["incline_bench_press", "dips", "single_arm_incline", "claps", "kettlebell_halos"]
+    },
+    "pullA": {
+      "focus": "Vertical pulling emphasis",
+      "repRange": "4-8 reps",
+      "suggestedExercises": ["wide_grip_pullups", "bent_over_rows", "concentration_curl", "face_pull", "shoulder_shrugs"]
+    },
+    "pullB": {
+      "focus": "Horizontal pulling emphasis",
+      "repRange": "6-10 reps", 
+      "suggestedExercises": ["chin_ups", "t_row", "incline_hammer_curl", "neutral_grip_pullups", "renegade_rows"]
+    },
+    "legsA": {
+      "focus": "Quad-dominant movements",
+      "repRange": "6-10 reps",
+      "suggestedExercises": ["goblet_squats", "dead_lifts", "calf_raises", "kettlebell_swings", "planks"]
+    },
+    "legsB": {
+      "focus": "Hip-dominant movements",
+      "repRange": "8-12 reps",
+      "suggestedExercises": ["stiff_legged_deadlifts", "glute_bridges", "box_step_ups", "kettlebell_swings", "bench_sit_ups"]
+    }
+  },
+  "validationResults": {
+    "allExercisesCategorized": true,
+    "noDuplicateCategories": true,
+    "totalExercisesConfirmed": 38,
+    "variationDistribution": {
+      "A_only": 8,
+      "B_only": 7,
+      "A_and_B": 23
+    }
+  }
+}

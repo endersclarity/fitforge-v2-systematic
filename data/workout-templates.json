@@ -1,0 +1,386 @@
+{
+  "pushA": {
+    "id": "push_a",
+    "name": "Push A - Compound Focus",
+    "description": "Heavy compound movements with lower rep ranges for strength and power development",
+    "category": "suggested",
+    "workoutType": "push",
+    "variant": "A",
+    "exercises": [
+      {
+        "exerciseId": "bench_press",
+        "sets": 4,
+        "reps": "4-6",
+        "restSeconds": 240,
+        "notes": "Primary compound movement, progressive overload focus"
+      },
+      {
+        "exerciseId": "shoulder_press",
+        "sets": 3,
+        "reps": "6-8",
+        "restSeconds": 180,
+        "notes": "Vertical push compound movement"
+      },
+      {
+        "exerciseId": "tricep_extension",
+        "sets": 3,
+        "reps": "8-10",
+        "restSeconds": 120,
+        "notes": "Triceps isolation to support compound movements"
+      },
+      {
+        "exerciseId": "pushup",
+        "sets": 3,
+        "reps": "10-15",
+        "restSeconds": 90,
+        "notes": "Bodyweight finisher, focus on form and endurance"
+      },
+      {
+        "exerciseId": "trx_reverse_flys",
+        "sets": 3,
+        "reps": "12-15",
+        "restSeconds": 90,
+        "notes": "Posterior deltoid balance and injury prevention"
+      }
+    ],
+    "targetMuscles": ["Pectoralis_Major", "Anterior_Deltoids", "Triceps_Brachii"],
+    "estimatedDuration": 55,
+    "difficulty": "Intermediate",
+    "equipment": ["Bench", "Dumbbell", "Bodyweight", "TRX"],
+    "tags": ["compound", "strength", "power"],
+    "progressiveOverloadNotes": "Focus on 3% volume increase through weight progression on compounds",
+    "fatigueScore": 8.5,
+    "createdAt": "2025-06-25T17:30:00.000Z",
+    "updatedAt": "2025-06-25T17:30:00.000Z"
+  },
+  "pushB": {
+    "id": "push_b", 
+    "name": "Push B - Isolation Balance",
+    "description": "Higher volume isolation work with moderate rep ranges for hypertrophy and muscle balance",
+    "category": "suggested",
+    "workoutType": "push",
+    "variant": "B",
+    "exercises": [
+      {
+        "exerciseId": "incline_bench_press",
+        "sets": 4,
+        "reps": "8-10",
+        "restSeconds": 180,
+        "notes": "Upper chest emphasis, compound variation"
+      },
+      {
+        "exerciseId": "dips",
+        "sets": 3,
+        "reps": "8-12",
+        "restSeconds": 150,
+        "notes": "Triceps and lower chest compound movement"
+      },
+      {
+        "exerciseId": "single_arm_incline",
+        "sets": 3,
+        "reps": "10-12",
+        "restSeconds": 120,
+        "notes": "Unilateral strength and core stability"
+      },
+      {
+        "exerciseId": "kettlebell_halos",
+        "sets": 3,
+        "reps": "12-15",
+        "restSeconds": 90,
+        "notes": "Shoulder mobility and stability work"
+      },
+      {
+        "exerciseId": "claps",
+        "sets": 2,
+        "reps": "5-8",
+        "restSeconds": 120,
+        "notes": "Explosive power development finisher"
+      }
+    ],
+    "targetMuscles": ["Pectoralis_Major", "Triceps_Brachii", "Deltoids"],
+    "estimatedDuration": 50,
+    "difficulty": "Advanced",
+    "equipment": ["Bench", "Bodyweight", "Kettlebell"],
+    "tags": ["isolation", "hypertrophy", "volume"],
+    "progressiveOverloadNotes": "Focus on rep progression and time under tension for isolation movements",
+    "fatigueScore": 7.0,
+    "createdAt": "2025-06-25T17:30:00.000Z",
+    "updatedAt": "2025-06-25T17:30:00.000Z"
+  },
+  "pullA": {
+    "id": "pull_a",
+    "name": "Pull A - Vertical Pulling Focus",
+    "description": "Vertical pulling emphasis with compound movements for lat development and strength",
+    "category": "suggested",
+    "workoutType": "pull",
+    "variant": "A",
+    "exercises": [
+      {
+        "exerciseId": "wide_grip_pullups",
+        "sets": 4,
+        "reps": "4-8",
+        "restSeconds": 240,
+        "notes": "Primary vertical pull compound, progressive overload focus"
+      },
+      {
+        "exerciseId": "bent_over_rows",
+        "sets": 3,
+        "reps": "6-8",
+        "restSeconds": 180,
+        "notes": "Horizontal pull balance for complete back development"
+      },
+      {
+        "exerciseId": "concentration_curl",
+        "sets": 3,
+        "reps": "8-12",
+        "restSeconds": 120,
+        "notes": "Biceps isolation with strict form focus"
+      },
+      {
+        "exerciseId": "face_pull",
+        "sets": 3,
+        "reps": "12-15",
+        "restSeconds": 90,
+        "notes": "Rear deltoid and rhomboid strengthening"
+      },
+      {
+        "exerciseId": "shoulder_shrugs",
+        "sets": 3,
+        "reps": "10-15",
+        "restSeconds": 90,
+        "notes": "Trapezius isolation and postural support"
+      }
+    ],
+    "targetMuscles": ["Latissimus_Dorsi", "Rhomboids", "Biceps_Brachii", "Trapezius"],
+    "estimatedDuration": 50,
+    "difficulty": "Advanced",
+    "equipment": ["Pull-up_Bar", "Dumbbell", "TRX"],
+    "tags": ["vertical", "compound", "strength"],
+    "progressiveOverloadNotes": "Focus on adding weight to pull-ups and rows, rep progression for accessories",
+    "fatigueScore": 8.0,
+    "createdAt": "2025-06-25T17:30:00.000Z",
+    "updatedAt": "2025-06-25T17:30:00.000Z"
+  },
+  "pullB": {
+    "id": "pull_b",
+    "name": "Pull B - Horizontal Pulling Focus", 
+    "description": "Horizontal pulling emphasis with higher volume training for muscle balance",
+    "category": "suggested",
+    "workoutType": "pull",
+    "variant": "B",
+    "exercises": [
+      {
+        "exerciseId": "chin_ups",
+        "sets": 3,
+        "reps": "6-10",
+        "restSeconds": 180,
+        "notes": "Biceps-emphasized vertical pull variation"
+      },
+      {
+        "exerciseId": "t_row",
+        "sets": 4,
+        "reps": "8-10",
+        "restSeconds": 150,
+        "notes": "Primary horizontal pull with TRX stability challenge"
+      },
+      {
+        "exerciseId": "renegade_rows",
+        "sets": 3,
+        "reps": "8-12",
+        "restSeconds": 120,
+        "notes": "Unilateral pull with core integration"
+      },
+      {
+        "exerciseId": "incline_hammer_curl",
+        "sets": 3,
+        "reps": "10-12",
+        "restSeconds": 90,
+        "notes": "Biceps and brachialis isolation on incline"
+      },
+      {
+        "exerciseId": "single_arm_upright_row",
+        "sets": 3,
+        "reps": "12-15",
+        "restSeconds": 90,
+        "notes": "Unilateral trap and deltoid work"
+      }
+    ],
+    "targetMuscles": ["Latissimus_Dorsi", "Rhomboids", "Biceps_Brachii", "Trapezius"],
+    "estimatedDuration": 45,
+    "difficulty": "Intermediate",
+    "equipment": ["Pull-up_Bar", "TRX", "Dumbbell", "Bench"],
+    "tags": ["horizontal", "volume", "balance"],
+    "progressiveOverloadNotes": "Focus on time under tension and rep progression for horizontal movements",
+    "fatigueScore": 7.5,
+    "createdAt": "2025-06-25T17:30:00.000Z",
+    "updatedAt": "2025-06-25T17:30:00.000Z"
+  },
+  "legsA": {
+    "id": "legs_a",
+    "name": "Legs A - Quad Dominant",
+    "description": "Quadriceps-focused movements with compound squat patterns for lower body strength",
+    "category": "suggested",
+    "workoutType": "legs",
+    "variant": "A",
+    "exercises": [
+      {
+        "exerciseId": "goblet_squats",
+        "sets": 4,
+        "reps": "6-10",
+        "restSeconds": 240,
+        "notes": "Primary quad-dominant compound movement"
+      },
+      {
+        "exerciseId": "dead_lifts",
+        "sets": 3,
+        "reps": "5-8",
+        "restSeconds": 240,
+        "notes": "Hip hinge pattern for posterior chain balance"
+      },
+      {
+        "exerciseId": "calf_raises",
+        "sets": 4,
+        "reps": "12-20",
+        "restSeconds": 90,
+        "notes": "Calf isolation for complete lower leg development"
+      },
+      {
+        "exerciseId": "kettlebell_swings",
+        "sets": 3,
+        "reps": "15-20",
+        "restSeconds": 120,
+        "notes": "Power and conditioning with hip hinge pattern"
+      },
+      {
+        "exerciseId": "planks",
+        "sets": 3,
+        "reps": "30-60 seconds",
+        "restSeconds": 90,
+        "notes": "Core stability to support compound movements"
+      }
+    ],
+    "targetMuscles": ["Quadriceps", "Gluteus_Maximus", "Hamstrings", "Gastrocnemius"],
+    "estimatedDuration": 55,
+    "difficulty": "Intermediate",
+    "equipment": ["Kettlebell", "Dumbbell", "Bodyweight"],
+    "tags": ["quad-dominant", "strength", "compound"],
+    "progressiveOverloadNotes": "Progressive loading on squats and deadlifts, volume progression for accessories",
+    "fatigueScore": 9.0,
+    "createdAt": "2025-06-25T17:30:00.000Z",
+    "updatedAt": "2025-06-25T17:30:00.000Z"
+  },
+  "legsB": {
+    "id": "legs_b",
+    "name": "Legs B - Hip Dominant",
+    "description": "Hip-dominant movements emphasizing glutes and hamstrings with unilateral work",
+    "category": "suggested",
+    "workoutType": "legs", 
+    "variant": "B",
+    "exercises": [
+      {
+        "exerciseId": "stiff_legged_deadlifts",
+        "sets": 4,
+        "reps": "8-12",
+        "restSeconds": 180,
+        "notes": "Primary hip hinge movement targeting hamstrings"
+      },
+      {
+        "exerciseId": "glute_bridges",
+        "sets": 4,
+        "reps": "12-20",
+        "restSeconds": 120,
+        "notes": "Glute isolation and hip extension strength"
+      },
+      {
+        "exerciseId": "box_step_ups",
+        "sets": 3,
+        "reps": "10-12 each leg",
+        "restSeconds": 120,
+        "notes": "Unilateral quad and glute development"
+      },
+      {
+        "exerciseId": "kettlebell_swings",
+        "sets": 3,
+        "reps": "20-25",
+        "restSeconds": 120,
+        "notes": "Explosive hip extension and conditioning"
+      },
+      {
+        "exerciseId": "bench_sit_ups",
+        "sets": 3,
+        "reps": "15-20",
+        "restSeconds": 90,
+        "notes": "Core strength with hip flexor integration"
+      }
+    ],
+    "targetMuscles": ["Gluteus_Maximus", "Hamstrings", "Quadriceps", "Erector_Spinae"],
+    "estimatedDuration": 50,
+    "difficulty": "Intermediate",
+    "equipment": ["Dumbbell", "Bodyweight", "Plybox", "Kettlebell", "Bench"],
+    "tags": ["hip-dominant", "glutes", "unilateral"],
+    "progressiveOverloadNotes": "Focus on range of motion and control, progressive loading on deadlift patterns",
+    "fatigueScore": 8.5,
+    "createdAt": "2025-06-25T17:30:00.000Z",
+    "updatedAt": "2025-06-25T17:30:00.000Z"
+  },
+  "templateCategories": {
+    "suggested": {
+      "id": "suggested",
+      "name": "Suggested Workouts",
+      "description": "Exercise science-based templates designed for balanced muscle development and progressive overload",
+      "templates": ["pushA", "pushB", "pullA", "pullB", "legsA", "legsB"]
+    },
+    "expert": {
+      "id": "expert", 
+      "name": "Expert Workouts",
+      "description": "Battle-tested workout templates with proven compound/isolation balance and A/B variation system",
+      "templates": []
+    },
+    "custom": {
+      "id": "custom",
+      "name": "Custom Workouts", 
+      "description": "User-created workout templates saved from the workout builder",
+      "templates": []
+    }
+  },
+  "templateMetadata": {
+    "totalTemplates": 6,
+    "totalCategories": 3,
+    "categoryDistribution": {
+      "suggested": 6,
+      "expert": 0,
+      "custom": 0
+    },
+    "developmentGuideAlignment": {
+      "abVariationSystem": true,
+      "progressiveOverloadIntegration": true,
+      "muscleEngagementScience": true,
+      "portfolioQualityStandards": true
+    },
+    "designPrinciples": [
+      "Push A focuses on compound movements with lower rep ranges (4-8 reps)",
+      "Push B emphasizes isolation work with moderate rep ranges (8-15 reps)",
+      "Pull A emphasizes vertical pulling for lat development (4-8 reps)",
+      "Pull B emphasizes horizontal pulling with volume training (6-12 reps)",
+      "Legs A focuses on quad-dominant movements (6-10 reps)",
+      "Legs B focuses on hip-dominant movements with unilateral work (8-20 reps)",
+      "Progressive overload follows 3% volume increase rule from Development Guide",
+      "Exercise selection based on scientific muscle engagement data",
+      "Rest periods optimized for rep ranges and exercise type",
+      "Equipment flexibility for different user setups"
+    ],
+    "scientificBasis": {
+      "compoundMovements": "4-8 reps for strength and neural adaptation",
+      "isolationMovements": "8-15 reps for hypertrophy and metabolic stress",
+      "restPeriods": "Longer for compounds (180-240s), shorter for isolation (90-120s)",
+      "volumeProgression": "3% increase rule maintains progressive overload",
+      "muscleRecovery": "48-72 hour rest between Push A and Push B sessions"
+    },
+    "integrationNotes": {
+      "equipmentFiltering": "Templates can be filtered by available equipment",
+      "muscleVolumeVisualization": "Exercise selection triggers real-time muscle engagement display",
+      "progressiveOverload": "Each exercise includes target progression guidelines",
+      "dataStructure": "Designed for future FastAPI + Supabase integration per Development Guide"
+    }
+  }
+}

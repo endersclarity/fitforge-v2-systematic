@@ -43,6 +43,101 @@ export function isValidEquipmentType(equipment: string): equipment is EquipmentT
 }
 
 // ============================================================================
+// WORKOUT TEMPLATE INTERFACES
+// ============================================================================
+
+export type WorkoutType = 'push' | 'pull' | 'legs';
+export type WorkoutVariant = 'A' | 'B';
+
+export interface TemplateExercise {
+  exerciseId: string;
+  sets: number;
+  reps: string; // e.g., "6-8", "8-12", "AMRAP"
+  restSeconds: number;
+  notes?: string;
+}
+
+export type TemplateCategory = 'suggested' | 'expert' | 'custom';
+
+export interface TemplateCategoryInfo {
+  id: TemplateCategory;
+  name: string;
+  description: string;
+  templates: string[]; // Array of template IDs
+}
+
+export interface WorkoutTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: TemplateCategory;
+  workoutType: WorkoutType;
+  variant: WorkoutVariant;
+  exercises: TemplateExercise[];
+  targetMuscles: string[];
+  estimatedDuration: number; // minutes
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  equipment: EquipmentType[];
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkoutTemplateInsert {
+  id: string;
+  name: string;
+  description: string;
+  category: TemplateCategory;
+  workoutType: WorkoutType;
+  variant: WorkoutVariant;
+  exercises: TemplateExercise[];
+  targetMuscles: string[];
+  estimatedDuration: number;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  equipment?: EquipmentType[];
+  tags?: string[];
+}
+
+// Template validation constraints
+export const TEMPLATE_CONSTRAINTS = {
+  exercises: { min: 3, max: 8 },
+  estimatedDuration: { min: 20, max: 120 }, // minutes
+  sets: { min: 1, max: 6 },
+  restSeconds: { min: 30, max: 300 }
+} as const;
+
+// ============================================================================
+// WORKOUT PLANNING INTERFACES
+// ============================================================================
+
+export interface PlannedSet {
+  id: string;
+  exerciseId: string;
+  setNumber: number;
+  targetWeight: number;
+  targetReps: number;
+  equipment: string;
+  notes?: string;
+}
+
+export interface WorkoutPlan {
+  id: string;
+  exercises: WorkoutExercise[];
+  plannedSets: PlannedSet[];
+  totalEstimatedTime: number;
+  createdAt: string;
+  templateId?: string; // Reference to WorkoutTemplate if based on template
+}
+
+export interface WorkoutExercise {
+  id: string;
+  name: string;
+  category: string;
+  equipment: string;
+  difficulty: string;
+}
+
+// ============================================================================
 // USER PROFILE INTERFACES
 // ============================================================================
 
@@ -442,7 +537,38 @@ export function isValidMuscleEngagement(data: any): data is MuscleEngagement {
     Object.values(data).every(value => 
       typeof value === 'number' && value >= 0 && value <= 100
     ) &&
-    Object.values(data).some(value => value > 0) // At least one muscle engaged
+    Object.values(data).some(value => 
+      typeof value === 'number' && value > 0
+    ) // At least one muscle engaged
+  );
+}
+
+export function isValidWorkoutTemplate(data: any): data is WorkoutTemplateInsert {
+  return (
+    typeof data === 'object' &&
+    typeof data.id === 'string' &&
+    typeof data.name === 'string' &&
+    typeof data.description === 'string' &&
+    ['suggested', 'expert', 'custom'].includes(data.category) &&
+    ['push', 'pull', 'legs'].includes(data.workoutType) &&
+    ['A', 'B'].includes(data.variant) &&
+    Array.isArray(data.exercises) &&
+    data.exercises.length >= TEMPLATE_CONSTRAINTS.exercises.min &&
+    data.exercises.length <= TEMPLATE_CONSTRAINTS.exercises.max &&
+    data.exercises.every((ex: any) => 
+      typeof ex.exerciseId === 'string' &&
+      typeof ex.sets === 'number' &&
+      ex.sets >= TEMPLATE_CONSTRAINTS.sets.min &&
+      ex.sets <= TEMPLATE_CONSTRAINTS.sets.max &&
+      typeof ex.reps === 'string' &&
+      typeof ex.restSeconds === 'number' &&
+      ex.restSeconds >= TEMPLATE_CONSTRAINTS.restSeconds.min &&
+      ex.restSeconds <= TEMPLATE_CONSTRAINTS.restSeconds.max
+    ) &&
+    Array.isArray(data.targetMuscles) &&
+    typeof data.estimatedDuration === 'number' &&
+    data.estimatedDuration >= TEMPLATE_CONSTRAINTS.estimatedDuration.min &&
+    data.estimatedDuration <= TEMPLATE_CONSTRAINTS.estimatedDuration.max
   );
 }
 
