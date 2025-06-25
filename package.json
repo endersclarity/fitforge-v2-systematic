@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "echo '🚨 DEPRECATED: Use ./start-fitforge-docker.sh instead!' && echo '🐳 Docker is the ONLY supported development method!' && exit 1",
+    "dev": "next dev",
     "dev:next": "next dev",
     "dev:docker": "docker-compose -f docker-compose.fast.yml up --build -d",
     "dev:stop": "docker-compose -f docker-compose.fast.yml down",
