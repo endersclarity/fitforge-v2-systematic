@@ -8,7 +8,7 @@ import { Home, Dumbbell, Calendar, TrendingUp, BarChart3, Moon, Sun } from "luci
 import { useTheme } from "next-themes"
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: Home },
+  { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/push-pull-legs", label: "Start Workout", icon: Dumbbell },
   { href: "/muscle-explorer", label: "Exercise Library", icon: TrendingUp },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
