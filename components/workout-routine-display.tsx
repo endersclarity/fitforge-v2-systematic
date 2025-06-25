@@ -42,7 +42,7 @@ export function WorkoutRoutineDisplay({
   selectedTemplate = 'pushA' // Default to Push A template
 }: { 
   onBack: () => void
-  onStartWorkout: (template: WorkoutTemplate) => void
+  onStartWorkout?: (template: WorkoutTemplate) => void
   selectedTemplate?: string
 }) {
   const [template, setTemplate] = useState<WorkoutTemplate | null>(null)
@@ -175,7 +175,27 @@ export function WorkoutRoutineDisplay({
       {/* Start Workout Button - Prominent action */}
       <div className="px-6 py-8">
         <Button 
-          onClick={() => onStartWorkout(template)}
+          onClick={() => {
+            if (!template) return
+            
+            // Convert template exercises to workout queue format expected by WorkoutLoggerEnhanced
+            const workoutQueue = template.exercises.map((templateExercise) => {
+              const exerciseData = exerciseMap[templateExercise.exerciseId]
+              return {
+                id: templateExercise.exerciseId,
+                name: exerciseData?.name || templateExercise.exerciseId.replace(/_/g, ' '),
+                category: exerciseData?.category || 'Unknown',
+                equipment: exerciseData?.equipment || 'Unknown',
+                difficulty: exerciseData?.difficulty || 'Intermediate'
+              }
+            })
+
+            // Save workout queue to localStorage for WorkoutLoggerEnhanced
+            localStorage.setItem('workoutQueue', JSON.stringify(workoutQueue))
+            
+            // Navigate to the workout logger
+            window.location.href = '/workouts-simple'
+          }}
           className="w-full bg-[#FF375F] hover:bg-[#E63050] text-white h-14 text-lg font-semibold"
         >
           Start Workout

@@ -2,7 +2,7 @@
   "pushA": {
     "id": "push_a",
     "name": "Push A - Compound Focus",
-    "description": "Heavy compound movements with lower rep ranges for strength and power development",
+    "description": "Heavy compound movements from your chest/triceps exercises",
     "category": "suggested",
     "workoutType": "push",
     "variant": "A",
@@ -10,107 +10,103 @@
       {
         "exerciseId": "bench_press",
         "sets": 4,
-        "reps": "4-6",
-        "restSeconds": 240,
-        "notes": "Primary compound movement, progressive overload focus"
-      },
-      {
-        "exerciseId": "shoulder_press",
-        "sets": 3,
         "reps": "6-8",
         "restSeconds": 180,
-        "notes": "Vertical push compound movement"
+        "notes": "Primary compound movement"
       },
       {
         "exerciseId": "tricep_extension",
         "sets": 3,
-        "reps": "8-10",
+        "reps": "8-12",
         "restSeconds": 120,
-        "notes": "Triceps isolation to support compound movements"
+        "notes": "Triceps strength"
       },
       {
-        "exerciseId": "pushup",
+        "exerciseId": "single_arm_bench",
         "sets": 3,
-        "reps": "10-15",
-        "restSeconds": 90,
-        "notes": "Bodyweight finisher, focus on form and endurance"
+        "reps": "8-10",
+        "restSeconds": 120,
+        "notes": "Unilateral chest work"
       },
       {
         "exerciseId": "trx_reverse_flys",
         "sets": 3,
         "reps": "12-15",
         "restSeconds": 90,
-        "notes": "Posterior deltoid balance and injury prevention"
+        "notes": "Posterior deltoid balance"
+      },
+      {
+        "exerciseId": "planks",
+        "sets": 3,
+        "reps": "30-60 seconds",
+        "restSeconds": 90,
+        "notes": "Core stability"
       }
     ],
-    "targetMuscles": ["Pectoralis_Major", "Anterior_Deltoids", "Triceps_Brachii"],
-    "estimatedDuration": 55,
+    "targetMuscles": ["Pectoralis_Major", "Triceps_Brachii", "Deltoids"],
+    "estimatedDuration": 45,
     "difficulty": "Intermediate",
-    "equipment": ["Bench", "Dumbbell", "Bodyweight", "TRX"],
-    "tags": ["compound", "strength", "power"],
-    "progressiveOverloadNotes": "Focus on 3% volume increase through weight progression on compounds",
-    "fatigueScore": 8.5,
+    "equipment": ["Bench", "Dumbbell", "TRX"],
+    "tags": ["compound", "strength"],
     "createdAt": "2025-06-25T17:30:00.000Z",
     "updatedAt": "2025-06-25T17:30:00.000Z"
   },
   "pushB": {
     "id": "push_b", 
-    "name": "Push B - Isolation Balance",
-    "description": "Higher volume isolation work with moderate rep ranges for hypertrophy and muscle balance",
+    "name": "Push B - Power & Isolation",
+    "description": "Power movements and isolation from your chest/triceps exercises",
     "category": "suggested",
     "workoutType": "push",
     "variant": "B",
     "exercises": [
       {
-        "exerciseId": "incline_bench_press",
+        "exerciseId": "single_arm_incline",
         "sets": 4,
         "reps": "8-10",
-        "restSeconds": 180,
-        "notes": "Upper chest emphasis, compound variation"
-      },
-      {
-        "exerciseId": "dips",
-        "sets": 3,
-        "reps": "8-12",
         "restSeconds": 150,
-        "notes": "Triceps and lower chest compound movement"
+        "notes": "Unilateral chest strength"
       },
       {
-        "exerciseId": "single_arm_incline",
+        "exerciseId": "trx_pushup",
+        "sets": 3,
+        "reps": "10-15",
+        "restSeconds": 120,
+        "notes": "Instability training"
+      },
+      {
+        "exerciseId": "pullover",
         "sets": 3,
         "reps": "10-12",
         "restSeconds": 120,
-        "notes": "Unilateral strength and core stability"
-      },
-      {
-        "exerciseId": "kettlebell_halos",
-        "sets": 3,
-        "reps": "12-15",
-        "restSeconds": 90,
-        "notes": "Shoulder mobility and stability work"
+        "notes": "Chest and lat stretch"
       },
       {
         "exerciseId": "claps",
-        "sets": 2,
+        "sets": 3,
         "reps": "5-8",
         "restSeconds": 120,
-        "notes": "Explosive power development finisher"
+        "notes": "Explosive power development"
+      },
+      {
+        "exerciseId": "spider_planks",
+        "sets": 3,
+        "reps": "10-15",
+        "restSeconds": 90,
+        "notes": "Dynamic core work"
       }
     ],
     "targetMuscles": ["Pectoralis_Major", "Triceps_Brachii", "Deltoids"],
-    "estimatedDuration": 50,
+    "estimatedDuration": 40,
     "difficulty": "Advanced",
-    "equipment": ["Bench", "Bodyweight", "Kettlebell"],
-    "tags": ["isolation", "hypertrophy", "volume"],
-    "progressiveOverloadNotes": "Focus on rep progression and time under tension for isolation movements",
-    "fatigueScore": 7.0,
+    "equipment": ["Bench", "TRX", "Dumbbell"],
+    "tags": ["power", "isolation"],
     "createdAt": "2025-06-25T17:30:00.000Z",
     "updatedAt": "2025-06-25T17:30:00.000Z"
   },
   "pullA": {
     "id": "pull_a",
-    "name": "Pull A - Vertical Pulling Focus",
-    "description": "Vertical pulling emphasis with compound movements for lat development and strength",
+    "name": "Pull A - Vertical Focus",
+    "description": "Vertical pulling emphasis from your back/biceps exercises",
     "category": "suggested",
     "workoutType": "pull",
     "variant": "A",
@@ -118,53 +114,51 @@
       {
         "exerciseId": "wide_grip_pullups",
         "sets": 4,
-        "reps": "4-8",
-        "restSeconds": 240,
-        "notes": "Primary vertical pull compound, progressive overload focus"
-      },
-      {
-        "exerciseId": "bent_over_rows",
-        "sets": 3,
-        "reps": "6-8",
+        "reps": "6-10",
         "restSeconds": 180,
-        "notes": "Horizontal pull balance for complete back development"
+        "notes": "Primary vertical pull compound"
       },
       {
         "exerciseId": "concentration_curl",
         "sets": 3,
         "reps": "8-12",
         "restSeconds": 120,
-        "notes": "Biceps isolation with strict form focus"
+        "notes": "Biceps isolation"
       },
       {
         "exerciseId": "face_pull",
         "sets": 3,
         "reps": "12-15",
         "restSeconds": 90,
-        "notes": "Rear deltoid and rhomboid strengthening"
+        "notes": "Rear deltoid strengthening"
       },
       {
         "exerciseId": "shoulder_shrugs",
         "sets": 3,
-        "reps": "10-15",
+        "reps": "12-15",
         "restSeconds": 90,
-        "notes": "Trapezius isolation and postural support"
+        "notes": "Trapezius isolation"
+      },
+      {
+        "exerciseId": "hanging_knee_raises",
+        "sets": 3,
+        "reps": "8-12",
+        "restSeconds": 90,
+        "notes": "Core and grip strength"
       }
     ],
     "targetMuscles": ["Latissimus_Dorsi", "Rhomboids", "Biceps_Brachii", "Trapezius"],
-    "estimatedDuration": 50,
+    "estimatedDuration": 45,
     "difficulty": "Advanced",
     "equipment": ["Pull-up_Bar", "Dumbbell", "TRX"],
-    "tags": ["vertical", "compound", "strength"],
-    "progressiveOverloadNotes": "Focus on adding weight to pull-ups and rows, rep progression for accessories",
-    "fatigueScore": 8.0,
+    "tags": ["vertical", "compound"],
     "createdAt": "2025-06-25T17:30:00.000Z",
     "updatedAt": "2025-06-25T17:30:00.000Z"
   },
   "pullB": {
     "id": "pull_b",
-    "name": "Pull B - Horizontal Pulling Focus", 
-    "description": "Horizontal pulling emphasis with higher volume training for muscle balance",
+    "name": "Pull B - Horizontal Focus", 
+    "description": "Horizontal pulling and biceps from your back/biceps exercises",
     "category": "suggested",
     "workoutType": "pull",
     "variant": "B",
@@ -174,44 +168,42 @@
         "sets": 3,
         "reps": "6-10",
         "restSeconds": 180,
-        "notes": "Biceps-emphasized vertical pull variation"
+        "notes": "Biceps-emphasized vertical pull"
       },
       {
         "exerciseId": "t_row",
         "sets": 4,
-        "reps": "8-10",
-        "restSeconds": 150,
-        "notes": "Primary horizontal pull with TRX stability challenge"
-      },
-      {
-        "exerciseId": "renegade_rows",
-        "sets": 3,
         "reps": "8-12",
-        "restSeconds": 120,
-        "notes": "Unilateral pull with core integration"
+        "restSeconds": 150,
+        "notes": "Primary horizontal pull with TRX"
       },
       {
-        "exerciseId": "incline_hammer_curl",
+        "exerciseId": "trx_bicep_curl",
         "sets": 3,
-        "reps": "10-12",
-        "restSeconds": 90,
-        "notes": "Biceps and brachialis isolation on incline"
+        "reps": "10-15",
+        "restSeconds": 120,
+        "notes": "TRX biceps isolation"
       },
       {
         "exerciseId": "single_arm_upright_row",
         "sets": 3,
-        "reps": "12-15",
+        "reps": "10-12",
         "restSeconds": 90,
-        "notes": "Unilateral trap and deltoid work"
+        "notes": "Unilateral trap and deltoid"
+      },
+      {
+        "exerciseId": "bench_sit_ups",
+        "sets": 3,
+        "reps": "12-20",
+        "restSeconds": 90,
+        "notes": "Core strength"
       }
     ],
     "targetMuscles": ["Latissimus_Dorsi", "Rhomboids", "Biceps_Brachii", "Trapezius"],
-    "estimatedDuration": 45,
+    "estimatedDuration": 40,
     "difficulty": "Intermediate",
     "equipment": ["Pull-up_Bar", "TRX", "Dumbbell", "Bench"],
-    "tags": ["horizontal", "volume", "balance"],
-    "progressiveOverloadNotes": "Focus on time under tension and rep progression for horizontal movements",
-    "fatigueScore": 7.5,
+    "tags": ["horizontal", "biceps"],
     "createdAt": "2025-06-25T17:30:00.000Z",
     "updatedAt": "2025-06-25T17:30:00.000Z"
   },

@@ -9,7 +9,7 @@
         "testStrategy": "Validate JSON structure with schema validation, verify all exercise IDs exist in exercises-real.json, test TypeScript interfaces compile correctly, and ensure template data loads properly in components",
         "priority": "high",
         "dependencies": [],
-        "status": "done",
+        "status": "review",
         "subtasks": [
           {
             "id": 1,
@@ -79,7 +79,7 @@
         "dependencies": [
           6
         ],
-        "status": "done",
+        "status": "review",
         "subtasks": [
           {
             "id": 1,
@@ -160,7 +160,60 @@
           8
         ],
         "status": "pending",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Template Data Transformation Utilities",
+            "description": "Build utility functions to convert workout template data structure into the format expected by workout-builder.tsx",
+            "dependencies": [],
+            "details": "Create lib/template-utils.ts with functions like templateToWorkoutBuilder() that transform template exercises (with their sets, reps, equipment) into the WorkoutExercise format used by the builder. Handle mapping of exercise IDs, equipment requirements, and default set/rep schemes.",
+            "status": "pending",
+            "testStrategy": "Unit test transformation functions with sample template data to ensure correct mapping of all fields and edge cases like missing equipment or invalid exercise IDs"
+          },
+          {
+            "id": 2,
+            "title": "Add Template Props to Workout Builder Component",
+            "description": "Modify workout-builder.tsx to accept optional template data as props and implement initialization logic",
+            "dependencies": [
+              1
+            ],
+            "details": "Update WorkoutBuilder component interface to accept templateData prop. Add useEffect hook to detect template data and call transformation utilities to pre-populate the workout. Ensure this doesn't interfere with existing empty workout initialization.",
+            "status": "pending",
+            "testStrategy": "Test component renders correctly with and without template data, verify pre-population works and existing features remain functional"
+          },
+          {
+            "id": 3,
+            "title": "Implement Template Selection State Management",
+            "description": "Create state management solution to pass selected template from selection interface to workout builder",
+            "dependencies": [],
+            "details": "Implement either URL-based routing with query parameters (e.g., /workout-builder?template=strength-basics) or React Context/Zustand store to maintain selected template state. Include mechanism to clear template selection after use.",
+            "status": "pending",
+            "testStrategy": "Verify state persists across navigation, template data is accessible in workout builder, and state clears appropriately"
+          },
+          {
+            "id": 4,
+            "title": "Update Template Selection Interface Integration",
+            "description": "Connect template selection component to trigger navigation/state update when template is selected",
+            "dependencies": [
+              3
+            ],
+            "details": "Modify template selection component's onSelect handler to either navigate to workout builder with template parameter or update global state. Add loading states and error handling for template data retrieval.",
+            "status": "pending",
+            "testStrategy": "E2E test selecting a template and verifying workout builder receives and displays the correct template data"
+          },
+          {
+            "id": 5,
+            "title": "Ensure Equipment Filter and Muscle Volume Compatibility",
+            "description": "Verify and fix any issues with equipment filtering and muscle volume visualization when using template-sourced exercises",
+            "dependencies": [
+              2,
+              4
+            ],
+            "details": "Test that equipment filters properly filter template exercises, muscle volume calculations include all template exercises, and the visualization updates correctly. Fix any edge cases where template data structure differs from manually added exercises.",
+            "status": "pending",
+            "testStrategy": "Integration test with various templates containing different equipment requirements and muscle groups, verify filters and visualizations work correctly"
+          }
+        ]
       },
       {
         "id": 10,
@@ -243,7 +296,7 @@
     ],
     "metadata": {
       "created": "2025-06-25T16:20:00.000Z",
-      "updated": "2025-06-25T18:25:48.514Z",
+      "updated": "2025-06-25T18:48:50.609Z",
       "description": "Tasks for master context"
     }
   }
