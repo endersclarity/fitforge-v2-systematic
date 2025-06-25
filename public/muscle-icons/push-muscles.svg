@@ -1,0 +1,27 @@
+<svg width="120" height="160" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple Push Muscle Diagram: Chest, Shoulders, Triceps -->
+  
+  <!-- Body outline -->
+  <path d="M60 20 C50 20, 40 30, 40 40 L40 55 Q35 60, 30 70 L25 90 L20 120 Q50 130, 60 130 Q70 130, 100 120 L95 90 L90 70 Q85 60, 80 55 L80 40 C80 30, 70 20, 60 20 Z" 
+        fill="none" stroke="var(--calm-functional-border)" stroke-width="2"/>
+  
+  <!-- Shoulders (Deltoids) -->
+  <circle cx="30" cy="65" r="12" fill="var(--calm-accent-teal)" opacity="0.8"/>
+  <circle cx="90" cy="65" r="12" fill="var(--calm-accent-teal)" opacity="0.8"/>
+  
+  <!-- Chest (Pectorals) -->
+  <ellipse cx="50" cy="80" rx="18" ry="15" fill="var(--calm-primary-blue)" opacity="0.9"/>
+  <ellipse cx="70" cy="80" rx="18" ry="15" fill="var(--calm-primary-blue)" opacity="0.9"/>
+  
+  <!-- Triceps -->
+  <ellipse cx="20" cy="90" rx="6" ry="18" fill="var(--calm-accent-lavender)" opacity="0.7"/>
+  <ellipse cx="100" cy="90" rx="6" ry="18" fill="var(--calm-accent-lavender)" opacity="0.7"/>
+  
+  <!-- Labels -->
+  <text x="60" y="145" text-anchor="middle" fill="var(--calm-dark-text)" font-size="12" font-weight="500">
+    Push Day
+  </text>
+  <text x="60" y="155" text-anchor="middle" fill="var(--calm-functional-neutral)" font-size="10">
+    Chest • Shoulders • Triceps
+  </text>
+</svg>

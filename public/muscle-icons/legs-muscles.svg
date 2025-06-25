@@ -1,0 +1,30 @@
+<svg width="120" height="160" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple Legs Muscle Diagram: Quads, Glutes, Hamstrings, Calves -->
+  
+  <!-- Hip/Glute area -->
+  <ellipse cx="60" cy="30" rx="20" ry="12" fill="var(--calm-primary-blue)" opacity="0.9"/>
+  
+  <!-- Left leg -->
+  <path d="M45 40 L40 45 L38 80 L40 120 L45 120 L47 80 L50 45 Z" 
+        fill="var(--calm-accent-teal)" opacity="0.8" stroke="var(--calm-functional-border)" stroke-width="1"/>
+  
+  <!-- Right leg -->
+  <path d="M75 40 L80 45 L82 80 L80 120 L75 120 L73 80 L70 45 Z" 
+        fill="var(--calm-accent-teal)" opacity="0.8" stroke="var(--calm-functional-border)" stroke-width="1"/>
+  
+  <!-- Quads (front thigh) -->
+  <ellipse cx="42" cy="65" rx="6" ry="18" fill="var(--calm-accent-lavender)" opacity="0.8"/>
+  <ellipse cx="78" cy="65" rx="6" ry="18" fill="var(--calm-accent-lavender)" opacity="0.8"/>
+  
+  <!-- Calves -->
+  <ellipse cx="42" cy="100" rx="4" ry="12" fill="var(--calm-functional-success)" opacity="0.7"/>
+  <ellipse cx="78" cy="100" rx="4" ry="12" fill="var(--calm-functional-success)" opacity="0.7"/>
+  
+  <!-- Labels -->
+  <text x="60" y="145" text-anchor="middle" fill="var(--calm-dark-text)" font-size="12" font-weight="500">
+    Leg Day
+  </text>
+  <text x="60" y="155" text-anchor="middle" fill="var(--calm-functional-neutral)" font-size="10">
+    Quads • Glutes • Hamstrings • Calves
+  </text>
+</svg>

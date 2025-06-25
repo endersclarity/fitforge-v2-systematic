@@ -123,6 +123,17 @@ export default function ExerciseSelection() {
       .sort(([,a], [,b]) => b - a)[0]?.[0] || 'Mixed'
   }
 
+  const getMuscleGroupImage = (category: string) => {
+    const workoutType = categoryMapping[muscleGroup]?.[0] || 'ChestTriceps'
+    
+    if (workoutType.includes('ChestTriceps')) return '/muscle-icons/push-muscles.svg'
+    if (workoutType.includes('BackBiceps')) return '/muscle-icons/pull-muscles.svg'
+    if (workoutType.includes('Legs')) return '/muscle-icons/legs-muscles.svg'
+    if (workoutType.includes('Abs')) return '/muscle-icons/abs-muscles.svg'
+    
+    return '/muscle-icons/push-muscles.svg' // default
+  }
+
   return (
     <div className="min-h-screen bg-[#121212] text-white">
       {/* Header */}
@@ -181,17 +192,23 @@ export default function ExerciseSelection() {
                   e.currentTarget.style.boxShadow = 'var(--calm-elevation-card)';
                 }}
               >
-                {/* Large Image Area with Calm Gradient */}
+                {/* Large Image Area with Muscle Group Visualization */}
                 <div 
-                  className="aspect-square flex items-center justify-center calm-gradient-blue"
-                  style={{ position: 'relative' }}
+                  className="aspect-square flex items-center justify-center"
+                  style={{ 
+                    position: 'relative',
+                    background: 'var(--calm-secondary-gradient-blue)',
+                    padding: 'var(--calm-space-s)'
+                  }}
                 >
-                  <Dumbbell 
+                  <img 
+                    src={getMuscleGroupImage(exercise.category)}
+                    alt={`${muscleGroup} muscles`}
                     style={{ 
-                      width: 'var(--calm-icon-nav)', 
-                      height: 'var(--calm-icon-nav)',
-                      color: 'var(--calm-primary-white)',
-                      opacity: 0.9
+                      width: '80%', 
+                      height: '80%',
+                      objectFit: 'contain',
+                      opacity: 0.95
                     }} 
                   />
                 </div>

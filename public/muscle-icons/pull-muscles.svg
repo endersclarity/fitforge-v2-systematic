@@ -1,0 +1,28 @@
+<svg width="120" height="160" viewBox="0 0 120 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple Pull Muscle Diagram: Back, Biceps -->
+  
+  <!-- Body outline (back view) -->
+  <path d="M60 20 C50 20, 40 30, 40 40 L40 55 Q35 60, 30 70 L25 90 L20 120 Q50 130, 60 130 Q70 130, 100 120 L95 90 L90 70 Q85 60, 80 55 L80 40 C80 30, 70 20, 60 20 Z" 
+        fill="none" stroke="var(--calm-functional-border)" stroke-width="2"/>
+  
+  <!-- Upper Back/Traps -->
+  <ellipse cx="60" cy="50" rx="25" ry="12" fill="var(--calm-primary-blue)" opacity="0.9"/>
+  
+  <!-- Lats -->
+  <path d="M35 70 Q60 75, 85 70 L80 100 Q60 110, 40 100 Z" fill="var(--calm-accent-teal)" opacity="0.8"/>
+  
+  <!-- Biceps -->
+  <ellipse cx="25" cy="85" rx="8" ry="20" fill="var(--calm-accent-lavender)" opacity="0.8"/>
+  <ellipse cx="95" cy="85" rx="8" ry="20" fill="var(--calm-accent-lavender)" opacity="0.8"/>
+  
+  <!-- Lower Back -->
+  <ellipse cx="60" cy="110" rx="15" ry="8" fill="var(--calm-functional-success)" opacity="0.7"/>
+  
+  <!-- Labels -->
+  <text x="60" y="145" text-anchor="middle" fill="var(--calm-dark-text)" font-size="12" font-weight="500">
+    Pull Day
+  </text>
+  <text x="60" y="155" text-anchor="middle" fill="var(--calm-functional-neutral)" font-size="10">
+    Back • Biceps • Rear Delts
+  </text>
+</svg>
