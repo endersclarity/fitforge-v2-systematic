@@ -137,6 +137,11 @@ export default function ExerciseSelection() {
     }
   }
 
+  const isPectoralisExercise = (muscleEngagement: Record<string, number>) => {
+    const muscles = Object.entries(muscleEngagement).sort(([,a], [,b]) => b - a)
+    return muscles[0]?.[0] === 'Pectoralis_Major'
+  }
+
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
@@ -177,6 +182,7 @@ export default function ExerciseSelection() {
             const isAdded = addedExercises.has(exercise.id)
             const primaryMuscle = getPrimaryMuscle(exercise.muscleEngagement)
             const muscleTargeting = getMuscleTargeting(exercise.muscleEngagement || {})
+            const isChestExercise = isPectoralisExercise(exercise.muscleEngagement || {})
             
             return (
               <div 
@@ -197,7 +203,7 @@ export default function ExerciseSelection() {
                   e.currentTarget.style.boxShadow = 'var(--calm-elevation-card)';
                 }}
               >
-                {/* Clean Gradient Header */}
+                {/* Header - Chest Icon for Pectoralis Exercises, Emoji for Others */}
                 <div 
                   className="aspect-square flex items-center justify-center calm-gradient-blue"
                   style={{ 
@@ -205,29 +211,42 @@ export default function ExerciseSelection() {
                     padding: 'var(--calm-space-m)'
                   }}
                 >
-                  <div style={{ textAlign: 'center' }}>
-                    <div 
+                  {isChestExercise ? (
+                    <img 
+                      src="/icons/fitbod-chest.png"
+                      alt="Chest muscles"
                       style={{ 
-                        fontSize: '48px',
-                        marginBottom: 'var(--calm-space-xs)'
-                      }}
-                    >
-                      {muscleGroup === 'push' ? '💪' : 
-                       muscleGroup === 'pull' ? '🤏' : 
-                       muscleGroup === 'legs' ? '🏃' : '🔥'}
+                        width: '80%', 
+                        height: '80%',
+                        objectFit: 'contain',
+                        opacity: 0.95
+                      }} 
+                    />
+                  ) : (
+                    <div style={{ textAlign: 'center' }}>
+                      <div 
+                        style={{ 
+                          fontSize: '48px',
+                          marginBottom: 'var(--calm-space-xs)'
+                        }}
+                      >
+                        {muscleGroup === 'push' ? '💪' : 
+                         muscleGroup === 'pull' ? '🤏' : 
+                         muscleGroup === 'legs' ? '🏃' : '🔥'}
+                      </div>
+                      <div 
+                        className="calm-text-small"
+                        style={{ 
+                          color: 'var(--calm-primary-white)',
+                          fontWeight: 'var(--calm-weight-medium)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '1px'
+                        }}
+                      >
+                        {muscleGroupTitles[muscleGroup]} Day
+                      </div>
                     </div>
-                    <div 
-                      className="calm-text-small"
-                      style={{ 
-                        color: 'var(--calm-primary-white)',
-                        fontWeight: 'var(--calm-weight-medium)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '1px'
-                      }}
-                    >
-                      {muscleGroupTitles[muscleGroup]} Day
-                    </div>
-                  </div>
+                  )}
                 </div>
                 
                 {/* Card Content */}
