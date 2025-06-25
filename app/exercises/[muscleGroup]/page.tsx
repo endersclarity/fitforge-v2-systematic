@@ -109,6 +109,15 @@ export default function ExerciseSelection() {
     }
   }
 
+  const getDifficultyBadgeColor = (difficulty: string) => {
+    switch (difficulty.toLowerCase()) {
+      case 'beginner': return 'var(--calm-functional-success)'
+      case 'intermediate': return 'var(--calm-functional-warning)'
+      case 'advanced': return '#FF6B6B'
+      default: return 'var(--calm-functional-neutral)'
+    }
+  }
+
   const getPrimaryMuscle = (muscleEngagement: Record<string, number>) => {
     return Object.entries(muscleEngagement)
       .sort(([,a], [,b]) => b - a)[0]?.[0] || 'Mixed'
@@ -146,75 +155,157 @@ export default function ExerciseSelection() {
         </div>
       </div>
 
-      {/* Exercise Gallery Grid - Calm-Inspired */}
-      <div className="p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {/* Exercise Gallery Grid - ChatGPT Calm Design System */}
+      <div style={{ padding: 'var(--calm-space-m)' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ gap: 'var(--calm-space-m)' }}>
           {exercises.map((exercise) => {
             const isAdded = addedExercises.has(exercise.id)
             const primaryMuscle = getPrimaryMuscle(exercise.muscleEngagement)
             
             return (
-              <Card key={exercise.id} className="bg-[#1C1C1E] border-[#2C2C2E] overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-[1.02]">
-                <CardContent className="p-0">
-                  {/* Large Image Area */}
-                  <div className="aspect-square bg-gradient-to-br from-[#2C2C2E] to-[#1C1C1E] flex items-center justify-center">
-                    <Dumbbell className="h-16 w-16 text-[#A1A1A3]/70" />
+              <div 
+                key={exercise.id} 
+                className="calm-card calm-transition-hover overflow-hidden"
+                style={{
+                  backgroundColor: 'var(--calm-dark-card)',
+                  borderColor: 'var(--calm-functional-border)',
+                  transform: 'scale(1)',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = 'var(--calm-elevation-card)';
+                }}
+              >
+                {/* Large Image Area with Calm Gradient */}
+                <div 
+                  className="aspect-square flex items-center justify-center calm-gradient-blue"
+                  style={{ position: 'relative' }}
+                >
+                  <Dumbbell 
+                    style={{ 
+                      width: 'var(--calm-icon-nav)', 
+                      height: 'var(--calm-icon-nav)',
+                      color: 'var(--calm-primary-white)',
+                      opacity: 0.9
+                    }} 
+                  />
+                </div>
+                
+                {/* Card Content */}
+                <div style={{ padding: 'var(--calm-space-s)' }}>
+                  {/* Exercise Name */}
+                  <h3 
+                    className="calm-text-h2"
+                    style={{ 
+                      color: 'var(--calm-dark-text)', 
+                      marginBottom: 'var(--calm-space-xs)',
+                      fontWeight: 'var(--calm-weight-medium)'
+                    }}
+                  >
+                    {exercise.name}
+                  </h3>
+                  
+                  {/* Difficulty Badge */}
+                  <div style={{ marginBottom: 'var(--calm-space-s)' }}>
+                    <span 
+                      className="calm-text-label"
+                      style={{
+                        backgroundColor: getDifficultyBadgeColor(exercise.difficulty),
+                        color: 'var(--calm-primary-white)',
+                        padding: 'var(--calm-space-xxs) var(--calm-space-xs)',
+                        borderRadius: 'calc(var(--calm-radius-card) / 2)',
+                        fontSize: 'var(--calm-size-label)'
+                      }}
+                    >
+                      {exercise.difficulty}
+                    </span>
                   </div>
                   
-                  {/* Card Content */}
-                  <div className="p-4 space-y-3">
-                    {/* Exercise Name */}
-                    <h3 className="text-lg font-medium text-white leading-tight">
-                      {exercise.name}
-                    </h3>
-                    
-                    {/* Difficulty Badge */}
-                    <div className="flex items-center justify-between">
-                      <Badge 
-                        variant="outline" 
-                        className={`text-xs border-opacity-50 ${getDifficultyColor(exercise.difficulty)}`}
-                      >
-                        {exercise.difficulty}
-                      </Badge>
+                  {/* Exercise Details */}
+                  <div style={{ marginBottom: 'var(--calm-space-s)' }}>
+                    <div 
+                      className="calm-text-small"
+                      style={{ 
+                        color: 'var(--calm-functional-neutral)', 
+                        marginBottom: 'var(--calm-space-xxs)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'var(--calm-space-xs)'
+                      }}
+                    >
+                      <Users style={{ width: 'var(--calm-size-small)', height: 'var(--calm-size-small)' }} />
+                      <span>{primaryMuscle}</span>
                     </div>
-                    
-                    {/* Exercise Details */}
-                    <div className="space-y-2 text-sm text-[#A1A1A3]">
-                      <div className="flex items-center space-x-2">
-                        <Users className="h-3.5 w-3.5" />
-                        <span>{primaryMuscle}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-3.5 w-3.5" />
-                        <span>{exercise.equipment}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Add Button */}
-                    <div className="pt-2">
-                      {isAdded ? (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => removeFromWorkout(exercise.id)}
-                          className="w-full bg-[#FF375F]/10 border-[#FF375F]/30 text-[#FF375F] hover:bg-[#FF375F]/20 rounded-xl"
-                        >
-                          Added ✓
-                        </Button>
-                      ) : (
-                        <Button
-                          size="sm"
-                          onClick={() => addToWorkout(exercise)}
-                          className="w-full bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-0 rounded-xl transition-colors"
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Exercise
-                        </Button>
-                      )}
+                    <div 
+                      className="calm-text-small"
+                      style={{ 
+                        color: 'var(--calm-functional-neutral)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 'var(--calm-space-xs)'
+                      }}
+                    >
+                      <Clock style={{ width: 'var(--calm-size-small)', height: 'var(--calm-size-small)' }} />
+                      <span>{exercise.equipment}</span>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  
+                  {/* Add Button */}
+                  <div style={{ paddingTop: 'var(--calm-space-xs)' }}>
+                    {isAdded ? (
+                      <button
+                        onClick={() => removeFromWorkout(exercise.id)}
+                        className="calm-text-small calm-transition-standard"
+                        style={{
+                          width: '100%',
+                          padding: 'var(--calm-space-xs) var(--calm-space-s)',
+                          backgroundColor: 'var(--calm-functional-success)',
+                          color: 'var(--calm-primary-white)',
+                          border: 'none',
+                          borderRadius: 'var(--calm-radius-card)',
+                          fontWeight: 'var(--calm-weight-medium)',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Added ✓
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => addToWorkout(exercise)}
+                        className="calm-text-small calm-transition-standard"
+                        style={{
+                          width: '100%',
+                          padding: 'var(--calm-space-xs) var(--calm-space-s)',
+                          backgroundColor: 'var(--calm-accent-teal)',
+                          color: 'var(--calm-primary-white)',
+                          border: 'none',
+                          borderRadius: 'var(--calm-radius-card)',
+                          fontWeight: 'var(--calm-weight-medium)',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: 'var(--calm-space-xs)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--calm-accent-lavender)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = 'var(--calm-accent-teal)';
+                        }}
+                      >
+                        <Plus style={{ width: 'var(--calm-size-small)', height: 'var(--calm-size-small)' }} />
+                        Add Exercise
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
             )
           })}
         </div>

@@ -1,0 +1,142 @@
+/* ChatGPT's Calm Design System Tokens */
+:root {
+  /* Color System */
+  --calm-primary-blue: #1C3F72;
+  --calm-primary-white: #FFFFFF;
+  
+  --calm-secondary-gradient-blue: linear-gradient(#3B6CB7, #76B5C5);
+  --calm-secondary-card-gradient: linear-gradient(#F3F6FA, #D4DCE3);
+  
+  --calm-accent-teal: #3BB2B8;
+  --calm-accent-lavender: #7F84F2;
+  
+  --calm-functional-success: #00B894;
+  --calm-functional-warning: #FFD54F;
+  --calm-functional-neutral: #B0BEC5;
+  --calm-functional-border: #E0E0E0;
+  
+  --calm-background-dark: #0B2545;
+  --calm-background-light: #F8FAFC;
+  --calm-background-card: #FFFFFF;
+  
+  --calm-dark-background: #121212;
+  --calm-dark-card: #1E1E1E;
+  --calm-dark-text: #E0F7FA;
+  --calm-dark-highlight: #64FFDA;
+
+  /* Typography System */
+  --calm-font-primary: 'SF Pro Text', 'Roboto', sans-serif;
+  --calm-font-fallback: 'Helvetica Neue', Arial, sans-serif;
+  
+  --calm-weight-regular: 400;
+  --calm-weight-medium: 500;
+  --calm-weight-bold: 700;
+  
+  --calm-size-h1: 32px;
+  --calm-size-h2: 24px;
+  --calm-size-body: 16px;
+  --calm-size-small: 14px;
+  --calm-size-label: 12px;
+  
+  --calm-line-h1: 40px;
+  --calm-line-h2: 32px;
+  --calm-line-body: 24px;
+  --calm-line-small: 20px;
+
+  /* Spacing System */
+  --calm-space-xxs: 4px;
+  --calm-space-xs: 8px;
+  --calm-space-s: 16px;
+  --calm-space-m: 24px;
+  --calm-space-l: 32px;
+  --calm-space-xl: 48px;
+  --calm-space-xxl: 64px;
+
+  /* Border Radius */
+  --calm-radius-card: 12px;
+
+  /* Elevation */
+  --calm-elevation-card: 0 2px 8px rgba(0,0,0,0.05);
+
+  /* Animation */
+  --calm-duration-standard: 300ms;
+  --calm-duration-hover: 200ms;
+  --calm-duration-transition: 400ms;
+  --calm-duration-pill: 150ms;
+  --calm-easing-standard: ease-in-out;
+  --calm-easing-hover: ease-out;
+  --calm-easing-transition: ease;
+
+  /* Icons */
+  --calm-icon-nav: 28px;
+  --calm-icon-sidebar: 24px;
+}
+
+/* Dark Mode Application */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --calm-background-card: var(--calm-dark-card);
+    --calm-primary-white: var(--calm-dark-text);
+    --calm-functional-border: rgba(224, 224, 224, 0.1);
+  }
+}
+
+/* Utility Classes for Calm Design System */
+.calm-card {
+  background: var(--calm-background-card);
+  border-radius: var(--calm-radius-card);
+  box-shadow: var(--calm-elevation-card);
+  border: 1px solid var(--calm-functional-border);
+}
+
+.calm-text-h1 {
+  font-family: var(--calm-font-primary);
+  font-size: var(--calm-size-h1);
+  line-height: var(--calm-line-h1);
+  font-weight: var(--calm-weight-bold);
+}
+
+.calm-text-h2 {
+  font-family: var(--calm-font-primary);
+  font-size: var(--calm-size-h2);
+  line-height: var(--calm-line-h2);
+  font-weight: var(--calm-weight-medium);
+}
+
+.calm-text-body {
+  font-family: var(--calm-font-primary);
+  font-size: var(--calm-size-body);
+  line-height: var(--calm-line-body);
+  font-weight: var(--calm-weight-regular);
+}
+
+.calm-text-small {
+  font-family: var(--calm-font-primary);
+  font-size: var(--calm-size-small);
+  line-height: var(--calm-line-small);
+  font-weight: var(--calm-weight-regular);
+}
+
+.calm-text-label {
+  font-family: var(--calm-font-primary);
+  font-size: var(--calm-size-label);
+  font-weight: var(--calm-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.calm-transition-standard {
+  transition: all var(--calm-duration-standard) var(--calm-easing-standard);
+}
+
+.calm-transition-hover {
+  transition: all var(--calm-duration-hover) var(--calm-easing-hover);
+}
+
+.calm-gradient-blue {
+  background: var(--calm-secondary-gradient-blue);
+}
+
+.calm-gradient-card {
+  background: var(--calm-secondary-card-gradient);
+}
