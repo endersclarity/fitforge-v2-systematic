@@ -11,6 +11,38 @@
  */
 
 // ============================================================================
+// EQUIPMENT TYPES (extracted from exercises-real.json)
+// ============================================================================
+
+export const EQUIPMENT_TYPES = {
+  BENCH: 'Bench',
+  BODYWEIGHT: 'Bodyweight', 
+  DUMBBELL: 'Dumbbell',
+  KETTLEBELL: 'Kettlebell',
+  PLYBOX: 'Plybox',
+  PULL_UP_BAR: 'Pull-up_Bar',
+  TRX: 'TRX'
+} as const;
+
+export type EquipmentType = typeof EQUIPMENT_TYPES[keyof typeof EQUIPMENT_TYPES];
+
+// Equipment type array for filtering UI
+export const EQUIPMENT_OPTIONS: EquipmentType[] = [
+  EQUIPMENT_TYPES.BODYWEIGHT,
+  EQUIPMENT_TYPES.DUMBBELL, 
+  EQUIPMENT_TYPES.BENCH,
+  EQUIPMENT_TYPES.TRX,
+  EQUIPMENT_TYPES.PULL_UP_BAR,
+  EQUIPMENT_TYPES.KETTLEBELL,
+  EQUIPMENT_TYPES.PLYBOX
+];
+
+// Equipment type validation
+export function isValidEquipmentType(equipment: string): equipment is EquipmentType {
+  return Object.values(EQUIPMENT_TYPES).includes(equipment as EquipmentType);
+}
+
+// ============================================================================
 // USER PROFILE INTERFACES
 // ============================================================================
 
@@ -76,7 +108,7 @@ export interface Exercise {
   id: string; // Primary key, e.g., 'single_arm_upright_row'
   name: string;
   category: string; // 'Push', 'Pull', 'Legs', etc.
-  equipment: string;
+  equipment: EquipmentType;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   variation?: 'A' | 'B' | 'A/B';
   
@@ -105,7 +137,7 @@ export interface ExerciseInsert {
   id: string;
   name: string;
   category: string;
-  equipment: string;
+  equipment: EquipmentType;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   variation?: 'A' | 'B' | 'A/B';
   instructions?: string[];
