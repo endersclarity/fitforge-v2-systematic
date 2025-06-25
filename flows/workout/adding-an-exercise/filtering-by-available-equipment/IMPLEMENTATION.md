@@ -33,11 +33,18 @@ Implement equipment filtering for exercise selection following Fitbod UI pattern
 - **Utility Functions**: `filterExercisesByEquipment()`, `getUniqueEquipmentTypes()`, equipment presets
 - **localStorage Support**: Save/load user equipment preferences
 
-### ⏳ Task 2: Create Filter UI Component (PENDING)
-- [ ] Build toggle interface matching Fitbod patterns
-- [ ] Implement "Your available equipment" toggle
-- [ ] Add "Sort by" options (Alphabetically, Most Logged)
-- [ ] Style with existing Calm design tokens
+### ✅ Task 2: Create Filter UI Component (COMPLETED)
+- [x] Build toggle interface matching Fitbod patterns
+- [x] Implement "Your available equipment" toggle
+- [x] Add "Sort by" options (Alphabetically, Most Logged)
+- [x] Style with existing Calm design tokens
+
+**Results:**
+- **Component**: `components/equipment-filter.tsx` with full Fitbod UI pattern
+- **Features**: Equipment toggle, individual/preset selection, sort options
+- **Styling**: Dark theme with Calm tokens (#1C1C1E, #FF375F, etc.)
+- **State Management**: localStorage persistence for user preferences
+- **Demo Page**: `app/equipment-filter-demo/page.tsx` for testing
 
 ### ⏳ Task 3: Integrate Filter Logic (PENDING)
 - [ ] Connect filtering to exercise selection components
@@ -95,4 +102,4 @@ Implement equipment filtering for exercise selection following Fitbod UI pattern
 ---
 
 **Last Updated**: 2025-06-25  
-**Next Action**: Execute Task 1 - Extract equipment types from exercise database
+**Next Action**: Execute Task 3 - Integrate filter logic with exercise selection components
