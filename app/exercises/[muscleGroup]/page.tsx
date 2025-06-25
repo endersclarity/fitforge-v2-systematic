@@ -123,16 +123,20 @@ export default function ExerciseSelection() {
       .sort(([,a], [,b]) => b - a)[0]?.[0] || 'Mixed'
   }
 
-  const getMuscleGroupImage = (category: string) => {
-    const workoutType = categoryMapping[muscleGroup]?.[0] || 'ChestTriceps'
+  const getMuscleTargeting = (muscleEngagement: Record<string, number>) => {
+    const muscles = Object.entries(muscleEngagement)
+      .sort(([,a], [,b]) => b - a)
+      .filter(([,engagement]) => engagement > 0)
     
-    if (workoutType.includes('ChestTriceps')) return '/muscle-icons/push-muscles.svg'
-    if (workoutType.includes('BackBiceps')) return '/muscle-icons/pull-muscles.svg'
-    if (workoutType.includes('Legs')) return '/muscle-icons/legs-muscles.svg'
-    if (workoutType.includes('Abs')) return '/muscle-icons/abs-muscles.svg'
+    const primary = muscles.slice(0, 1).map(([muscle]) => muscle)
+    const secondary = muscles.slice(1, 3).map(([muscle]) => muscle)
     
-    return '/muscle-icons/push-muscles.svg' // default
+    return {
+      primary: primary.length > 0 ? primary : ['Mixed'],
+      secondary: secondary.length > 0 ? secondary : []
+    }
   }
+
 
   return (
     <div className="min-h-screen bg-[#121212] text-white">
@@ -172,6 +176,7 @@ export default function ExerciseSelection() {
           {exercises.map((exercise) => {
             const isAdded = addedExercises.has(exercise.id)
             const primaryMuscle = getPrimaryMuscle(exercise.muscleEngagement)
+            const muscleTargeting = getMuscleTargeting(exercise.muscleEngagement || {})
             
             return (
               <div 
@@ -192,25 +197,37 @@ export default function ExerciseSelection() {
                   e.currentTarget.style.boxShadow = 'var(--calm-elevation-card)';
                 }}
               >
-                {/* Large Image Area with Muscle Group Visualization */}
+                {/* Clean Gradient Header */}
                 <div 
-                  className="aspect-square flex items-center justify-center"
+                  className="aspect-square flex items-center justify-center calm-gradient-blue"
                   style={{ 
                     position: 'relative',
-                    background: 'var(--calm-secondary-gradient-blue)',
-                    padding: 'var(--calm-space-s)'
+                    padding: 'var(--calm-space-m)'
                   }}
                 >
-                  <img 
-                    src={getMuscleGroupImage(exercise.category)}
-                    alt={`${muscleGroup} muscles`}
-                    style={{ 
-                      width: '80%', 
-                      height: '80%',
-                      objectFit: 'contain',
-                      opacity: 0.95
-                    }} 
-                  />
+                  <div style={{ textAlign: 'center' }}>
+                    <div 
+                      style={{ 
+                        fontSize: '48px',
+                        marginBottom: 'var(--calm-space-xs)'
+                      }}
+                    >
+                      {muscleGroup === 'push' ? '💪' : 
+                       muscleGroup === 'pull' ? '🤏' : 
+                       muscleGroup === 'legs' ? '🏃' : '🔥'}
+                    </div>
+                    <div 
+                      className="calm-text-small"
+                      style={{ 
+                        color: 'var(--calm-primary-white)',
+                        fontWeight: 'var(--calm-weight-medium)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px'
+                      }}
+                    >
+                      {muscleGroupTitles[muscleGroup]} Day
+                    </div>
+                  </div>
                 </div>
                 
                 {/* Card Content */}
@@ -226,6 +243,37 @@ export default function ExerciseSelection() {
                   >
                     {exercise.name}
                   </h3>
+                  
+                  {/* Muscle Targeting - Clean Text */}
+                  <div style={{ marginBottom: 'var(--calm-space-s)' }}>
+                    {muscleTargeting.primary.length > 0 && (
+                      <div style={{ marginBottom: 'var(--calm-space-xxs)' }}>
+                        <span 
+                          className="calm-text-small"
+                          style={{ 
+                            color: 'var(--calm-accent-teal)',
+                            fontWeight: 'var(--calm-weight-medium)',
+                            fontSize: 'var(--calm-size-small)'
+                          }}
+                        >
+                          Primary: {muscleTargeting.primary.join(', ')}
+                        </span>
+                      </div>
+                    )}
+                    {muscleTargeting.secondary.length > 0 && (
+                      <div>
+                        <span 
+                          className="calm-text-small"
+                          style={{ 
+                            color: 'var(--calm-functional-neutral)',
+                            fontSize: 'var(--calm-size-label)'
+                          }}
+                        >
+                          Secondary: {muscleTargeting.secondary.join(', ')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   
                   {/* Difficulty Badge */}
                   <div style={{ marginBottom: 'var(--calm-space-s)' }}>
