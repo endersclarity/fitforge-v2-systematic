@@ -4,6 +4,7 @@
  */
 
 import { PlannedSet, WorkoutExercise } from '@/schemas/typescript-interfaces'
+import userCapacityBaselines from '@/data/user-capacity-baselines.json'
 
 interface ExerciseWithSets extends WorkoutExercise {
   plannedSets: PlannedSet[]
@@ -99,19 +100,93 @@ export function getVolumeColor(intensity: ReturnType<typeof getVolumeIntensity>)
 }
 
 /**
- * Calculate total volume summary by muscle group
+ * Get muscle capacity baseline from user data
+ * @param muscleName - Name of muscle (with underscores)
+ * @returns Capacity baseline or null if not found
+ */
+function getMuscleCapacityBaseline(muscleName: string): number | null {
+  const baselineName = muscleName.toLowerCase().replace(/_/g, '_')
+  const baselines = userCapacityBaselines.user_data.muscle_capacity_baselines
+  
+  // Map muscle names to baseline keys
+  const muscleMapping: Record<string, string> = {
+    'trapezius': 'trapezius_upper',
+    'trapezius_upper': 'trapezius_upper',
+    'trapezius_lower': 'trapezius_lower',
+    'latissimus_dorsi': 'latissimus_dorsi',
+    'biceps_brachii': 'biceps_brachii',
+    'rhomboids': 'rhomboids',
+    'pectoralis_major': 'pectoralis_major',
+    'triceps_brachii': 'triceps_brachii',
+    'deltoids': 'deltoids',
+    'anterior_deltoids': 'deltoids',
+    'rear_deltoids': 'deltoids',
+    'quadriceps': 'quadriceps',
+    'hamstrings': 'hamstrings_glutes',
+    'glutes': 'hamstrings_glutes',
+    'gluteus_maximus': 'hamstrings_glutes',
+    'core': 'core_abs',
+    'abs': 'core_abs',
+    'rectus_abdominis': 'core_abs',
+    'calves': 'calves',
+    'gastrocnemius': 'calves',
+    'soleus': 'calves',
+    'grip_forearms': 'forearms_grip',
+    'forearms': 'forearms_grip'
+  }
+  
+  const mappedKey = muscleMapping[baselineName]
+  if (mappedKey && (baselines as any)[mappedKey]) {
+    return (baselines as any)[mappedKey].capacity_volume_units
+  }
+  
+  return null
+}
+
+/**
+ * Calculate fatigue percentage based on user capacity baselines
+ * @param muscleName - Name of muscle
+ * @param currentVolume - Current workout volume
+ * @returns Fatigue percentage (0-100+)
+ */
+export function calculateMuscleFatiguePercentage(muscleName: string, currentVolume: number): number {
+  const baseline = getMuscleCapacityBaseline(muscleName)
+  if (!baseline || baseline === 0) return 0
+  
+  return Math.round((currentVolume / baseline) * 100)
+}
+
+/**
+ * Get fatigue intensity category based on percentage
+ * @param fatiguePercentage - Fatigue percentage (0-100+)
+ * @returns Intensity category
+ */
+export function getFatigueIntensity(fatiguePercentage: number): 'none' | 'low' | 'medium' | 'high' | 'very_high' {
+  if (fatiguePercentage === 0) return 'none'
+  if (fatiguePercentage < 30) return 'low'
+  if (fatiguePercentage < 70) return 'medium'
+  if (fatiguePercentage < 90) return 'high'
+  return 'very_high'
+}
+
+/**
+ * Calculate total volume summary by muscle group with meaningful fatigue percentages
  * @param muscleVolumes - Raw muscle volumes
- * @returns Formatted volume summary
+ * @returns Formatted volume summary with fatigue percentages
  */
 export function getMuscleVolumeSummary(muscleVolumes: Record<string, number>) {
   const summary = Object.entries(muscleVolumes)
     .filter(([_, volume]) => volume > 0)
-    .map(([muscle, volume]) => ({
-      muscle: muscle.replace(/_/g, ' '),
-      volume: Math.round(volume),
-      intensity: getVolumeIntensity(volume)
-    }))
-    .sort((a, b) => b.volume - a.volume)
+    .map(([muscle, volume]) => {
+      const fatiguePercentage = calculateMuscleFatiguePercentage(muscle, volume)
+      return {
+        muscle: muscle.replace(/_/g, ' '),
+        volume: Math.round(volume),
+        fatiguePercentage,
+        intensity: getFatigueIntensity(fatiguePercentage)
+      }
+    })
+    .sort((a, b) => b.fatiguePercentage - a.fatiguePercentage)
   
   return summary
 }

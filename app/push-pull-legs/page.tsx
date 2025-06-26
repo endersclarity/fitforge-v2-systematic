@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +19,7 @@ interface Exercise {
 }
 
 export default function PushPullLegsPage() {
+  const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedWorkoutType, setSelectedWorkoutType] = useState<string | null>(null);
 
@@ -89,21 +91,20 @@ export default function PushPullLegsPage() {
     // Route to specific workout type pages for better UX
     switch (workoutType) {
       case 'pull':
-        window.location.href = '/pull-day';
+        router.push('/pull-day');
         break;
       case 'push':
-        window.location.href = '/push-day';
+        router.push('/push-day');
         break;
       case 'legs':
-        window.location.href = '/legs-day';
+        router.push('/legs-day');
         break;
       case 'core':
-        window.location.href = '/core-day';
+        router.push('/core-day');
         break;
       default:
         // Fallback to simple logger if needed
-        const url = `/workout-simple?category=${workoutType}`;
-        window.location.href = url;
+        router.push(`/workout-simple?category=${workoutType}`);
     }
   };
 

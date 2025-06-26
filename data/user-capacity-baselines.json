@@ -1,0 +1,159 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2025-06-26",
+  "description": "User muscle capacity baselines established through capacity assessment quiz. Used to convert raw volume numbers into meaningful fatigue percentages.",
+  "methodology": "Submaximal testing using Epley formula validation. Based on exercise science protocols for safe strength assessment.",
+  "user_data": {
+    "bodyweight_lbs": 185,
+    "assessment_date": "2025-06-26",
+    "muscle_capacity_baselines": {
+      "trapezius_upper": {
+        "capacity_volume_units": 4680,
+        "test_exercise": "shoulder_shrugs",
+        "test_parameters": {
+          "weight_per_hand_lbs": 65,
+          "sets": 3,
+          "reps": 12,
+          "total_weight_lbs": 130
+        },
+        "calculation_method": "Epley formula + multiple sets to failure estimation"
+      },
+      "trapezius_lower": {
+        "capacity_volume_units": 6210,
+        "test_exercise": "low_trx_rows",
+        "test_parameters": {
+          "body_angle_degrees": 45,
+          "estimated_resistance_lbs": 90,
+          "sets": 3,
+          "reps": 23
+        },
+        "calculation_method": "TRX biomechanics + bodyweight percentage"
+      },
+      "latissimus_dorsi": {
+        "capacity_volume_units": 3885,
+        "test_exercise": "neutral_grip_pullups",
+        "test_parameters": {
+          "bodyweight_lbs": 185,
+          "max_consecutive_reps": 14
+        },
+        "calculation_method": "Bodyweight exercise + failure point estimation"
+      },
+      "biceps_brachii": {
+        "capacity_volume_units": 1512,
+        "test_exercise": "concentration_curl",
+        "test_parameters": {
+          "weight_per_hand_lbs": 35,
+          "sets": 3,
+          "reps": 12
+        },
+        "calculation_method": "Epley formula + multiple sets to failure estimation"
+      },
+      "rhomboids": {
+        "capacity_volume_units": 4590,
+        "test_exercise": "trx_face_pull",
+        "test_parameters": {
+          "body_angle_degrees": 45,
+          "estimated_resistance_lbs": 90,
+          "sets": 3,
+          "reps": 17
+        },
+        "calculation_method": "TRX biomechanics + bodyweight percentage"
+      },
+      "pectoralis_major": {
+        "capacity_volume_units": 3900,
+        "test_exercise": "dumbbell_bench_press",
+        "test_parameters": {
+          "weight_per_hand_lbs": 65,
+          "sets": 3,
+          "reps": 10,
+          "total_weight_lbs": 130
+        },
+        "calculation_method": "Epley formula + multiple sets to failure estimation"
+      },
+      "triceps_brachii": {
+        "capacity_volume_units": 2590,
+        "test_exercise": "dips",
+        "test_parameters": {
+          "bodyweight_percentage": 75,
+          "effective_weight_lbs": 139,
+          "max_consecutive_reps": 20
+        },
+        "calculation_method": "Bodyweight exercise + failure point estimation"
+      },
+      "deltoids": {
+        "capacity_volume_units": 540,
+        "test_exercise": "lateral_raises",
+        "test_parameters": {
+          "weight_per_hand_lbs": 15,
+          "sets": 3,
+          "reps": 12
+        },
+        "calculation_method": "Epley formula + multiple sets to failure estimation"
+      },
+      "quadriceps": {
+        "capacity_volume_units": 11100,
+        "test_exercise": "box_step_ups",
+        "test_parameters": {
+          "box_height_inches": 18,
+          "bodyweight_lbs": 185,
+          "reps_per_leg": 30,
+          "unilateral_load": true
+        },
+        "calculation_method": "Single-leg bodyweight exercise + high load factor"
+      },
+      "hamstrings_glutes": {
+        "capacity_volume_units": 11875,
+        "test_exercise": "weighted_glute_bridges",
+        "test_parameters": {
+          "added_weight_lbs": 52.5,
+          "bodyweight_lbs": 185,
+          "total_weight_lbs": 237.5,
+          "max_consecutive_reps": 50
+        },
+        "calculation_method": "Weighted bodyweight exercise + failure point estimation"
+      },
+      "core_abs": {
+        "capacity_volume_units": 4625,
+        "test_exercise": "decline_sit_ups",
+        "test_parameters": {
+          "leg_suspension": true,
+          "bodyweight_percentage": 50,
+          "effective_weight_lbs": 92.5,
+          "max_consecutive_reps": 50
+        },
+        "calculation_method": "Bodyweight exercise + partial resistance estimation"
+      },
+      "calves": {
+        "capacity_volume_units": 27750,
+        "test_exercise": "bodyweight_calf_raises",
+        "test_parameters": {
+          "bodyweight_lbs": 185,
+          "sets": 3,
+          "reps": 50
+        },
+        "calculation_method": "Bodyweight exercise + multiple sets capacity"
+      },
+      "forearms_grip": {
+        "capacity_volume_units": 1785,
+        "test_exercise": "grip_exerciser",
+        "test_parameters": {
+          "resistance_lbs": 35,
+          "sets": 3,
+          "reps": 17
+        },
+        "calculation_method": "Resistance device + multiple sets to failure estimation"
+      }
+    }
+  },
+  "usage_notes": {
+    "fatigue_calculation": "Current workout volume ÷ baseline capacity = fatigue percentage",
+    "color_coding": {
+      "green": "< 30% fatigue",
+      "yellow": "30-70% fatigue", 
+      "orange": "70-90% fatigue",
+      "red": "> 90% fatigue"
+    },
+    "update_frequency": "Reassess every 4-6 weeks or when strength significantly changes",
+    "accuracy_notes": "These baselines represent ~85% of maximum possible volume before muscle failure"
+  }
+}

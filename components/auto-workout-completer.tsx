@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -43,6 +44,7 @@ export function AutoWorkoutCompleter({
   fatigueTargets = [],
   exerciseRecommendations = []
 }: AutoWorkoutCompleterProps) {
+  const router = useRouter()
   const [completedWorkout, setCompletedWorkout] = useState<CompletedWorkout | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [exercises, setExercises] = useState<any[]>([])
@@ -341,7 +343,7 @@ export function AutoWorkoutCompleter({
     localStorage.setItem("workoutDraft", JSON.stringify(updatedDraft))
     
     // Trigger a page refresh or navigation to workout page
-    window.location.href = '/workouts'
+    router.push('/workouts')
   }
 
   if (targetMuscles.length === 0) {

@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Home, Dumbbell, Calendar, TrendingUp, BarChart3, Moon, Sun } from "lucide-react"
+import { Home, Dumbbell, Calendar, TrendingUp, BarChart3, Moon, Sun, User } from "lucide-react"
 import { useTheme } from "next-themes"
 
 const navItems = [
@@ -12,6 +12,7 @@ const navItems = [
   { href: "/push-pull-legs", label: "Start Workout", icon: Dumbbell },
   { href: "/muscle-explorer", label: "Exercise Library", icon: TrendingUp },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/profile", label: "Profile", icon: User },
   { href: "/workout-simple", label: "Quick Log", icon: Calendar },
 ]
 

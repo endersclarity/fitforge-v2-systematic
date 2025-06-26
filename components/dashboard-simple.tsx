@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -24,6 +25,7 @@ interface WeeklyStats {
 }
 
 export function DashboardSimple() {
+  const router = useRouter()
   const [recentWorkouts, setRecentWorkouts] = useState<WorkoutSession[]>([])
   const [weeklyStats, setWeeklyStats] = useState<WeeklyStats>({
     workouts: 0,
@@ -138,7 +140,7 @@ export function DashboardSimple() {
           {recentWorkouts.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground mb-4">No workouts logged yet</p>
-              <Button onClick={() => window.location.href = "/push-pull-legs"}>
+              <Button onClick={() => router.push("/push-pull-legs")}>
                 Start Your First Workout
               </Button>
             </div>
@@ -207,19 +209,19 @@ export function DashboardSimple() {
 
       {/* Quick Actions */}
       <div className="flex flex-col sm:flex-row gap-4">
-        <Button onClick={() => window.location.href = "/push-pull-legs"} className="flex-1 bg-[#FF375F] hover:bg-[#E63050] text-white">
+        <Button onClick={() => router.push("/push-pull-legs")} className="flex-1 bg-[#FF375F] hover:bg-[#E63050] text-white">
           🏋️ Start Workout
         </Button>
-        <Button variant="outline" onClick={() => window.location.href = "/analytics"} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
+        <Button variant="outline" onClick={() => router.push("/analytics")} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
           📊 View Analytics
         </Button>
       </div>
       
       <div className="flex flex-col sm:flex-row gap-4">
-        <Button variant="outline" onClick={() => window.location.href = "/muscle-explorer"} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
+        <Button variant="outline" onClick={() => router.push("/muscle-explorer")} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
           📚 Browse Exercises
         </Button>
-        <Button variant="outline" onClick={() => window.location.href = "/workout-simple"} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
+        <Button variant="outline" onClick={() => router.push("/workout-simple")} className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]">
           ⚡ Quick Log
         </Button>
       </div>
