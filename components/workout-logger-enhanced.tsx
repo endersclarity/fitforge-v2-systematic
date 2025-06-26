@@ -67,10 +67,11 @@ export function WorkoutLoggerEnhanced() {
 
   // Load workout queue and planned sets on mount
   useEffect(() => {
-    const savedQueue = localStorage.getItem('workoutQueue')
-    if (savedQueue) {
-      const queue = JSON.parse(savedQueue)
-      setWorkoutQueue(queue)
+    // First try the new format from pull/push/legs pages
+    const savedSession = localStorage.getItem('fitforge-workout-session')
+    if (savedSession) {
+      const session = JSON.parse(savedSession)
+      setWorkoutQueue(session.exercises || [])
       
       // Load planned workout if available
       const savedPlan = localStorage.getItem('workout-plan')
@@ -80,8 +81,8 @@ export function WorkoutLoggerEnhanced() {
         setPlannedSets(plan.plannedSets)
         
         // Set initial weight/reps from first planned set if available
-        if (plan.plannedSets.length > 0 && queue.length > 0) {
-          const firstExercisePlannedSets = plan.plannedSets.filter(set => set.exerciseId === queue[0].id)
+        if (plan.plannedSets.length > 0 && session.exercises.length > 0) {
+          const firstExercisePlannedSets = plan.plannedSets.filter(set => set.exerciseId === session.exercises[0].id)
           if (firstExercisePlannedSets.length > 0) {
             const firstSet = firstExercisePlannedSets[0]
             setCurrentWeight(firstSet.targetWeight.toString())
@@ -90,12 +91,23 @@ export function WorkoutLoggerEnhanced() {
         }
       }
       
-      if (queue.length === 0) {
+      if (session.exercises.length === 0) {
         // No exercises selected, redirect back
         router.push('/')
       }
     } else {
-      router.push('/')
+      // Fallback to legacy workoutQueue format
+      const savedQueue = localStorage.getItem('workoutQueue')
+      if (savedQueue) {
+        const queue = JSON.parse(savedQueue)
+        setWorkoutQueue(queue)
+        
+        if (queue.length === 0) {
+          router.push('/')
+        }
+      } else {
+        router.push('/')
+      }
     }
   }, [router])
 

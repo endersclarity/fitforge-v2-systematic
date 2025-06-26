@@ -55,14 +55,15 @@ export default function PullDayPage() {
   const sharedExercises = exercises.filter(ex => ex.variation === 'A/B')
 
   const createDefaultSets = (exercise: Exercise): PlannedSet[] => {
-    const defaultWeight = exercise.equipment === 'Bodyweight' ? 0 : 50
+    const defaultWeight = exercise.equipment === 'Pull-up_Bar' || exercise.equipment === 'Bodyweight' ? 0 : 50
+    const defaultReps = exercise.equipment === 'Pull-up_Bar' || exercise.equipment === 'Bodyweight' ? 8 : 10
     return [
       { 
         id: `${exercise.id}-set-1`, 
         exerciseId: exercise.id,
         setNumber: 1,
         targetWeight: defaultWeight, 
-        targetReps: 10, 
+        targetReps: defaultReps, 
         equipment: exercise.equipment,
         notes: ''
       }
