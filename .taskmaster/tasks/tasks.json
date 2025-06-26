@@ -9,7 +9,7 @@
         "testStrategy": "Validate JSON structure with schema validation, verify all exercise IDs exist in exercises-real.json, test TypeScript interfaces compile correctly, and ensure template data loads properly in components",
         "priority": "high",
         "dependencies": [],
-        "status": "review",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -79,7 +79,7 @@
         "dependencies": [
           6
         ],
-        "status": "review",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -159,7 +159,7 @@
         "dependencies": [
           8
         ],
-        "status": "in-progress",
+        "status": "cancelled",
         "subtasks": [
           {
             "id": 1,
@@ -249,10 +249,8 @@
         "details": "Create components/rest-timer.tsx with countdown display, pause/resume functionality, and audio/visual completion notification. Default to 60-90 seconds with user customization. Store timer preferences in localStorage. Integrate with WorkoutLoggerEnhanced component to auto-start after set completion. Include circular progress indicator and prominent time display using Calm Design System typography and colors.",
         "testStrategy": "Test timer accuracy and precision, verify localStorage persistence of preferences, validate auto-start integration with set completion, test pause/resume functionality, ensure responsive design, and verify completion notifications work properly",
         "priority": "medium",
-        "dependencies": [
-          9
-        ],
-        "status": "pending",
+        "dependencies": [],
+        "status": "done",
         "subtasks": []
       },
       {
@@ -326,7 +324,7 @@
         "description": "Build a colorful splash screen that checks localStorage for user profile data and routes to intake form or main app accordingly.",
         "details": "Create app/page.tsx as the root splash screen component displaying the colorful splash image from public/splashscreen_bunq.png. Implement localStorage check for user profile data with console logging for debugging. Create routing logic that navigates to intake form if no profile exists, or main app if profile is found. Reference flows/logging-in/flow-analysis.md for design patterns and user flow insights. Implement polished transitions using CSS animations or Framer Motion. Add loading states and error handling for localStorage access. Ensure responsive design works across mobile and desktop viewports using Calm Design System tokens.",
         "testStrategy": "Test user sees colorful splash image at localhost:8080 on page load, verify routing logic outputs to console showing profile check results, test user with empty localStorage gets routed to intake form, test user with existing profile data gets routed to main app, validate smooth transitions between splash and target screens, test responsive design on various screen sizes, and ensure accessibility compliance with proper alt text and ARIA labels",
-        "status": "in-progress",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "subtasks": [
@@ -369,7 +367,7 @@
               3
             ],
             "details": "Add loading state management using React state hooks. Implement fade-out animation for splash screen before navigation using CSS transitions or Framer Motion. Show subtle loading indicator during localStorage check if needed. Ensure transitions follow patterns from flows/logging-in/flow-analysis.md for consistency.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Verify smooth visual transitions between states, test animation performance on different devices, ensure no jarring visual jumps"
           },
           {
@@ -380,7 +378,7 @@
               4
             ],
             "details": "Handle scenarios where localStorage is disabled or throws exceptions. Add fallback navigation to intake form if profile check fails. Implement timeout handling if localStorage operations take too long. Add user-friendly error states that maintain the visual polish of the splash screen. Log all errors to console for debugging.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Test with localStorage disabled, simulate slow localStorage operations, verify graceful degradation in error scenarios"
           },
           {
@@ -408,9 +406,7 @@
       {
         "id": 18,
         "title": "Phase 4: Advanced Analytics & AI Implementation",
-        "description": "Implement sophisticated muscle recovery analytics, AI-powered workout generation, and progressive overload optimization with real-time fatigue visualization and intelligent exercise recommendations.",
-        "details": "Create comprehensive analytics system with multiple components: 1) Muscle Recovery Model (lib/muscle-recovery-model.ts) implementing 5-day recovery tracking with 48-72 hour windows per muscle group using engagement percentages from exercises-real.json. 2) AI Workout Generator (lib/ai-workout-generator.ts) that considers user profile, available equipment, muscle recovery states, and progressive overload principles to generate optimal workouts. 3) Progressive Overload Optimizer (lib/progressive-overload.ts) with algorithms for 3% volume increases through weight/rep adjustments based on performance history. 4) Advanced Fatigue Calculator (lib/advanced-fatigue-calculator.ts) using scientific muscle engagement data to calculate precise fatigue scores across all muscle groups. 5) Real-time Muscle Heat Map (components/muscle-heat-map.tsx) with SVG anatomical visualization showing color-coded fatigue states. 6) Intelligent Workout Suggestions (lib/intelligent-suggestions.ts) that analyzes equipment availability, muscle recovery, and user goals to recommend optimal exercise selection and ordering. Integrate all components with existing workout builder and logger systems while maintaining performance with localStorage data persistence.",
-        "testStrategy": "Test muscle recovery calculations accurately reflect 48-72 hour windows and engagement percentages from exercise data. Verify AI workout generator produces logical workouts considering all input parameters (profile, equipment, recovery, progressive overload). Validate progressive overload algorithms correctly calculate 3% volume increases and track performance trends. Test advanced fatigue calculator produces consistent and accurate muscle fatigue scores. Verify muscle heat map renders correctly with real-time updates and proper color coding for different fatigue levels. Test intelligent suggestions provide relevant and achievable exercise recommendations. Ensure all analytics components integrate seamlessly with existing workout builder and logger without performance degradation. Validate localStorage persistence of analytics data and recovery state across sessions.",
+        "description": "Implement sophisticated muscle recovery analytics, AI-powered workout generation, and progressive overload optimization with real-time fatigue visualization and intelligent exercise recommendations. Features follow 'condensed until it expands' principle with progressive disclosure design patterns inspired by Dream Workout Tracker research.",
         "status": "pending",
         "dependencies": [
           6,
@@ -420,7 +416,73 @@
           14
         ],
         "priority": "medium",
-        "subtasks": []
+        "details": "Create comprehensive analytics system with multiple components following progressive disclosure UX patterns: 1) Muscle Recovery Model (lib/muscle-recovery-model.ts) implementing 5-day recovery tracking with 48-72 hour windows per muscle group using engagement percentages from exercises-real.json, with color-coded status indicators (red/yellow/green recovery states). 2) AI Workout Generator (lib/ai-workout-generator.ts) that considers user profile, available equipment, muscle recovery states, and progressive overload principles to generate optimal workouts. 3) Progressive Overload Optimizer (lib/progressive-overload.ts) with Brzycki formula for one-rep max calculations and 3% rule progress tracking with smart progression recommendations. 4) Advanced Fatigue Calculator (lib/advanced-fatigue-calculator.ts) using scientific muscle engagement data to calculate precise fatigue scores across all muscle groups. 5) Real-time Muscle Heat Map (components/muscle-heat-map.tsx) with SVG anatomical visualization showing color-coded fatigue states. 6) Intelligent Workout Suggestions (lib/intelligent-suggestions.ts) that analyzes equipment availability, muscle recovery, and user goals to recommend optimal exercise selection and ordering. 7) Progressive Disclosure UI Components: expandable workout cards with condensed view by default and detailed analytics on click/expand. 8) Volume Distribution Visualization with percentage bars showing muscle group balance. 9) Gamification Elements including muscle balance game and progression streak tracking. All components integrate with existing workout builder and logger systems while maintaining performance with localStorage data persistence.",
+        "testStrategy": "Test muscle recovery calculations accurately reflect 48-72 hour windows with color-coded indicators (red/yellow/green states). Verify Brzycki formula calculations for one-rep max tracking and 3% rule progression recommendations. Validate AI workout generator produces logical workouts considering all input parameters. Test progressive disclosure UI - workout cards display condensed view by default and expand to show detailed analytics on interaction. Verify volume distribution visualization accurately displays muscle group balance with percentage bars. Test gamification elements (muscle balance game, progression streaks) provide engaging user experience. Validate advanced fatigue calculator produces consistent scores and muscle heat map renders with real-time color-coded updates. Ensure all analytics components follow 'condensed until it expands' design principle and integrate seamlessly with existing systems without performance degradation. Test localStorage persistence of all analytics data, recovery states, and gamification progress across sessions.",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Implement Brzycki Formula One-Rep Max Calculator",
+            "description": "Create lib/one-rep-max-calculator.ts with Brzycki formula implementation for strength progression tracking",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Build Progressive Disclosure Workout Cards",
+            "description": "Create expandable workout card components that show condensed view by default and detailed analytics on click/expand",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Implement Color-Coded Recovery Status Indicators",
+            "description": "Add red/yellow/green color coding to muscle recovery model to visually indicate recovery states",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Create Volume Distribution Visualization",
+            "description": "Build components to display muscle group balance with percentage bars showing workout volume distribution",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Implement 3% Rule Progress Tracking",
+            "description": "Create smart progression recommendation system using 3% rule for volume increases with progress tracking",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "Build Gamification Elements",
+            "description": "Implement muscle balance game and progression streak tracking for user engagement",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          },
+          {
+            "id": 7,
+            "title": "Integrate Progressive Disclosure Design System",
+            "description": "Apply 'condensed until it expands' principle across all analytics components and UI elements",
+            "status": "pending",
+            "dependencies": [],
+            "details": "",
+            "testStrategy": ""
+          }
+        ]
       },
       {
         "id": 19,
@@ -457,7 +519,7 @@
     ],
     "metadata": {
       "created": "2025-06-25T16:20:00.000Z",
-      "updated": "2025-06-26T01:27:00.731Z",
+      "updated": "2025-06-26T06:49:39.043Z",
       "description": "Tasks for master context"
     }
   }

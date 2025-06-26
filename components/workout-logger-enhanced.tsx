@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Plus, Minus, Clock, CheckCircle, Dumbbell, Timer } from "lucide-react"
 import { WorkoutPlan, PlannedSet } from '@/schemas/typescript-interfaces'
+import { RestTimer } from './rest-timer'
 
 interface WorkoutExercise {
   id: string
@@ -50,6 +51,7 @@ export function WorkoutLoggerEnhanced() {
   const [isWorkoutComplete, setIsWorkoutComplete] = useState(false)
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null)
   const [plannedSets, setPlannedSets] = useState<PlannedSet[]>([])
+  const [showRestTimer, setShowRestTimer] = useState(false)
 
   // Timer effect
   useEffect(() => {
@@ -123,6 +125,9 @@ export function WorkoutLoggerEnhanced() {
 
     setSets(prev => [...prev, newSet])
     
+    // Auto-start rest timer after set completion
+    setShowRestTimer(true)
+    
     // Auto-populate next planned set values if available
     const nextSetNumber = exerciseSets.length + 2 // +2 because we just added one
     const nextPlannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
@@ -138,6 +143,10 @@ export function WorkoutLoggerEnhanced() {
 
   const removeSet = (setId: string) => {
     setSets(prev => prev.filter(set => set.id !== setId))
+  }
+
+  const handleRestTimerComplete = () => {
+    setShowRestTimer(false)
   }
 
   const nextExercise = () => {
@@ -435,6 +444,17 @@ export function WorkoutLoggerEnhanced() {
             </Button>
           </CardContent>
         </Card>
+
+        {/* Rest Timer */}
+        {showRestTimer && (
+          <div className="mb-6">
+            <RestTimer
+              onComplete={handleRestTimerComplete}
+              autoStart={true}
+              className="mx-auto max-w-sm"
+            />
+          </div>
+        )}
 
         {/* Sets List */}
         {exerciseSets.length > 0 && (
