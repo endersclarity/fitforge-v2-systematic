@@ -9,12 +9,15 @@ import { useRouter } from "next/navigation"
 import { 
   ArrowLeft, 
   Play, 
-  Dumbbell, 
-  Users, 
+  Plus,
+  Minus,
   Clock,
   Target
 } from "lucide-react"
+import { Input } from "@/components/ui/input"
 import exercisesData from '@/data/exercises-real.json'
+import { useRealTimeMuscleVolume } from '@/hooks/useRealTimeMuscleVolume'
+import { WorkoutExercise, PlannedSet } from '@/schemas/typescript-interfaces'
 
 interface Exercise {
   id: string
@@ -26,9 +29,17 @@ interface Exercise {
   muscleEngagement: Record<string, number>
 }
 
+interface ExerciseWithSets extends WorkoutExercise {
+  plannedSets: PlannedSet[]
+}
+
 export default function PullDayPage() {
   const router = useRouter()
   const [exercises, setExercises] = useState<Exercise[]>([])
+  const [selectedExercises, setSelectedExercises] = useState<ExerciseWithSets[]>([])
+
+  // Real-time muscle volume calculation
+  const { normalizedVolumes, summary, estimatedDuration } = useRealTimeMuscleVolume(selectedExercises)
 
   useEffect(() => {
     // Filter BackBiceps exercises and organize by variation
@@ -43,63 +54,135 @@ export default function PullDayPage() {
   const pullBExercises = exercises.filter(ex => ex.variation === 'B') 
   const sharedExercises = exercises.filter(ex => ex.variation === 'A/B')
 
-  const getEquipmentIcon = (equipment: string) => {
-    switch (equipment) {
-      case 'Pull-up_Bar': return '🔥'
-      case 'Dumbbell': return '🏋️'
-      case 'TRX': return '⚡'
-      case 'Bench': return '🪑'
-      default: return '💪'
-    }
-  }
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Beginner': return 'bg-green-500'
-      case 'Intermediate': return 'bg-yellow-500'
-      case 'Advanced': return 'bg-red-500'
-      default: return 'bg-gray-500'
-    }
-  }
-
-  const startWorkout = (variation: 'A' | 'B') => {
-    // Navigate to workout logger with specific pull variation
-    router.push(`/workout-simple?category=pull&variation=${variation}`)
-  }
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.2,
-        staggerChildren: 0.1
+  const createDefaultSets = (exercise: Exercise): PlannedSet[] => {
+    const defaultWeight = exercise.equipment === 'Bodyweight' ? 0 : 50
+    return [
+      { 
+        id: `${exercise.id}-set-1`, 
+        exerciseId: exercise.id,
+        setNumber: 1,
+        targetWeight: defaultWeight, 
+        targetReps: 10, 
+        equipment: exercise.equipment,
+        notes: ''
       }
-    }
+    ]
   }
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 30
-      }
+  const addExercise = (exercise: Exercise) => {
+    const workoutExercise: ExerciseWithSets = {
+      id: exercise.id,
+      name: exercise.name,
+      category: exercise.category,
+      equipment: exercise.equipment,
+      difficulty: exercise.difficulty,
+      muscleEngagement: exercise.muscleEngagement,
+      plannedSets: createDefaultSets(exercise)
     }
+    setSelectedExercises(prev => [...prev, workoutExercise])
+  }
+
+  const removeExercise = (exerciseId: string) => {
+    setSelectedExercises(prev => prev.filter(ex => ex.id !== exerciseId))
+  }
+
+  const updateSetValue = (exerciseId: string, setIndex: number, field: 'targetWeight' | 'targetReps', value: number) => {
+    setSelectedExercises(prev => prev.map(exercise => {
+      if (exercise.id !== exerciseId) return exercise
+      
+      const updatedSets = [...exercise.plannedSets]
+      updatedSets[setIndex] = {
+        ...updatedSets[setIndex],
+        [field]: Math.max(0, value)
+      }
+      
+      return {
+        ...exercise,
+        plannedSets: updatedSets
+      }
+    }))
+  }
+
+  const updateExerciseRestTime = (exerciseId: string, restSeconds: number) => {
+    setSelectedExercises(prev => prev.map(exercise => {
+      if (exercise.id !== exerciseId) return exercise
+      
+      // Update all sets to use the new rest time
+      const updatedSets = exercise.plannedSets.map(set => ({
+        ...set,
+        restSeconds: Math.max(0, restSeconds)
+      }))
+      
+      return {
+        ...exercise,
+        plannedSets: updatedSets
+      }
+    }))
+  }
+
+  const addSet = (exerciseId: string) => {
+    setSelectedExercises(prev => prev.map(exercise => {
+      if (exercise.id !== exerciseId) return exercise
+      
+      const lastSet = exercise.plannedSets[exercise.plannedSets.length - 1]
+      const newSetNumber = exercise.plannedSets.length + 1
+      const newSet: PlannedSet = {
+        id: `${exerciseId}-set-${newSetNumber}`,
+        exerciseId: exerciseId,
+        setNumber: newSetNumber,
+        targetWeight: lastSet?.targetWeight || (exercise.equipment === 'Bodyweight' ? 0 : 50),
+        targetReps: lastSet?.targetReps || 10,
+        equipment: exercise.equipment,
+        notes: ''
+      }
+      
+      return {
+        ...exercise,
+        plannedSets: [...exercise.plannedSets, newSet]
+      }
+    }))
+  }
+
+  const removeSet = (exerciseId: string, setIndex: number) => {
+    setSelectedExercises(prev => prev.map(exercise => {
+      if (exercise.id !== exerciseId) return exercise
+      
+      // Don't allow removing the last set
+      if (exercise.plannedSets.length <= 1) return exercise
+      
+      const updatedSets = exercise.plannedSets.filter((_, index) => index !== setIndex)
+      
+      return {
+        ...exercise,
+        plannedSets: updatedSets
+      }
+    }))
+  }
+
+  const startWorkout = () => {
+    if (selectedExercises.length === 0) {
+      alert('Please select at least one exercise before starting your workout.');
+      return;
+    }
+
+    // Save workout session to localStorage for the execution page
+    const workoutSession = {
+      exercises: selectedExercises,
+      workoutType: 'pull',
+      startTime: new Date().toISOString()
+    };
+    
+    localStorage.setItem('fitforge-workout-session', JSON.stringify(workoutSession));
+    
+    // Navigate to dedicated workout execution page
+    router.push('/workout-execution');
   }
 
   return (
-    <div className="min-h-screen bg-fitbod-background text-fitbod-text p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-fitbod-background text-fitbod-text p-4">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-4 mb-8"
-        >
+        <div className="flex items-center gap-4 mb-6">
           <Button
             variant="outline"
             size="icon"
@@ -109,193 +192,365 @@ export default function PullDayPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-4xl font-bold text-fitbod-text">Pull Day Workouts</h1>
-            <p className="text-fitbod-text-secondary text-lg mt-2">
-              Choose your pull day variation - vertical or horizontal focus
+            <h1 className="text-2xl font-bold text-fitbod-text">Build Your Pull Workout</h1>
+            <p className="text-fitbod-text-secondary">
+              Add exercises from Pull A, Pull B, or shared exercises
             </p>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Workout Variations */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid lg:grid-cols-2 gap-8"
-        >
+        <div className="grid grid-cols-3 gap-6">
           {/* Pull A Card */}
-          <motion.div variants={cardVariants}>
-            <Card className="bg-fitbod-card border-fitbod-subtle h-full">
-              <CardHeader className="border-b border-fitbod-subtle">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-2xl text-fitbod-text flex items-center gap-3">
-                      <span className="text-3xl">🏋️</span>
-                      Pull A - Vertical Focus
-                    </CardTitle>
-                    <p className="text-fitbod-text-secondary mt-2">
-                      Wide grip pullups and vertical pulling emphasis
-                    </p>
-                  </div>
-                  <Badge className="bg-blue-500 text-white">Variation A</Badge>
+          <Card className="bg-fitbod-card border-fitbod-subtle">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg text-fitbod-text">Pull A</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {pullAExercises.map((exercise) => (
+                <div key={exercise.id} className="flex items-center justify-between p-2 hover:bg-fitbod-subtle rounded">
+                  <span className="text-sm text-fitbod-text">{exercise.name}</span>
+                  <Button
+                    size="sm"
+                    onClick={() => addExercise(exercise)}
+                    disabled={selectedExercises.some(ex => ex.id === exercise.id)}
+                    className="h-6 w-6 p-0 bg-fitbod-accent hover:bg-red-600"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
                 </div>
-              </CardHeader>
+              ))}
               
-              <CardContent className="p-6">
-                {/* Pull A Specific Exercises */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-fitbod-text-secondary mb-3 uppercase tracking-wide">
-                    A-Specific Exercises ({pullAExercises.length})
-                  </h4>
-                  <div className="space-y-3">
-                    {pullAExercises.map((exercise) => (
-                      <div key={exercise.id} className="flex items-center justify-between p-3 bg-fitbod-subtle rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl">{getEquipmentIcon(exercise.equipment)}</span>
-                          <div>
-                            <p className="font-medium text-fitbod-text">{exercise.name}</p>
-                            <p className="text-sm text-fitbod-text-secondary">{exercise.equipment}</p>
-                          </div>
-                        </div>
-                        <Badge className={`${getDifficultyColor(exercise.difficulty)} text-white text-xs`}>
-                          {exercise.difficulty}
-                        </Badge>
-                      </div>
-                    ))}
+              <div className="pt-2 border-t border-fitbod-subtle">
+                <p className="text-xs text-fitbod-text-secondary mb-2">Shared (A/B):</p>
+                {sharedExercises.map((exercise) => (
+                  <div key={`a-${exercise.id}`} className="flex items-center justify-between p-1 hover:bg-fitbod-subtle rounded">
+                    <span className="text-xs text-fitbod-text-secondary">{exercise.name}</span>
+                    <Button
+                      size="sm"
+                      onClick={() => addExercise(exercise)}
+                      disabled={selectedExercises.some(ex => ex.id === exercise.id)}
+                      className="h-5 w-5 p-0 bg-fitbod-accent hover:bg-red-600"
+                    >
+                      <Plus className="h-2 w-2" />
+                    </Button>
                   </div>
-                </div>
-
-                {/* Shared A/B Exercises */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-fitbod-text-secondary mb-3 uppercase tracking-wide">
-                    Additional Options ({sharedExercises.length})
-                  </h4>
-                  <div className="space-y-2">
-                    {sharedExercises.map((exercise) => (
-                      <div key={`a-${exercise.id}`} className="flex items-center justify-between p-2 bg-fitbod-background rounded-md">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">{getEquipmentIcon(exercise.equipment)}</span>
-                          <span className="text-sm text-fitbod-text">{exercise.name}</span>
-                        </div>
-                        <Badge variant="outline" className="text-xs border-fitbod-subtle text-fitbod-text-secondary">
-                          {exercise.equipment}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Start Button */}
-                <Button 
-                  onClick={() => startWorkout('A')}
-                  className="w-full py-6 text-lg font-semibold bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  <Play className="h-5 w-5 mr-2" />
-                  Start Pull A Workout
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Pull B Card */}
-          <motion.div variants={cardVariants}>
-            <Card className="bg-fitbod-card border-fitbod-subtle h-full">
-              <CardHeader className="border-b border-fitbod-subtle">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-2xl text-fitbod-text flex items-center gap-3">
-                      <span className="text-3xl">⚡</span>
-                      Pull B - Horizontal Focus
-                    </CardTitle>
-                    <p className="text-fitbod-text-secondary mt-2">
-                      Chin-ups, rows and horizontal pulling emphasis
-                    </p>
-                  </div>
-                  <Badge className="bg-purple-500 text-white">Variation B</Badge>
+          <Card className="bg-fitbod-card border-fitbod-subtle">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg text-fitbod-text">Pull B</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {pullBExercises.map((exercise) => (
+                <div key={exercise.id} className="flex items-center justify-between p-2 hover:bg-fitbod-subtle rounded">
+                  <span className="text-sm text-fitbod-text">{exercise.name}</span>
+                  <Button
+                    size="sm"
+                    onClick={() => addExercise(exercise)}
+                    disabled={selectedExercises.some(ex => ex.id === exercise.id)}
+                    className="h-6 w-6 p-0 bg-fitbod-accent hover:bg-red-600"
+                  >
+                    <Plus className="h-3 w-3" />
+                  </Button>
                 </div>
-              </CardHeader>
+              ))}
               
-              <CardContent className="p-6">
-                {/* Pull B Specific Exercises */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-fitbod-text-secondary mb-3 uppercase tracking-wide">
-                    B-Specific Exercises ({pullBExercises.length})
-                  </h4>
-                  <div className="space-y-3">
-                    {pullBExercises.map((exercise) => (
-                      <div key={exercise.id} className="flex items-center justify-between p-3 bg-fitbod-subtle rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl">{getEquipmentIcon(exercise.equipment)}</span>
-                          <div>
-                            <p className="font-medium text-fitbod-text">{exercise.name}</p>
-                            <p className="text-sm text-fitbod-text-secondary">{exercise.equipment}</p>
+              <div className="pt-2 border-t border-fitbod-subtle">
+                <p className="text-xs text-fitbod-text-secondary mb-2">Shared (A/B):</p>
+                {sharedExercises.map((exercise) => (
+                  <div key={`b-${exercise.id}`} className="flex items-center justify-between p-1 hover:bg-fitbod-subtle rounded">
+                    <span className="text-xs text-fitbod-text-secondary">{exercise.name}</span>
+                    <Button
+                      size="sm"
+                      onClick={() => addExercise(exercise)}
+                      disabled={selectedExercises.some(ex => ex.id === exercise.id)}
+                      className="h-5 w-5 p-0 bg-fitbod-accent hover:bg-red-600"
+                    >
+                      <Plus className="h-2 w-2" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Workout Builder */}
+          <Card className="bg-fitbod-card border-fitbod-subtle">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg text-fitbod-text">Your Workout</CardTitle>
+                <div className="flex items-center gap-2 text-xs text-fitbod-text-secondary">
+                  <Clock className="h-3 w-3" />
+                  {estimatedDuration}min
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {selectedExercises.length === 0 ? (
+                <p className="text-sm text-fitbod-text-secondary text-center py-4">
+                  Add exercises to build your workout
+                </p>
+              ) : (
+                <div className="space-y-4">
+                  {selectedExercises.map((exercise, index) => (
+                    <div key={exercise.id} className="p-3 bg-fitbod-subtle rounded">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-fitbod-text">{exercise.name}</span>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => addSet(exercise.id)}
+                            className="h-6 w-6 p-0 text-fitbod-accent hover:text-red-400"
+                            title="Add set"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => removeExercise(exercise.id)}
+                            className="h-6 w-6 p-0 text-fitbod-text-secondary hover:text-fitbod-text"
+                            title="Remove exercise"
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Rest Timer Control */}
+                      <div className="flex items-center gap-2 mb-3 p-2 bg-fitbod-background rounded">
+                        <Clock className="h-3 w-3 text-fitbod-text-secondary" />
+                        <span className="text-xs text-fitbod-text-secondary">Rest:</span>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => updateExerciseRestTime(exercise.id, (exercise.plannedSets[0]?.restSeconds || 120) - 30)}
+                            className="h-5 w-5 p-0 text-fitbod-text-secondary hover:text-fitbod-text"
+                          >
+                            <Minus className="h-2 w-2" />
+                          </Button>
+                          <Input
+                            type="number"
+                            value={exercise.plannedSets[0]?.restSeconds || 120}
+                            onChange={(e) => updateExerciseRestTime(exercise.id, parseInt(e.target.value) || 120)}
+                            className="w-12 h-5 text-xs text-center bg-fitbod-background border-fitbod-subtle text-fitbod-text [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          />
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => updateExerciseRestTime(exercise.id, (exercise.plannedSets[0]?.restSeconds || 120) + 30)}
+                            className="h-5 w-5 p-0 text-fitbod-text-secondary hover:text-fitbod-text"
+                          >
+                            <Plus className="h-2 w-2" />
+                          </Button>
+                          <span className="text-xs text-fitbod-text-secondary">sec</span>
+                        </div>
+                      </div>
+                      
+                      {/* Editable Sets */}
+                      <div className="space-y-2">
+                        {exercise.plannedSets.map((set, setIndex) => (
+                          <div key={setIndex} className="flex items-center gap-2 text-xs">
+                            <span className="text-fitbod-text-secondary w-8">Set {setIndex + 1}</span>
+                            
+                            {/* Weight Input */}
+                            {exercise.equipment !== 'Bodyweight' && (
+                              <div className="flex items-center gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => updateSetValue(exercise.id, setIndex, 'targetWeight', set.targetWeight - 5)}
+                                  className="h-6 w-6 p-0 text-fitbod-text-secondary hover:text-fitbod-text"
+                                >
+                                  <Minus className="h-2 w-2" />
+                                </Button>
+                                <Input
+                                  type="number"
+                                  value={set.targetWeight}
+                                  onChange={(e) => updateSetValue(exercise.id, setIndex, 'targetWeight', parseInt(e.target.value) || 0)}
+                                  className="w-14 h-7 text-xs text-center bg-fitbod-background border-fitbod-subtle text-fitbod-text [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                />
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => updateSetValue(exercise.id, setIndex, 'targetWeight', set.targetWeight + 5)}
+                                  className="h-6 w-6 p-0 text-fitbod-text-secondary hover:text-fitbod-text"
+                                >
+                                  <Plus className="h-2 w-2" />
+                                </Button>
+                                <span className="text-fitbod-text-secondary">lb</span>
+                              </div>
+                            )}
+                            
+                            {/* Reps Input */}
+                            <div className="flex items-center gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => updateSetValue(exercise.id, setIndex, 'targetReps', set.targetReps - 1)}
+                                className="h-6 w-6 p-0 text-fitbod-text-secondary hover:text-fitbod-text"
+                              >
+                                <Minus className="h-2 w-2" />
+                              </Button>
+                              <Input
+                                type="number"
+                                value={set.targetReps}
+                                onChange={(e) => updateSetValue(exercise.id, setIndex, 'targetReps', parseInt(e.target.value) || 0)}
+                                className="w-14 h-7 text-xs text-center bg-fitbod-background border-fitbod-subtle text-fitbod-text [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                              />
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => updateSetValue(exercise.id, setIndex, 'targetReps', set.targetReps + 1)}
+                                className="h-6 w-6 p-0 text-fitbod-text-secondary hover:text-fitbod-text"
+                              >
+                                <Plus className="h-2 w-2" />
+                              </Button>
+                              <span className="text-fitbod-text-secondary">reps</span>
+                            </div>
+                            
+                            {/* Remove Set Button */}
+                            {exercise.plannedSets.length > 1 && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => removeSet(exercise.id, setIndex)}
+                                className="h-6 w-6 p-0 text-fitbod-text-secondary hover:text-red-400 ml-auto"
+                                title="Remove set"
+                              >
+                                <Minus className="h-2 w-2" />
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {/* Enhanced Muscle Fatigue Visualization */}
+                  {summary && summary.length > 0 && (
+                    <div className="pt-4 border-t border-fitbod-subtle">
+                      <p className="text-sm font-medium text-fitbod-text mb-3">Muscle Fatigue</p>
+                      <div className="space-y-3">
+                        {summary.slice(0, 6).map((muscle) => (
+                          <div key={muscle.muscle} className="space-y-1">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-fitbod-text font-medium">{muscle.muscle}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-fitbod-text font-medium">{muscle.fatiguePercentage}%</span>
+                                <Badge 
+                                  className={`text-xs h-4 px-2 ${
+                                    muscle.intensity === 'very_high' ? 'bg-red-600 text-white' :
+                                    muscle.intensity === 'high' ? 'bg-red-500 text-white' :
+                                    muscle.intensity === 'medium' ? 'bg-yellow-500 text-black' :
+                                    muscle.intensity === 'low' ? 'bg-green-500 text-white' : 'bg-gray-500 text-white'
+                                  }`}
+                                >
+                                  {muscle.intensity.replace('_', ' ')}
+                                </Badge>
+                              </div>
+                            </div>
+                            <div className="w-full bg-fitbod-background rounded-full h-2 overflow-hidden">
+                              <div 
+                                className={`h-2 rounded-full transition-all duration-300 ${
+                                  muscle.intensity === 'very_high' ? 'bg-red-600' :
+                                  muscle.intensity === 'high' ? 'bg-red-500' :
+                                  muscle.intensity === 'medium' ? 'bg-yellow-500' :
+                                  muscle.intensity === 'low' ? 'bg-green-500' : 'bg-gray-500'
+                                }`}
+                                style={{ 
+                                  width: `${Math.min(100, muscle.fatiguePercentage)}%`
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Fatigue Legend */}
+                      <div className="mt-4 pt-3 border-t border-fitbod-subtle">
+                        <p className="text-xs text-fitbod-text-secondary mb-2">Fatigue Scale:</p>
+                        <div className="flex items-center gap-3 text-xs">
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-green-500 rounded"></div>
+                            <span className="text-fitbod-text-secondary">Low (&lt;30%)</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+                            <span className="text-fitbod-text-secondary">Med (30-70%)</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-red-500 rounded"></div>
+                            <span className="text-fitbod-text-secondary">High (70-90%)</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <div className="w-3 h-3 bg-red-600 rounded"></div>
+                            <span className="text-fitbod-text-secondary">Max (&gt;90%)</span>
                           </div>
                         </div>
-                        <Badge className={`${getDifficultyColor(exercise.difficulty)} text-white text-xs`}>
-                          {exercise.difficulty}
-                        </Badge>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  )}
+                  
+                  <Button 
+                    onClick={startWorkout}
+                    className="w-full mt-4 bg-fitbod-accent hover:bg-red-600 text-white"
+                    disabled={selectedExercises.length === 0}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Start Workout
+                  </Button>
                 </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
 
-                {/* Shared A/B Exercises */}
-                <div className="mb-6">
-                  <h4 className="text-sm font-semibold text-fitbod-text-secondary mb-3 uppercase tracking-wide">
-                    Additional Options ({sharedExercises.length})
-                  </h4>
-                  <div className="space-y-2">
-                    {sharedExercises.map((exercise) => (
-                      <div key={`b-${exercise.id}`} className="flex items-center justify-between p-2 bg-fitbod-background rounded-md">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm">{getEquipmentIcon(exercise.equipment)}</span>
-                          <span className="text-sm text-fitbod-text">{exercise.name}</span>
-                        </div>
-                        <Badge variant="outline" className="text-xs border-fitbod-subtle text-fitbod-text-secondary">
-                          {exercise.equipment}
-                        </Badge>
-                      </div>
-                    ))}
+        {/* Muscle Map Card - Horizontal at Bottom */}
+        <Card className="bg-fitbod-card border-fitbod-subtle mt-6">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg text-fitbod-text">Muscle Fatigue Map</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {selectedExercises.length === 0 ? (
+              <p className="text-sm text-fitbod-text-secondary text-center py-4">
+                Add exercises to see muscle fatigue levels
+              </p>
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {summary.map((muscle) => (
+                  <div key={muscle.muscle} className="text-center p-3 bg-fitbod-subtle rounded">
+                    <p className="text-sm font-medium text-fitbod-text mb-2">
+                      {muscle.muscle}
+                    </p>
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-lg font-bold text-fitbod-text">
+                        {muscle.fatiguePercentage}%
+                      </span>
+                      <div 
+                        className={`w-3 h-3 rounded-full ${
+                          muscle.intensity === 'very_high' ? 'bg-red-600' :
+                          muscle.intensity === 'high' ? 'bg-red-500' :
+                          muscle.intensity === 'medium' ? 'bg-yellow-500' :
+                          muscle.intensity === 'low' ? 'bg-green-500' : 'bg-gray-500'
+                        }`}
+                      />
+                    </div>
+                    <p className="text-xs text-fitbod-text-secondary mt-1">
+                      {muscle.intensity.replace('_', ' ')} fatigue
+                    </p>
                   </div>
-                </div>
-
-                {/* Start Button */}
-                <Button 
-                  onClick={() => startWorkout('B')}
-                  className="w-full py-6 text-lg font-semibold bg-purple-600 hover:bg-purple-700 text-white"
-                >
-                  <Play className="h-5 w-5 mr-2" />
-                  Start Pull B Workout  
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </motion.div>
-
-        {/* Summary Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4"
-        >
-          <Card className="p-4 bg-fitbod-card border-fitbod-subtle text-center">
-            <div className="text-2xl font-bold text-fitbod-accent">{pullAExercises.length}</div>
-            <div className="text-sm text-fitbod-text-secondary">Pull A Exercises</div>
-          </Card>
-          <Card className="p-4 bg-fitbod-card border-fitbod-subtle text-center">
-            <div className="text-2xl font-bold text-fitbod-accent">{pullBExercises.length}</div>
-            <div className="text-sm text-fitbod-text-secondary">Pull B Exercises</div>
-          </Card>
-          <Card className="p-4 bg-fitbod-card border-fitbod-subtle text-center">
-            <div className="text-2xl font-bold text-fitbod-accent">{sharedExercises.length}</div>
-            <div className="text-sm text-fitbod-text-secondary">Shared A/B</div>
-          </Card>
-          <Card className="p-4 bg-fitbod-card border-fitbod-subtle text-center">
-            <div className="text-2xl font-bold text-fitbod-accent">{exercises.length}</div>
-            <div className="text-sm text-fitbod-text-secondary">Total Pull Exercises</div>
-          </Card>
-        </motion.div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
