@@ -87,12 +87,23 @@ export default function PushPullLegsPage() {
 
   const startWorkout = (workoutType: string) => {
     // Route to specific workout type pages for better UX
-    if (workoutType === 'pull') {
-      window.location.href = '/pull-day';
-    } else {
-      // For now, other workout types still go to simple logger
-      const url = `/workout-simple?category=${workoutType}`;
-      window.location.href = url;
+    switch (workoutType) {
+      case 'pull':
+        window.location.href = '/pull-day';
+        break;
+      case 'push':
+        window.location.href = '/push-day';
+        break;
+      case 'legs':
+        window.location.href = '/legs-day';
+        break;
+      case 'core':
+        window.location.href = '/core-day';
+        break;
+      default:
+        // Fallback to simple logger if needed
+        const url = `/workout-simple?category=${workoutType}`;
+        window.location.href = url;
     }
   };
 
