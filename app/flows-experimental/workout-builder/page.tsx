@@ -101,20 +101,20 @@ export default function WorkoutBuilderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-fitbod-background text-fitbod-text">
       <div className="max-w-4xl mx-auto p-4">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Workout Builder</h1>
+          <h1 className="text-2xl font-bold text-fitbod-text">Workout Builder</h1>
           <div className="flex gap-2">
             <button 
-              className="px-4 py-2 text-gray-600 border border-gray-300 rounded"
+              className="px-4 py-2 text-fitbod-text-secondary border border-fitbod-subtle rounded bg-fitbod-card hover:bg-fitbod-subtle"
               onClick={() => window.history.back()}
             >
               Cancel
             </button>
             <button 
-              className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+              className="px-4 py-2 bg-fitbod-accent text-white rounded disabled:opacity-50 hover:bg-fitbod-accent/90"
               onClick={handleSaveWorkout}
               disabled={workoutExercises.length === 0}
             >
@@ -128,10 +128,10 @@ export default function WorkoutBuilderPage() {
           /* Empty State */
           <div className="text-center py-12">
             <div className="max-w-md mx-auto">
-              <h2 className="text-lg font-semibold mb-2">Start building your workout</h2>
-              <p className="text-gray-600 mb-6">Add exercises to create your custom workout</p>
+              <h2 className="text-lg font-semibold mb-2 text-fitbod-text">Start building your workout</h2>
+              <p className="text-fitbod-text-secondary mb-6">Add exercises to create your custom workout</p>
               <button 
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium"
+                className="px-6 py-3 bg-fitbod-accent text-white rounded-lg font-medium hover:bg-fitbod-accent/90"
                 onClick={() => setShowExerciseSelector(true)}
               >
                 Add an exercise
@@ -142,11 +142,11 @@ export default function WorkoutBuilderPage() {
           /* Workout Exercises */
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">
+              <h3 className="text-lg font-semibold text-fitbod-text">
                 {workoutExercises.length} {workoutExercises.length === 1 ? 'Exercise' : 'Exercises'}
               </h3>
               <button 
-                className="px-4 py-2 bg-blue-600 text-white rounded font-medium"
+                className="px-4 py-2 bg-fitbod-accent text-white rounded font-medium hover:bg-fitbod-accent/90"
                 onClick={() => setShowExerciseSelector(true)}
               >
                 Add an exercise

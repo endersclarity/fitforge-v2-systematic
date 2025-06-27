@@ -61,13 +61,13 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" data-testid="save-workout-modal">
-      <div className="bg-white rounded-lg max-w-md w-full m-4">
+      <div className="bg-fitbod-card rounded-lg max-w-md w-full m-4 border border-fitbod-subtle">
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold">Save Workout Template</h2>
+        <div className="flex justify-between items-center p-6 border-b border-fitbod-subtle">
+          <h2 className="text-xl font-semibold text-fitbod-text">Save Workout Template</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="text-fitbod-text-secondary hover:text-fitbod-text"
           >
             <X size={24} />
           </button>
@@ -77,7 +77,7 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
         <div className="p-6 space-y-4">
           {/* Workout Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-fitbod-text mb-1">
               Workout Name
             </label>
             <input
@@ -85,20 +85,20 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
               value={workoutName}
               onChange={(e) => setWorkoutName(e.target.value)}
               placeholder="Workout name..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-fitbod-subtle rounded-md focus:ring-2 focus:ring-fitbod-accent focus:border-fitbod-accent bg-fitbod-background text-fitbod-text"
               data-testid="workout-name-input"
             />
           </div>
 
           {/* Workout Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-fitbod-text mb-1">
               Workout Type
             </label>
             <select
               value={workoutType}
               onChange={(e) => setWorkoutType(e.target.value as 'A' | 'B' | 'C' | 'D')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-fitbod-subtle rounded-md focus:ring-2 focus:ring-fitbod-accent focus:border-fitbod-accent bg-fitbod-background text-fitbod-text"
               data-testid="workout-type-select"
             >
               <option value="A">Type A</option>
@@ -110,13 +110,13 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-fitbod-text mb-1">
               Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as any)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-fitbod-subtle rounded-md focus:ring-2 focus:ring-fitbod-accent focus:border-fitbod-accent bg-fitbod-background text-fitbod-text"
             >
               <option value="general">General Fitness</option>
               <option value="strength">Strength</option>
@@ -126,9 +126,9 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
           </div>
 
           {/* Summary */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="font-medium text-gray-900 mb-2">Workout Summary</h3>
-            <div className="text-sm text-gray-600 space-y-1">
+          <div className="bg-fitbod-subtle/30 rounded-lg p-4">
+            <h3 className="font-medium text-fitbod-text mb-2">Workout Summary</h3>
+            <div className="text-sm text-fitbod-text-secondary space-y-1">
               <div>{workoutExercises.length} exercises</div>
               <div>
                 {workoutExercises.reduce((total, ex) => total + ex.sets, 0)} total sets
@@ -143,16 +143,16 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end gap-3 p-6 border-t bg-gray-50">
+        <div className="flex justify-end gap-3 p-6 border-t border-fitbod-subtle bg-fitbod-subtle/30">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+            className="px-4 py-2 text-fitbod-text-secondary border border-fitbod-subtle rounded hover:bg-fitbod-subtle"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="px-4 py-2 bg-fitbod-accent text-white rounded hover:bg-fitbod-accent/90"
           >
             Save Template
           </button>

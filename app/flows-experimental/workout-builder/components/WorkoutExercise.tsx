@@ -55,13 +55,13 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-white rounded-lg border p-4 shadow-sm"
+      className="bg-fitbod-card rounded-lg border border-fitbod-subtle p-4 shadow-sm"
       data-testid={`draggable-exercise-${index}`}
     >
       <div className="flex items-start gap-3">
         {/* Drag Handle */}
         <button
-          className="mt-2 p-1 text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
+          className="mt-2 p-1 text-fitbod-text-secondary hover:text-fitbod-text cursor-grab active:cursor-grabbing"
           data-testid="drag-handle"
           {...attributes}
           {...listeners}
@@ -74,17 +74,17 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
           {/* Exercise Name */}
           <div className="flex justify-between items-start mb-3">
             <div>
-              <h3 className="font-semibold text-lg" data-testid="exercise-name">
+              <h3 className="font-semibold text-lg text-fitbod-text" data-testid="exercise-name">
                 {exercise.name}
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-fitbod-text-secondary">
                 {exercise.sets} sets × {exercise.reps} reps
                 {exercise.weight > 0 && ` @ ${exercise.weight} lb`}
               </p>
             </div>
             <button
               onClick={() => onRemove(exercise.id)}
-              className="text-gray-400 hover:text-red-500 p-1"
+              className="text-fitbod-text-secondary hover:text-red-500 p-1"
               aria-label="Remove exercise"
             >
               <X size={20} />
@@ -95,13 +95,13 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
           <div className="grid grid-cols-3 gap-4">
             {/* Sets */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
+              <label className="text-xs font-medium text-fitbod-text-secondary uppercase tracking-wide">
                 Sets
               </label>
-              <div className="flex items-center border rounded">
+              <div className="flex items-center border border-fitbod-subtle rounded bg-fitbod-background">
                 <button
                   onClick={() => incrementField('sets', -1)}
-                  className="p-2 hover:bg-gray-50"
+                  className="p-2 hover:bg-fitbod-subtle text-fitbod-text"
                   disabled={exercise.sets <= 1}
                 >
                   <Minus size={16} />
@@ -112,12 +112,12 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
                   max="10"
                   value={exercise.sets}
                   onChange={(e) => updateField('sets', parseInt(e.target.value) || 1)}
-                  className="flex-1 text-center border-0 focus:ring-0 focus:outline-none"
+                  className="flex-1 text-center border-0 focus:ring-0 focus:outline-none bg-transparent text-fitbod-text"
                   data-testid="sets-input"
                 />
                 <button
                   onClick={() => incrementField('sets', 1)}
-                  className="p-2 hover:bg-gray-50"
+                  className="p-2 hover:bg-fitbod-subtle text-fitbod-text"
                 >
                   <Plus size={16} />
                 </button>
@@ -126,13 +126,13 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
 
             {/* Reps */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
+              <label className="text-xs font-medium text-fitbod-text-secondary uppercase tracking-wide">
                 Reps
               </label>
-              <div className="flex items-center border rounded">
+              <div className="flex items-center border border-fitbod-subtle rounded bg-fitbod-background">
                 <button
                   onClick={() => incrementField('reps', -1)}
-                  className="p-2 hover:bg-gray-50"
+                  className="p-2 hover:bg-fitbod-subtle text-fitbod-text"
                   disabled={exercise.reps <= 1}
                 >
                   <Minus size={16} />
@@ -143,12 +143,12 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
                   max="50"
                   value={exercise.reps}
                   onChange={(e) => updateField('reps', parseInt(e.target.value) || 1)}
-                  className="flex-1 text-center border-0 focus:ring-0 focus:outline-none"
+                  className="flex-1 text-center border-0 focus:ring-0 focus:outline-none bg-transparent text-fitbod-text"
                   data-testid="reps-input"
                 />
                 <button
                   onClick={() => incrementField('reps', 1)}
-                  className="p-2 hover:bg-gray-50"
+                  className="p-2 hover:bg-fitbod-subtle text-fitbod-text"
                 >
                   <Plus size={16} />
                 </button>
@@ -157,13 +157,13 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
 
             {/* Weight */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
+              <label className="text-xs font-medium text-fitbod-text-secondary uppercase tracking-wide">
                 Weight (lb)
               </label>
-              <div className="flex items-center border rounded">
+              <div className="flex items-center border border-fitbod-subtle rounded bg-fitbod-background">
                 <button
                   onClick={() => incrementField('weight', -5)}
-                  className="p-2 hover:bg-gray-50"
+                  className="p-2 hover:bg-fitbod-subtle text-fitbod-text"
                   disabled={exercise.weight <= 0}
                 >
                   <Minus size={16} />
@@ -174,12 +174,12 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
                   step="5"
                   value={exercise.weight}
                   onChange={(e) => updateField('weight', parseInt(e.target.value) || 0)}
-                  className="flex-1 text-center border-0 focus:ring-0 focus:outline-none"
+                  className="flex-1 text-center border-0 focus:ring-0 focus:outline-none bg-transparent text-fitbod-text"
                   data-testid="weight-input"
                 />
                 <button
                   onClick={() => incrementField('weight', 5)}
-                  className="p-2 hover:bg-gray-50"
+                  className="p-2 hover:bg-fitbod-subtle text-fitbod-text"
                 >
                   <Plus size={16} />
                 </button>
@@ -189,7 +189,7 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
 
           {/* Rest Time */}
           <div className="mt-3">
-            <label className="text-xs font-medium text-gray-700 uppercase tracking-wide">
+            <label className="text-xs font-medium text-fitbod-text-secondary uppercase tracking-wide">
               Rest Time (seconds)
             </label>
             <div className="flex gap-2 mt-1">
@@ -199,8 +199,8 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
                   onClick={() => updateField('restTime', seconds)}
                   className={`px-3 py-1 text-sm rounded ${
                     exercise.restTime === seconds
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-fitbod-accent text-white'
+                      : 'bg-fitbod-subtle text-fitbod-text hover:bg-fitbod-subtle/70'
                   }`}
                 >
                   {seconds < 120 ? `${seconds}s` : `${seconds / 60}m`}
