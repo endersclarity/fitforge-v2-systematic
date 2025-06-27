@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import exercisesData from '@/data/exercises-real.json';
+import { WORKOUT_DEFAULTS } from '@/lib/workout-constants';
 
 import { WorkoutExercise } from './components/WorkoutExercise';
 import { ExerciseSelectorModal } from './components/ExerciseSelectorModal';
@@ -39,6 +40,7 @@ export default function WorkoutBuilderPage() {
   const [showExerciseSelector, setShowExerciseSelector] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [workoutName, setWorkoutName] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -52,10 +54,10 @@ export default function WorkoutBuilderPage() {
       id: `${exercise.id}-${Date.now()}`,
       exerciseId: exercise.id,
       name: exercise.name,
-      sets: 3,
-      reps: 8,
-      weight: exercise.equipment === 'Bodyweight' ? 0 : 135,
-      restTime: 90,
+      sets: WORKOUT_DEFAULTS.SETS,
+      reps: WORKOUT_DEFAULTS.REPS,
+      weight: exercise.equipment === 'Bodyweight' ? WORKOUT_DEFAULTS.BODYWEIGHT_WEIGHT : WORKOUT_DEFAULTS.DEFAULT_WEIGHT,
+      restTime: WORKOUT_DEFAULTS.REST_TIME,
       orderIndex: workoutExercises.length,
       isSuperset: false,
     };
@@ -65,16 +67,38 @@ export default function WorkoutBuilderPage() {
   };
 
   const handleDragEnd = (event: any) => {
-    const { active, over } = event;
+    try {
+      const { active, over } = event;
 
-    if (active.id !== over.id) {
-      setWorkoutExercises((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over.id);
+      // Validate drag operation
+      if (!active || !over) {
+        console.warn('Drag operation incomplete: missing active or over element');
+        return;
+      }
 
-        const reordered = arrayMove(items, oldIndex, newIndex);
-        return reordered.map((item, index) => ({ ...item, orderIndex: index }));
-      });
+      if (active.id !== over.id) {
+        setWorkoutExercises((items) => {
+          try {
+            const oldIndex = items.findIndex((item) => item.id === active.id);
+            const newIndex = items.findIndex((item) => item.id === over.id);
+
+            // Validate indices
+            if (oldIndex === -1 || newIndex === -1) {
+              console.error('Invalid drag indices:', { oldIndex, newIndex, activeId: active.id, overId: over.id });
+              return items; // Return unchanged array
+            }
+
+            const reordered = arrayMove(items, oldIndex, newIndex);
+            return reordered.map((item, index) => ({ ...item, orderIndex: index }));
+          } catch (error) {
+            console.error('Error reordering exercises:', error);
+            return items; // Return unchanged array on error
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error in drag end handler:', error);
+      // Could add toast notification here for user feedback
     }
   };
 
@@ -94,10 +118,15 @@ export default function WorkoutBuilderPage() {
 
   const handleWorkoutSaved = () => {
     // Could integrate with workout template service here
-    alert('Workout saved successfully!');
+    setShowSuccessMessage(true);
     setShowSaveModal(false);
     setWorkoutExercises([]);
     setWorkoutName('');
+    
+    // Hide success message after 3 seconds
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 3000);
   };
 
   return (
@@ -122,6 +151,13 @@ export default function WorkoutBuilderPage() {
             </button>
           </div>
         </div>
+
+        {/* Success Message */}
+        {showSuccessMessage && (
+          <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm">
+            ✅ Workout saved successfully!
+          </div>
+        )}
 
         {/* Workout Content */}
         {workoutExercises.length === 0 ? (
