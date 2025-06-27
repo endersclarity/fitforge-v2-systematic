@@ -126,7 +126,29 @@ export function WorkoutExecutionExperimental() {
         router.push('/')
       }
     } else {
-      router.push('/')
+      // Demo mode: Create sample workout for testing
+      const demoWorkout = {
+        exercises: [
+          {
+            id: 'bench_press',
+            name: 'Bench Press',
+            category: 'ChestTriceps',
+            equipment: 'Barbell',
+            difficulty: 'Intermediate'
+          },
+          {
+            id: 'bicep_curl',
+            name: 'Bicep Curl',
+            category: 'BackBiceps',
+            equipment: 'Dumbbell',
+            difficulty: 'Beginner'
+          }
+        ]
+      }
+      setWorkoutQueue(demoWorkout.exercises)
+      
+      // Set demo localStorage for persistence
+      localStorage.setItem('fitforge-workout-session', JSON.stringify(demoWorkout))
     }
   }, [router])
 
