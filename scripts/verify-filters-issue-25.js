@@ -24,18 +24,33 @@ async function verifyFilters() {
     // Test 2: Equipment filter
     console.log('TEST 2: Equipment filter (Dumbbell)');
     
-    // Find and click Equipment button
-    const equipmentButton = await page.$('button:has(span:has-text("Equipment"))') || 
-                           await page.$x('//button[contains(., "Equipment")]')[0];
-    if (equipmentButton) {
-      await equipmentButton.click();
-      await page.waitForTimeout(500);
+    // Find and click Equipment button using text content
+    const equipmentClicked = await page.evaluate(() => {
+      const buttons = Array.from(document.querySelectorAll('button'));
+      const equipmentButton = buttons.find(btn => btn.textContent.includes('Equipment'));
+      if (equipmentButton) {
+        equipmentButton.click();
+        return true;
+      }
+      return false;
+    });
+    
+    if (equipmentClicked) {
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       // Click Dumbbell option
-      const dumbbellOption = await page.$x('//div[contains(text(), "Dumbbell")]')[0];
-      if (dumbbellOption) {
-        await dumbbellOption.click();
-        await page.waitForTimeout(1000);
+      const dumbbellClicked = await page.evaluate(() => {
+        const options = Array.from(document.querySelectorAll('div, button, span'));
+        const dumbbellOption = options.find(el => el.textContent === 'Dumbbell');
+        if (dumbbellOption) {
+          dumbbellOption.click();
+          return true;
+        }
+        return false;
+      });
+      
+      if (dumbbellClicked) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
         
         const filteredCount = await page.$$eval('h3.font-semibold', els => els.length);
         console.log(`✓ After Dumbbell filter: ${filteredCount} exercises`);

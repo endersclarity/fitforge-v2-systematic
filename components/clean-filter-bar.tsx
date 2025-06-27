@@ -55,6 +55,7 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
   })
 
   const muscleDisplayNames = getMuscleDisplayNames()
+  console.log('Muscle display names:', muscleDisplayNames)
   const groupOptions = ['Push', 'Pull', 'Legs', 'Abs']
   const fatigueSortOptions = [
     { value: 'fresh', label: 'Fresh Muscles First' },
@@ -72,10 +73,12 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
   }
 
   const handleMuscleChange = (selectedDisplayNames: string[]) => {
+    console.log('Muscle filter selected (display names):', selectedDisplayNames)
     // Convert display names back to data names for the filter state
     const dataNames = selectedDisplayNames.map(displayName => 
       DISPLAY_TO_DATA_MAP[displayName] || displayName
     )
+    console.log('Muscle filter converted (data names):', dataNames)
     setFilters(prev => ({ ...prev, targetMuscle: dataNames }))
   }
 

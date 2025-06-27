@@ -55,13 +55,15 @@ export default function ExperimentalExerciseBrowser() {
   // Apply filters and sorting
   const filteredAndSortedExercises = useMemo(() => {
     let filtered = [...exercises]
-    console.log('Starting with', filtered.length, 'exercises')
+    console.log('🔍 FILTER DEBUG:')
+    console.log('  Starting with', filtered.length, 'exercises')
+    console.log('  Filter state:', JSON.stringify(filterState))
     
     // Apply equipment filter
     if (filterState.equipment.length > 0) {
       const beforeCount = filtered.length
       filtered = filtered.filter(ex => filterState.equipment.includes(ex.equipment))
-      console.log('Equipment filter:', filterState.equipment, 'reduced from', beforeCount, 'to', filtered.length)
+      console.log('  Equipment filter:', filterState.equipment, 'reduced from', beforeCount, 'to', filtered.length)
     }
     
     // Apply target muscle filter
