@@ -17,6 +17,7 @@ import { useRealTimeMuscleVolume } from '@/hooks/useRealTimeMuscleVolume'
 import { WorkoutHeader } from './workout-header'
 import { SetLoggingForm } from './set-logging-form'
 import { WorkoutProgress } from './workout-progress'
+import { ExerciseQueue } from './exercise-queue'
 
 interface WorkoutExercise {
   id: string
@@ -425,177 +426,22 @@ export function WorkoutExecutionExperimental() {
 
       <div className="p-4">
 
-        {/* Planned Sets Preview with Log All Sets */}
-        {workoutPlan && getExercisePlannedSets(currentExercise.id).length > 0 && (
-          <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="text-lg text-white">Planned Workout</CardTitle>
-                  <CardDescription className="text-[#A1A1A3]">
-                    Your planned sets for this exercise
-                  </CardDescription>
-                </div>
-                {/* Log All Sets Button */}
-                {exerciseSets.length < getExercisePlannedSets(currentExercise.id).length && 
-                 currentWeight && currentReps && (
-                  <Button
-                    onClick={logAllSets}
-                    className="bg-[#FF375F] hover:bg-[#E63050] text-white text-sm"
-                  >
-                    Log All Sets
-                  </Button>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {getExercisePlannedSets(currentExercise.id).map((plannedSet, index) => {
-                  const isCompleted = exerciseSets.length > index
-                  const actualSet = exerciseSets[index]
-                  
-                  return (
-                    <div key={plannedSet.id} className={`flex items-center justify-between p-3 rounded-lg border ${
-                      isCompleted 
-                        ? 'bg-[#1E3A1E] border-green-800/30' 
-                        : 'bg-[#2C2C2E] border-[#3C3C3E]'
-                    }`}>
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm font-medium text-white">Set {plannedSet.setNumber}</span>
-                        <div className="text-sm text-[#A1A1A3]">
-                          {currentExercise.equipment !== 'Bodyweight' && (
-                            <span>{plannedSet.targetWeight} lb × </span>
-                          )}
-                          <span>{plannedSet.targetReps} reps</span>
-                        </div>
-                      </div>
-                      
-                      {isCompleted && actualSet && (
-                        <div className="text-sm flex items-center space-x-2">
-                          <span className="text-green-400">
-                            {currentExercise.equipment !== 'Bodyweight' && (
-                              <span>{actualSet.weight} lb × </span>
-                            )}
-                            <span>{actualSet.reps} reps</span>
-                          </span>
-                          {actualSet.rpe && (
-                            <span className={`text-xs ${getRPEColor(actualSet.rpe)}`}>
-                              RPE {actualSet.rpe}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      
-                      {!isCompleted && exerciseSets.length === index && (
-                        <Badge className="bg-[#FF375F] text-white text-xs">Current</Badge>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Set Input */}
-        <SetLoggingForm
+        {/* Exercise Queue Component - Consolidated UI */}
+        <ExerciseQueue
           currentExercise={currentExercise}
-          currentWeight={currentWeight}
-          setCurrentWeight={setCurrentWeight}
-          currentReps={currentReps}
-          setCurrentReps={setCurrentReps}
-          isWarmupSet={isWarmupSet}
-          setIsWarmupSet={setIsWarmupSet}
-          setNotes={setNotes}
-          setSetNotes={setSetNotes}
           exerciseSets={exerciseSets}
-          getCurrentPlannedSet={getCurrentPlannedSet}
-          onAddSet={addSet}
+          workoutPlan={workoutPlan}
+          currentWeight={currentWeight}
+          currentReps={currentReps}
+          currentExerciseIndex={currentExerciseIndex}
+          workoutQueue={workoutQueue}
+          getExercisePlannedSets={getExercisePlannedSets}
+          logAllSets={logAllSets}
+          removeSet={removeSet}
+          getRPEColor={getRPEColor}
+          previousExercise={previousExercise}
+          nextExercise={nextExercise}
         />
-
-        {/* Rest Timer */}
-        {showRestTimer && (
-          <div className="mb-6">
-            <RestTimer
-              onComplete={handleRestTimerComplete}
-              autoStart={true}
-              className="mx-auto max-w-sm"
-            />
-          </div>
-        )}
-
-        {/* Sets List */}
-        {exerciseSets.length > 0 && (
-          <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
-            <CardHeader>
-              <CardTitle className="text-lg text-white">
-                Sets Completed ({exerciseSets.length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent data-testid="set-list">
-              <div className="space-y-2">
-                {exerciseSets.map((set, index) => (
-                  <div key={set.id} className="flex items-center justify-between p-3 bg-[#2C2C2E] rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <CheckCircle className="h-5 w-5 text-[#FF375F]" />
-                      <div>
-                        <div className="text-white flex items-center space-x-2">
-                          <span>
-                            Set {index + 1}: {currentExercise.equipment !== 'Bodyweight' ? `${set.weight} lbs × ` : ''}{set.reps} reps
-                          </span>
-                          {set.isWarmup && (
-                            <Badge 
-                              variant="outline" 
-                              className="text-xs bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
-                              data-testid="warmup-badge"
-                            >
-                              Warm-up
-                            </Badge>
-                          )}
-                          {set.rpe && (
-                            <span className={`text-xs ${getRPEColor(set.rpe)}`}>
-                              RPE {set.rpe}
-                            </span>
-                          )}
-                        </div>
-                        {set.notes && (
-                          <p className="text-sm text-[#A1A1A3] mt-1">{set.notes}</p>
-                        )}
-                      </div>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeSet(set.id)}
-                      className="text-[#A1A1A3] hover:text-[#FF375F]"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Navigation */}
-        <div className="flex space-x-3">
-          <Button
-            variant="outline"
-            onClick={previousExercise}
-            disabled={currentExerciseIndex === 0}
-            className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white border-[#3C3C3E]"
-          >
-            Previous
-          </Button>
-          <Button
-            onClick={nextExercise}
-            disabled={currentExerciseIndex === workoutQueue.length - 1}
-            className="flex-1 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white"
-          >
-            Next Exercise
-          </Button>
-        </div>
       </div>
 
       {/* RPE Rating Modal */}
