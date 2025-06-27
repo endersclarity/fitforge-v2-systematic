@@ -2,6 +2,9 @@
 
 **Advanced workout tracking with comprehensive UI flow analysis and design patterns.**
 
+## 🚨 **CRITICAL: READ FITFORGE-ESSENTIAL-PRINCIPLES.md FIRST**
+**BEFORE ANY DEVELOPMENT**: Read `FITFORGE-ESSENTIAL-PRINCIPLES.md` for mandatory architecture rules that prevent issues like broken filters. This document contains the condensed, essential principles from the comprehensive development guide.
+
 ## 🚨 **MANDATORY DEVELOPMENT WORKFLOW - NO EXCEPTIONS**
 
 ### 📋 **BEFORE ANY DEVELOPMENT WORK - REQUIRED CHECKLIST**
@@ -47,7 +50,10 @@ git checkout main && git merge feature/task-name         # Merge to main
 npx task-master set-status --id=X --status=done          # Complete task
 ```
 
-**Reference Document**: `DEVELOPMENT-WORKFLOW.md` - Complete systematic process
+**Reference Documents**: 
+- `DEVELOPMENT-WORKFLOW.md` - Complete systematic process
+- `FITFORGE-ESSENTIAL-PRINCIPLES.md` - Core architecture rules
+- `tests/TESTING-GUIDE.md` - Testing methodology (Playwright, Vitest, Puppeteer)
 
 ## 🚀 **Quick Start**
 - **System Overview**: `flows/memory-bank/system_manifest.md` ← Architecture overview

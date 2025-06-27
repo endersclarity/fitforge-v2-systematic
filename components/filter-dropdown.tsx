@@ -20,14 +20,19 @@ export function FilterDropdown({
   disabled = false 
 }: FilterDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
   const dropdownRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
+      // Don't close if clicking inside the dropdown
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        // Also check if clicking inside the portaled dropdown
+        const portalDropdown = document.querySelector('[style*="position: fixed"]')
+        if (portalDropdown && portalDropdown.contains(event.target as Node)) {
+          return // Don't close if clicking inside portal dropdown
+        }
         setIsOpen(false)
       }
     }
@@ -36,23 +41,17 @@ export function FilterDropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Update dropdown position when opened
-  useEffect(() => {
-    if (isOpen && buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect()
-      setDropdownPosition({
-        top: rect.bottom + window.scrollY + 8,
-        left: rect.left + window.scrollX,
-        width: rect.width
-      })
-    }
-  }, [isOpen])
 
   const handleOptionToggle = (option: string) => {
+    console.log('🔥 [handleOptionToggle] ENTRY - option clicked:', option)
+    console.log('🔧 [handleOptionToggle] Current selectedOptions:', selectedOptions)
+    
     const newSelected = selectedOptions.includes(option)
       ? selectedOptions.filter(item => item !== option)
       : [...selectedOptions, option]
     
+    console.log('🔧 [handleOptionToggle] New selectedOptions:', newSelected)
+    console.log('🔧 [handleOptionToggle] Calling onSelectionChange...')
     onSelectionChange(newSelected)
   }
 
@@ -97,14 +96,14 @@ export function FilterDropdown({
         />
       </button>
 
-      {/* Dropdown Menu - Portaled to document body */}
-      {isOpen && !disabled && typeof window !== 'undefined' && createPortal(
+      {/* Dropdown Menu - Portal with simple positioning */}
+      {isOpen && !disabled && typeof window !== 'undefined' && buttonRef.current && createPortal(
         <div 
           className="fixed bg-[#1C1C1E] border border-[#2C2C2E] rounded-lg shadow-xl z-[9999] max-h-64 overflow-y-auto min-w-[200px]"
           style={{
-            top: dropdownPosition.top,
-            left: dropdownPosition.left,
-            minWidth: Math.max(dropdownPosition.width, 200)
+            top: buttonRef.current.getBoundingClientRect().bottom + window.scrollY + 8,
+            left: buttonRef.current.getBoundingClientRect().left + window.scrollX,
+            minWidth: Math.max(buttonRef.current.getBoundingClientRect().width, 200)
           }}
         >
           <div className="p-2">
@@ -125,7 +124,16 @@ export function FilterDropdown({
             {options.map((option) => (
               <button
                 key={option}
-                onClick={() => handleOptionToggle(option)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  console.log('🚨 BUTTON CLICKED:', option)
+                  handleOptionToggle(option)
+                }}
+                onMouseDown={(e) => {
+                  e.stopPropagation()
+                  console.log('🚨 MOUSEDOWN:', option)
+                }}
                 className="w-full flex items-center justify-between px-3 py-2 text-sm text-white hover:bg-[#2C2C2E] rounded-md transition-colors"
               >
                 <span>{option}</span>

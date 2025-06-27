@@ -1,0 +1,1361 @@
+{
+  "config": {
+    "configFile": "/home/ender/.claude/projects/FitForge/fitforge-v2-systematic/playwright.config.ts",
+    "rootDir": "/home/ender/.claude/projects/FitForge/fitforge-v2-systematic/tests/e2e",
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/ender/.claude/projects/FitForge/fitforge-v2-systematic/test-results",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/ender/.claude/projects/FitForge/fitforge-v2-systematic/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/home/ender/.claude/projects/FitForge/fitforge-v2-systematic/test-results",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/home/ender/.claude/projects/FitForge/fitforge-v2-systematic/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.53.1",
+    "workers": 1,
+    "webServer": {
+      "command": "./start-fitforge-v2-dev.sh",
+      "port": 8080,
+      "reuseExistingServer": false,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "debug-analytics-data.spec.ts",
+      "file": "debug-analytics-data.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Analytics Data Loading",
+          "file": "debug-analytics-data.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "inspect analytics data loading and filtering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7efc88f6fae4078ffe41-2eef49486cfb4e4782f9",
+              "file": "debug-analytics-data.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect analytics data loading and filtering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "7efc88f6fae4078ffe41-d7a813f63185711c5093",
+              "file": "debug-analytics-data.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "debug-homepage.spec.ts",
+      "file": "debug-homepage.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Homepage",
+          "file": "debug-homepage.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "inspect homepage structure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b55b9596913d9183750c-b5cf04ccbf816b739a42",
+              "file": "debug-homepage.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect homepage structure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "b55b9596913d9183750c-d43199474bfc79db99c0",
+              "file": "debug-homepage.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "debug-pull-day-selection.spec.ts",
+      "file": "debug-pull-day-selection.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Pull Day Exercise Selection",
+          "file": "debug-pull-day-selection.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "check what exercises are actually being selected",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6a325ce5c1fc43ec9696-4b640ff5d8048aa01c91",
+              "file": "debug-pull-day-selection.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "check what exercises are actually being selected",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6a325ce5c1fc43ec9696-02b0e282819a041e6336",
+              "file": "debug-pull-day-selection.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "debug-pull-day.spec.ts",
+      "file": "debug-pull-day.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Pull Day Page",
+          "file": "debug-pull-day.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "inspect pull day page structure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c31e04241c92ce8e3bb9-8364b9e4744deba847fb",
+              "file": "debug-pull-day.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "inspect pull day page structure",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "c31e04241c92ce8e3bb9-2a69f9aa78ec7e8bfe80",
+              "file": "debug-pull-day.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "issue-25-exercise-filters.spec.ts",
+      "file": "issue-25-exercise-filters.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Issue #25: Exercise Browser Filters",
+          "file": "issue-25-exercise-filters.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "displays all 38 exercises initially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-e573df660c98d7b32c85",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "equipment filter - Dumbbell reduces exercise count",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-6d87703f1cb6fd8b419c",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "muscle filter - data contract verification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-1a89fe44496325023f10",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 46,
+              "column": 7
+            },
+            {
+              "title": "multiple filters work together",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-1dcc491ec000343f68bc",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 74,
+              "column": 7
+            },
+            {
+              "title": "clear all filters restores original count",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-ff0f69617b9d6388f113",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 101,
+              "column": 7
+            },
+            {
+              "title": "generates comprehensive test evidence",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-1fb4877f1c3033ae4faa",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 132,
+              "column": 7
+            },
+            {
+              "title": "displays all 38 exercises initially",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-c468c58e4ad126879cca",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 9,
+              "column": 7
+            },
+            {
+              "title": "equipment filter - Dumbbell reduces exercise count",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-ba802dfbd352257ce4c2",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 20,
+              "column": 7
+            },
+            {
+              "title": "muscle filter - data contract verification",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-06c8a58fc876a6d9e049",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 46,
+              "column": 7
+            },
+            {
+              "title": "multiple filters work together",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-3d9896760296b5d729ab",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 74,
+              "column": 7
+            },
+            {
+              "title": "clear all filters restores original count",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-87411ca2fdf3ffcfc8dd",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 101,
+              "column": 7
+            },
+            {
+              "title": "generates comprehensive test evidence",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f6a632c5c218dce67f3e-9ab2995c83a96f1cc113",
+              "file": "issue-25-exercise-filters.spec.ts",
+              "line": 132,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "issue-26.spec.ts",
+      "file": "issue-26.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Issue #26: Experimental Workout Builder with Drag-and-Drop",
+          "file": "issue-26.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display workout builder page with empty state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-e680e3aa13b4962f4c2d",
+              "file": "issue-26.spec.ts",
+              "line": 10,
+              "column": 7
+            },
+            {
+              "title": "should open exercise selector when Add an exercise is clicked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-66da35c92c784d08dd12",
+              "file": "issue-26.spec.ts",
+              "line": 23,
+              "column": 7
+            },
+            {
+              "title": "should add exercise to workout when selected",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-9893361c3b1e5d1b14ae",
+              "file": "issue-26.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "should allow configuring sets, reps, and weight for exercises",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-be93eaf0b34ce8bc2486",
+              "file": "issue-26.spec.ts",
+              "line": 51,
+              "column": 7
+            },
+            {
+              "title": "should create superset when grouping exercises",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-0fdfd58eb2df54b365e2",
+              "file": "issue-26.spec.ts",
+              "line": 70,
+              "column": 7
+            },
+            {
+              "title": "should allow reordering exercises with drag and drop",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-fb3d6a447f88de22469a",
+              "file": "issue-26.spec.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "should save workout as template",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-079467aaf6330c4daaef",
+              "file": "issue-26.spec.ts",
+              "line": 118,
+              "column": 7
+            },
+            {
+              "title": "should handle mobile-friendly drag interactions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-dceb80ea43fbbb401d64",
+              "file": "issue-26.spec.ts",
+              "line": 141,
+              "column": 7
+            },
+            {
+              "title": "should connect to exercise browser from issue #20",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-7575bc66aeaaa2b77add",
+              "file": "issue-26.spec.ts",
+              "line": 164,
+              "column": 7
+            },
+            {
+              "title": "should display workout builder page with empty state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-33b74af81f71c701c86a",
+              "file": "issue-26.spec.ts",
+              "line": 10,
+              "column": 7
+            },
+            {
+              "title": "should open exercise selector when Add an exercise is clicked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-f6345d2a90a1bff9820d",
+              "file": "issue-26.spec.ts",
+              "line": 23,
+              "column": 7
+            },
+            {
+              "title": "should add exercise to workout when selected",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-10d75ebe44309993c7db",
+              "file": "issue-26.spec.ts",
+              "line": 35,
+              "column": 7
+            },
+            {
+              "title": "should allow configuring sets, reps, and weight for exercises",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-9be800931f39e16167ef",
+              "file": "issue-26.spec.ts",
+              "line": 51,
+              "column": 7
+            },
+            {
+              "title": "should create superset when grouping exercises",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-d3d2742f484c62104b72",
+              "file": "issue-26.spec.ts",
+              "line": 70,
+              "column": 7
+            },
+            {
+              "title": "should allow reordering exercises with drag and drop",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-03eed16cb50bfac6a691",
+              "file": "issue-26.spec.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "should save workout as template",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-850bcf8ccbec1ce4eb69",
+              "file": "issue-26.spec.ts",
+              "line": 118,
+              "column": 7
+            },
+            {
+              "title": "should handle mobile-friendly drag interactions",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-06f6f1b013c72c502f7d",
+              "file": "issue-26.spec.ts",
+              "line": 141,
+              "column": 7
+            },
+            {
+              "title": "should connect to exercise browser from issue #20",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "bb9edd68c1a329b2a46c-39889538869901fbf2a4",
+              "file": "issue-26.spec.ts",
+              "line": 164,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "issue-31.spec.ts",
+      "file": "issue-31.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Issue #31: Fix Playwright EPIPE errors preventing reliable test execution",
+          "file": "issue-31.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Playwright test listing should work without EPIPE errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-c1d38ca33c46c05a8204",
+              "file": "issue-31.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "Multiple reporter outputs should not conflict",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-25e83a7d73b982fc7d7f",
+              "file": "issue-31.spec.ts",
+              "line": 17,
+              "column": 7
+            },
+            {
+              "title": "Test discovery should complete without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-f95e6ebd38f23d8f6365",
+              "file": "issue-31.spec.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "Console output should be captured properly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-f965b0863b46ea101a24",
+              "file": "issue-31.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "Test execution should be reliable and consistent",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-030455496e0e4a46dc63",
+              "file": "issue-31.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "CI environment compatibility should work",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-0fbf664cc82f6e75da16",
+              "file": "issue-31.spec.ts",
+              "line": 69,
+              "column": 7
+            },
+            {
+              "title": "Playwright test listing should work without EPIPE errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-974551f942995e818e93",
+              "file": "issue-31.spec.ts",
+              "line": 6,
+              "column": 7
+            },
+            {
+              "title": "Multiple reporter outputs should not conflict",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-a169a8efdd551715cd95",
+              "file": "issue-31.spec.ts",
+              "line": 17,
+              "column": 7
+            },
+            {
+              "title": "Test discovery should complete without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-266622aed92a39259326",
+              "file": "issue-31.spec.ts",
+              "line": 29,
+              "column": 7
+            },
+            {
+              "title": "Console output should be captured properly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-6014785f5169e86a68b2",
+              "file": "issue-31.spec.ts",
+              "line": 42,
+              "column": 7
+            },
+            {
+              "title": "Test execution should be reliable and consistent",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-e18bbb9451d305101478",
+              "file": "issue-31.spec.ts",
+              "line": 55,
+              "column": 7
+            },
+            {
+              "title": "CI environment compatibility should work",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "5741a5ecda6d8baecc4a-524de8f99f637f741435",
+              "file": "issue-31.spec.ts",
+              "line": 69,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "real-pull-workout.spec.ts",
+      "file": "real-pull-workout.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Real Pull Workout Test",
+          "file": "real-pull-workout.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "simulate real user doing pull workout with bodyweight exercises",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d3db29c4b370996013b7-36570569c03bfd0d0ab8",
+              "file": "real-pull-workout.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "simulate real user doing pull workout with bodyweight exercises",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "d3db29c4b370996013b7-be942a2ba72831d67207",
+              "file": "real-pull-workout.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "workout-flow.spec.ts",
+      "file": "workout-flow.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Complete Workout Flow",
+          "file": "workout-flow.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "complete workout journey: selection → execution → analytics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f64252130b92cd86f34f-82e247a1b844ada1d412",
+              "file": "workout-flow.spec.ts",
+              "line": 12,
+              "column": 7
+            },
+            {
+              "title": "bodyweight exercise data flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f64252130b92cd86f34f-a165fbf5d80d8c4dfcb9",
+              "file": "workout-flow.spec.ts",
+              "line": 325,
+              "column": 7
+            },
+            {
+              "title": "complete workout journey: selection → execution → analytics",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f64252130b92cd86f34f-92a0dcfb97f41c60faf2",
+              "file": "workout-flow.spec.ts",
+              "line": 12,
+              "column": 7
+            },
+            {
+              "title": "bodyweight exercise data flow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "f64252130b92cd86f34f-483361a27bb097e59de4",
+              "file": "workout-flow.spec.ts",
+              "line": 325,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-06-27T19:45:28.656Z",
+    "duration": 57.652000000000044,
+    "expected": 0,
+    "skipped": 56,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
