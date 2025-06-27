@@ -1,0 +1,37 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Extract issue number from branch name
+BRANCH_NAME=$(git branch --show-current)
+ISSUE_NUMBER=$(echo $BRANCH_NAME | grep -oE 'issue-([0-9]+)' | grep -oE '[0-9]+')
+
+if [ -n "$ISSUE_NUMBER" ]; then
+  echo "🧪 Checking for tests for issue #$ISSUE_NUMBER..."
+  
+  # Check if test file exists
+  TEST_FILE="tests/e2e/issue-$ISSUE_NUMBER*.spec.ts"
+  if ! ls $TEST_FILE 1> /dev/null 2>&1; then
+    echo "❌ ERROR: No tests found for issue #$ISSUE_NUMBER"
+    echo "Create tests in: tests/e2e/issue-$ISSUE_NUMBER-*.spec.ts"
+    exit 1
+  fi
+  
+  # Check if testing evidence exists
+  EVIDENCE_FILE="TESTING-EVIDENCE-$ISSUE_NUMBER.md"
+  if [ ! -f "$EVIDENCE_FILE" ]; then
+    echo "❌ ERROR: No testing evidence found"
+    echo "Run: npm run test:evidence $ISSUE_NUMBER"
+    exit 1
+  fi
+  
+  echo "✅ Tests and evidence found for issue #$ISSUE_NUMBER"
+fi
+
+# Run tests before push
+echo "🧪 Running tests..."
+npm test -- --reporter=dot || {
+  echo "❌ Tests failed. Fix them before pushing."
+  exit 1
+}
+
+echo "✅ All tests passed!"

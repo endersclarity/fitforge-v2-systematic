@@ -2,11 +2,34 @@
 
 **GitHub Issue**: https://github.com/endersclarity/fitforge-v2-systematic/issues/25
 **Created**: 2025-06-27
-**Status**: COMPLETED
+**Status**: REOPENED - Filters Non-Functional
+**Previous PR**: #30 (Merged but broken)
+**Reopened**: 2025-06-27
+
+## DATA CONTRACT VERIFICATION
+
+**🚨 CRITICAL FINDING**: Data contract mismatch between components
+
+```
+DATA CONTRACT VERIFICATION:
+- Data source: /data/exercises-real.json
+- Field names: muscleEngagement with keys like "Pectoralis_Major", "Triceps_Brachii"
+- Component sends: Display names like "Chest", "Triceps"
+- Match status: NO - MISMATCH DETECTED
+
+CleanFilterBar outputs: "Chest", "Triceps", "Biceps" (display names)
+Exercise data uses: "Pectoralis_Major", "Triceps_Brachii", "Biceps_Brachii" (scientific names)
+ExerciseBrowser attempts manual conversion but it's incomplete and error-prone
+```
 
 ## Issue Analysis
 ### Problem Summary
-Need to create an experimental exercise browser that follows Fitbod's proven UX patterns. This addresses the core problem where equipment filters were implemented on orphaned pages (`/exercises/[muscleGroup]`) that users can't reach through normal navigation.
+**REOPENED**: Despite being implemented and merged, the exercise filters don't actually work:
+- Equipment filters: Click does nothing  
+- Muscle filters: Click does nothing
+- Group filters: Click does nothing
+
+**Root Cause**: Component contract mismatch - CleanFilterBar sends display names but exercise data uses scientific names.
 
 ### Root Cause Analysis
 - Current app built features in isolation without cohesive user flows
@@ -18,18 +41,73 @@ Need to create an experimental exercise browser that follows Fitbod's proven UX 
 - Exercise selection is fragmented across different pages
 - Poor user experience due to disconnected flows
 
-## Task Breakdown
-- [x] Task 1: Create experimental directory structure and landing page
-- [x] Task 2: Implement exercise browser page with proper layout
-- [x] Task 3: Integrate existing filter components (CleanFilterBar)
-- [x] Task 4: Add exercise grid/list display with Fitbod patterns
-- [x] Task 5: Implement sorting functionality (Alphabetical/Most Logged)
-- [x] Task 6: Add exercise detail modal/view
-- [x] Task 7: Connect to next flow (workout builder)
-- [x] Task 8: Ensure mobile responsiveness
-- [x] Task 9: Add navigation from main app
+## Task Breakdown (FIX BROKEN FILTERS)
+- [ ] Task 1: Create single source of truth for muscle name mapping
+- [ ] Task 2: Fix CleanFilterBar to output data values, not display values
+- [ ] Task 3: Remove hacky conversion logic from ExerciseBrowser 
+- [ ] Task 4: Write E2E tests that verify filters actually work
+- [ ] Task 5: Test each filter type with actual clicks
+- [ ] Task 6: Verify filtered exercise count changes
+- [ ] Task 7: Add Puppeteer verification script
+- [ ] Task 8: Document test evidence
 
-## Implementation Plan
+## Implementation Plan (FIX BROKEN FILTERS)
+
+### Step 0: Create Tests FIRST (TDD)
+**Files to create**:
+- `tests/e2e/issue-25-exercise-filters.spec.ts` (update existing)
+- `tests/integration/muscle-name-mapping.test.ts`
+- `scripts/verify-filters-work.js` (Puppeteer script)
+
+**Tests must verify**:
+- Equipment filter reduces exercise count correctly
+- Muscle filter shows only exercises with that muscle
+- Clear filters restores all exercises
+- Multiple filters work together (AND logic)
+
+### Step 1: Create Single Source of Truth
+**File to create**: `/lib/muscle-name-constants.ts`
+```typescript
+export const MUSCLE_DATA_NAMES = {
+  PECTORALIS_MAJOR: 'Pectoralis_Major',
+  TRICEPS_BRACHII: 'Triceps_Brachii',
+  // ... all scientific names
+} as const
+
+export const MUSCLE_DISPLAY_MAP: Record<string, string> = {
+  'Pectoralis_Major': 'Chest',
+  'Triceps_Brachii': 'Triceps',
+  // ... complete mapping
+}
+
+export const DISPLAY_TO_DATA_MAP: Record<string, string> = {
+  'Chest': 'Pectoralis_Major',
+  'Triceps': 'Triceps_Brachii',
+  // ... reverse mapping
+}
+```
+
+### Step 2: Fix CleanFilterBar Component
+**File to modify**: `/components/clean-filter-bar.tsx`
+**Changes**:
+- Import muscle name constants
+- Change `handleMuscleChange` to send DATA values, not display values
+- Keep display names only for UI rendering
+- Ensure consistent data contract
+
+### Step 3: Fix Exercise Browser Filter Logic  
+**File to modify**: `/app/flows-experimental/exercise-browser/page.tsx`
+**Changes**:
+- Remove hacky conversion logic (lines 74-90)
+- Use direct muscle name comparison
+- Import shared constants
+- Simplify filter logic to direct matches
+
+### Step 4: Update FilterDropdown (if needed)
+**File to check**: `/components/filter-dropdown.tsx`
+**Verify**:
+- It handles value/display separation properly
+- Options can have separate value and label
 ### Step 1: Create Experimental Structure
 **Files to create**: 
 - `/app/flows-experimental/page.tsx` (landing page)
@@ -93,7 +171,33 @@ Need to create an experimental exercise browser that follows Fitbod's proven UX 
 **Connect to**:
 - Exercise browser → Workout builder (future Issue #26)
 
-## Testing Strategy
+## Testing Strategy (EVIDENCE-BASED)
+
+### Test Creation (BEFORE Implementation)
+- [ ] E2E test file created and failing
+- [ ] Integration test for name mapping
+- [ ] Puppeteer script for manual verification
+
+### Interaction Verification (REQUIRED)
+```bash
+# Initial state
+curl -s http://localhost:8080/flows-experimental/exercise-browser | grep -c "font-semibold"
+# Expected: 38
+
+# After equipment filter simulation  
+curl -s "http://localhost:8080/flows-experimental/exercise-browser?equipment=Dumbbell" | grep -c "font-semibold"
+# Expected: 11 (verified via: cat data/exercises-real.json | jq '[.[] | select(.equipment == "Dumbbell")] | length')
+
+# After muscle filter simulation
+# Expected: Different count based on muscle selected
+```
+
+### Evidence Documentation
+- [ ] Screenshot before filters
+- [ ] Screenshot after equipment filter (should show fewer exercises)
+- [ ] Screenshot after muscle filter
+- [ ] Console logs showing filter state changes
+- [ ] Test output showing all scenarios pass
 ### Functional Testing
 - [x] All exercises display correctly
 - [x] Equipment filtering works in real-time
@@ -143,6 +247,25 @@ Need to create an experimental exercise browser that follows Fitbod's proven UX 
 3. **Navigation**:
    - Clear back navigation
    - Connection to workout building flow
+
+## Test Evidence Summary
+
+### Phase 2 Implementation Results
+- [x] Created muscle name constants (single source of truth)
+- [x] Fixed CleanFilterBar to send data names
+- [x] Simplified filter logic in exercise browser
+- [x] Added comprehensive logging
+- [ ] Filters still don't work - state updates but doesn't re-render
+- [ ] Need to debug useMemo dependencies
+- [ ] Modal z-index blocking some interactions
+
+### Current Test Status
+```
+Equipment Filter: PARTIAL (works in Puppeteer, not Playwright)
+Muscle Filter: BROKEN (data contract fixed but still not filtering)
+Clear All: UNTESTABLE (filters not applying)
+URL Params: NOT IMPLEMENTED
+```
 
 ## Completion Checklist
 - [x] Experimental directory structure created

@@ -5,6 +5,11 @@ import { FilterDropdown } from './filter-dropdown'
 import { SortDropdown } from './sort-dropdown'
 import { EQUIPMENT_OPTIONS } from '@/schemas/typescript-interfaces'
 import exercisesData from '@/data/exercises-real.json'
+import { 
+  MUSCLE_DISPLAY_MAP, 
+  DISPLAY_TO_DATA_MAP,
+  getUniqueMuscleGroups 
+} from '@/lib/muscle-name-constants'
 
 interface CleanFilterBarProps {
   onFilterChange: (filters: FilterState) => void
@@ -19,35 +24,26 @@ export interface FilterState {
 }
 
 // Extract unique muscle groups from exercise data
-function getMuscleGroups(): string[] {
-  const muscleSet = new Set<string>()
+function getMuscleDisplayNames(): string[] {
+  const muscleDataNames = new Set<string>()
   
+  // Get all unique muscle names from exercise data
   exercisesData.forEach(exercise => {
     if (exercise.muscleEngagement) {
       Object.keys(exercise.muscleEngagement).forEach(muscle => {
-        // Convert scientific names to readable muscle groups
-        const readable = muscle
-          .replace(/_/g, ' ')
-          .replace('Pectoralis Major', 'Chest')
-          .replace('Deltoids Anterior', 'Front Shoulders')
-          .replace('Deltoids Posterior', 'Rear Shoulders')
-          .replace('Deltoids Lateral', 'Side Shoulders')
-          .replace('Latissimus Dorsi', 'Lats')
-          .replace('Triceps Brachii', 'Triceps')
-          .replace('Biceps Brachii', 'Biceps')
-          .replace('Quadriceps', 'Quads')
-          .replace('Hamstrings', 'Hamstrings')
-          .replace('Gastrocnemius', 'Calves')
-          .replace('Gluteus Maximus', 'Glutes')
-          .replace('Erector Spinae', 'Lower Back')
-          .replace('Rectus Abdominis', 'Abs')
-        
-        muscleSet.add(readable)
+        muscleDataNames.add(muscle)
       })
     }
   })
   
-  return Array.from(muscleSet).sort()
+  // Convert to display names for UI
+  const displayNames = Array.from(muscleDataNames)
+    .filter(muscle => MUSCLE_DISPLAY_MAP[muscle]) // Only include mapped muscles
+    .map(muscle => MUSCLE_DISPLAY_MAP[muscle])
+    .filter((name, index, self) => self.indexOf(name) === index) // Remove duplicates
+    .sort()
+  
+  return displayNames
 }
 
 export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBarProps) {
@@ -58,7 +54,8 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
     fatigueSort: 'all'
   })
 
-  const muscleGroups = getMuscleGroups()
+  const muscleDisplayNames = getMuscleDisplayNames()
+  console.log('Muscle display names:', muscleDisplayNames)
   const groupOptions = ['Push', 'Pull', 'Legs', 'Abs']
   const fatigueSortOptions = [
     { value: 'fresh', label: 'Fresh Muscles First' },
@@ -75,8 +72,14 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
     setFilters(prev => ({ ...prev, equipment: selected }))
   }
 
-  const handleMuscleChange = (selected: string[]) => {
-    setFilters(prev => ({ ...prev, targetMuscle: selected }))
+  const handleMuscleChange = (selectedDisplayNames: string[]) => {
+    console.log('Muscle filter selected (display names):', selectedDisplayNames)
+    // Convert display names back to data names for the filter state
+    const dataNames = selectedDisplayNames.map(displayName => 
+      DISPLAY_TO_DATA_MAP[displayName] || displayName
+    )
+    console.log('Muscle filter converted (data names):', dataNames)
+    setFilters(prev => ({ ...prev, targetMuscle: dataNames }))
   }
 
   const handleGroupChange = (selected: string[]) => {
@@ -99,8 +102,10 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
         
         <FilterDropdown
           label="Target Muscle"
-          options={muscleGroups}
-          selectedOptions={filters.targetMuscle}
+          options={muscleDisplayNames}
+          selectedOptions={filters.targetMuscle.map(dataName => 
+            MUSCLE_DISPLAY_MAP[dataName] || dataName
+          )}
           onSelectionChange={handleMuscleChange}
         />
         

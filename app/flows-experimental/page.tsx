@@ -23,7 +23,7 @@ export default function ExperimentalFlowsLanding() {
       description: 'Drag-and-drop workout creation with exercise grouping',
       icon: Calendar,
       route: '/flows-experimental/workout-builder',
-      status: 'coming-soon'
+      status: 'active'
     },
     {
       id: 'workout-execution',
