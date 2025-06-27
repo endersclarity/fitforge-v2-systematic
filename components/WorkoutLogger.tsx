@@ -7,6 +7,9 @@ import { Plus, Minus, Dumbbell, CheckCircle, XCircle, Loader2 } from 'lucide-rea
 import { workoutSetSchema, WorkoutSetFormData } from '../lib/workoutValidation';
 import { MuscleEngagementDisplay } from './muscle-engagement-display';
 import { VolumeProgressionCalculator } from './volume-progression-calculator-adapted';
+import { OverallProgressHeader } from './workout-progress/OverallProgressHeader';
+import { ExerciseProgressSection } from './workout-progress/ExerciseProgressSection';
+import { WorkoutOverviewDisplay } from './workout-progress/WorkoutOverviewDisplay';
 import exercisesData from '../data/exercises-real.json';
 
 interface WorkoutLoggerProps {
@@ -49,6 +52,29 @@ interface WorkoutSession {
   totalSets: number;
 }
 
+interface WorkoutPlan {
+  exercises: {
+    exerciseId: string;
+    targetSets: number;
+    order: number;
+  }[];
+}
+
+interface ExerciseProgress {
+  completed: number;
+  target: number;
+  currentSet: number;
+}
+
+interface SessionProgress {
+  totalTargetSets: number;
+  totalCompletedSets: number;
+  completionPercentage: number;
+  exerciseProgress: Record<string, ExerciseProgress>;
+  exercisesStarted: number;
+  totalExercises: number;
+}
+
 export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
   userId,
   initialCategory,
@@ -68,6 +94,11 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
   const [progressionRecommendations, setProgressionRecommendations] = useState<Record<string, any>>({});
   const [weeklyVolume, setWeeklyVolume] = useState<number>(0);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Progress tracking state
+  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
+  const [sessionProgress, setSessionProgress] = useState<SessionProgress | null>(null);
+  const [showWorkoutOverview, setShowWorkoutOverview] = useState(false);
 
   // Push/Pull/Legs category mapping
   const categoryMapping = {
@@ -128,6 +159,85 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
       recommendedWeight: lastWeight,
       reason: 'Continue with current weight'
     };
+  };
+
+  // Progress calculation utilities
+  const createDefaultWorkoutPlan = (exerciseIds: string[]): WorkoutPlan => {
+    return {
+      exercises: exerciseIds.map((exerciseId, index) => ({
+        exerciseId,
+        targetSets: 3, // Default to 3 sets per exercise
+        order: index
+      }))
+    };
+  };
+
+  const calculateSessionProgress = (
+    currentSession: CurrentSession | null,
+    workoutPlan: WorkoutPlan | null
+  ): SessionProgress | null => {
+    if (!currentSession || !workoutPlan) {
+      return null;
+    }
+
+    const exerciseProgress: Record<string, ExerciseProgress> = {};
+    let totalTargetSets = 0;
+    let totalCompletedSets = currentSession.sets.length;
+    let exercisesStarted = 0;
+
+    // Calculate progress for each planned exercise
+    workoutPlan.exercises.forEach(planExercise => {
+      const exerciseId = planExercise.exerciseId;
+      const completedSets = currentSession.sets.filter(set => set.exerciseId === exerciseId).length;
+      const targetSets = planExercise.targetSets;
+      
+      totalTargetSets += targetSets;
+      
+      if (completedSets > 0) {
+        exercisesStarted++;
+      }
+
+      exerciseProgress[exerciseId] = {
+        completed: completedSets,
+        target: targetSets,
+        currentSet: completedSets < targetSets ? completedSets + 1 : targetSets
+      };
+    });
+
+    const completionPercentage = totalTargetSets > 0 ? Math.round((totalCompletedSets / totalTargetSets) * 100) : 0;
+
+    return {
+      totalTargetSets,
+      totalCompletedSets,
+      completionPercentage,
+      exerciseProgress,
+      exercisesStarted,
+      totalExercises: workoutPlan.exercises.length
+    };
+  };
+
+  const getMotivationalBadge = (completionPercentage: number, exercisesStarted: number): string => {
+    if (completionPercentage === 0) return 'Let\'s Go!';
+    if (completionPercentage < 25) return 'Getting Started!';
+    if (completionPercentage < 50) return 'On Fire!';
+    if (completionPercentage < 75) return 'Crushing It!';
+    if (completionPercentage < 100) return 'Almost Done!';
+    return 'Workout Complete!';
+  };
+
+  const getElapsedTime = (startTime: string): string => {
+    const start = new Date(startTime);
+    const now = new Date();
+    const elapsedMs = now.getTime() - start.getTime();
+    const elapsedMinutes = Math.floor(elapsedMs / (1000 * 60));
+    
+    if (elapsedMinutes < 60) {
+      return `${elapsedMinutes} min`;
+    } else {
+      const hours = Math.floor(elapsedMinutes / 60);
+      const minutes = elapsedMinutes % 60;
+      return `${hours}h ${minutes}m`;
+    }
   };
 
   const loadLastPerformanceData = () => {
@@ -256,6 +366,33 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
       setValue('weight', lastWeights[selectedExerciseId]);
     }
   }, [selectedExerciseId, lastWeights, setValue]);
+
+  // Create workout plan when exercises are used
+  useEffect(() => {
+    if (currentSession && currentSession.sets.length > 0) {
+      const uniqueExerciseIds = Array.from(new Set(currentSession.sets.map(set => set.exerciseId)));
+      
+      // Only create a new plan if we don't have one or if exercises have changed
+      if (!workoutPlan || !arraysEqual(
+        workoutPlan.exercises.map(e => e.exerciseId).sort(),
+        uniqueExerciseIds.sort()
+      )) {
+        const newPlan = createDefaultWorkoutPlan(uniqueExerciseIds);
+        setWorkoutPlan(newPlan);
+      }
+    }
+  }, [currentSession, workoutPlan]);
+
+  // Update progress when session or workout plan changes
+  useEffect(() => {
+    const progress = calculateSessionProgress(currentSession, workoutPlan);
+    setSessionProgress(progress);
+  }, [currentSession, workoutPlan]);
+
+  // Utility function to compare arrays
+  const arraysEqual = (a: string[], b: string[]): boolean => {
+    return a.length === b.length && a.every((val, i) => val === b[i]);
+  };
 
   const saveCurrent = (session: CurrentSession) => {
     localStorage.setItem('currentWorkoutSession', JSON.stringify(session));
@@ -404,6 +541,15 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         </div>
       )}
 
+      {/* Overall Progress Header */}
+      {sessionProgress && currentSession && (
+        <OverallProgressHeader
+          sessionProgress={sessionProgress}
+          elapsedTime={getElapsedTime(currentSession.startTime)}
+          workoutType={selectedCategory !== 'all' ? categoryMapping[selectedCategory] : 'Mixed Workout'}
+        />
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Workout Type Filter */}
         <div>
@@ -522,9 +668,20 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
           )}
         </div>
 
-        {/* Set Number Display */}
-        {selectedExercise && (
-          <div className="p-3 bg-[#2C2C2E] rounded-xl">
+        {/* Exercise Progress Display */}
+        {selectedExercise && sessionProgress && (
+          <div className="p-4 bg-[#2C2C2E] rounded-xl">
+            {/* Exercise Progress Section */}
+            {sessionProgress.exerciseProgress[selectedExercise.id] && (
+              <ExerciseProgressSection
+                exerciseId={selectedExercise.id}
+                exerciseName={selectedExercise.name}
+                progress={sessionProgress.exerciseProgress[selectedExercise.id]}
+                isCurrentExercise={true}
+                className="mb-4"
+              />
+            )}
+
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-white">
@@ -625,6 +782,35 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
         </div>
       </form>
 
+      {/* Workout Overview Toggle */}
+      {currentSession && currentSession.sets.length > 0 && (
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => setShowWorkoutOverview(!showWorkoutOverview)}
+            className="px-4 py-2 bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white rounded-lg border border-[#4B5563] transition-colors duration-200 flex items-center gap-2 mx-auto"
+          >
+            <Dumbbell className="w-4 h-4" />
+            {showWorkoutOverview ? 'Hide' : 'Show'} Workout Overview
+          </button>
+        </div>
+      )}
+
+      {/* Workout Overview Display */}
+      {showWorkoutOverview && currentSession && sessionProgress && (
+        <div className="mt-6 p-4 bg-[#1a1a1a] rounded-xl border border-[#2C2C2E]">
+          <WorkoutOverviewDisplay
+            exercises={exercises}
+            currentSession={currentSession}
+            sessionProgress={sessionProgress}
+            selectedExerciseId={selectedExerciseId}
+            onExerciseSelect={(exerciseId) => {
+              setValue('exerciseId', exerciseId);
+              setShowWorkoutOverview(false); // Hide overview after selection
+            }}
+          />
+        </div>
+      )}
+
       {/* Weekly Volume Tracking */}
       <div className="mt-6 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-[#2C2C2E]">
         <h3 className="font-medium text-white mb-2 flex items-center gap-2">
@@ -684,15 +870,37 @@ export const WorkoutLogger: React.FC<WorkoutLoggerProps> = ({
             })()}
           </div>
 
-          {/* Exercise Details */}
-          <div className="space-y-1">
-            {Object.entries(setCounters).map(([exerciseId, count]) => {
-              const exercise = exercises.find(ex => ex.id === exerciseId);
-              return exercise ? (
-                <p key={exerciseId} className="text-sm text-[#A1A1A3]">
-                  {exercise.name}: {count} sets logged
-                </p>
-              ) : null;
+          {/* Exercise Progress Details */}
+          <div className="space-y-4">
+            {sessionProgress && workoutPlan && workoutPlan.exercises.map((planExercise) => {
+              const exercise = exercises.find(ex => ex.id === planExercise.exerciseId);
+              const progress = sessionProgress.exerciseProgress[planExercise.exerciseId];
+              const isCurrentExercise = selectedExerciseId === planExercise.exerciseId;
+              
+              if (!exercise || !progress) return null;
+              
+              return (
+                <div 
+                  key={planExercise.exerciseId} 
+                  className={`p-3 rounded-lg border transition-all duration-200 ${
+                    isCurrentExercise 
+                      ? 'bg-[#2a2a1a] border-[#F59E0B]/30 shadow-sm' 
+                      : 'bg-[#1a1a1a] border-[#333]'
+                  }`}
+                >
+                  <ExerciseProgressSection
+                    exerciseId={planExercise.exerciseId}
+                    exerciseName={exercise.name}
+                    progress={progress}
+                    isCurrentExercise={isCurrentExercise}
+                  />
+                  {isCurrentExercise && (
+                    <div className="mt-2 text-xs text-[#F59E0B] font-medium">
+                      ← Currently active
+                    </div>
+                  )}
+                </div>
+              );
             })}
           </div>
         </div>

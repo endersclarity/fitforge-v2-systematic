@@ -1,0 +1,211 @@
+/* Progress indicator animations */
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.1); 
+    box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.2); 
+  }
+}
+
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--progress-width);
+  }
+}
+
+@keyframes setComplete {
+  0% {
+    transform: scale(1);
+    background-color: #F59E0B;
+  }
+  50% {
+    transform: scale(1.2);
+    background-color: #10B981;
+  }
+  100% {
+    transform: scale(0.95);
+    background-color: #10B981;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.4);
+  }
+}
+
+@keyframes celebrate {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(-5deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(5deg) scale(1.05);
+  }
+}
+
+/* Progress bar gradient animation */
+@keyframes progressGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Utility classes for progress animations */
+.progress-fill {
+  animation: progressFill 0.8s ease-out;
+}
+
+.set-current-pulse {
+  animation: pulse 2s infinite;
+}
+
+.set-complete-animation {
+  animation: setComplete 0.6s ease-out;
+}
+
+.slide-in-left {
+  animation: slideInFromLeft 0.5s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInFromRight 0.5s ease-out;
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.current-set-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.workout-complete-celebrate {
+  animation: celebrate 1s ease-in-out;
+}
+
+.progress-gradient-animated {
+  background: linear-gradient(-45deg, #10B981, #34D399, #6EE7B7, #10B981);
+  background-size: 400% 400%;
+  animation: progressGradient 3s ease infinite;
+}
+
+/* Hover effects */
+.exercise-card:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease-out;
+}
+
+.set-row:hover {
+  transform: translateX(4px);
+  transition: transform 0.2s ease-out;
+}
+
+/* Progress completion effects */
+.progress-complete {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-complete::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 2s ease-in-out;
+}
+
+@keyframes shimmer {
+  to {
+    left: 100%;
+  }
+}
+
+/* Loading state animations */
+.loading-skeleton {
+  background: linear-gradient(90deg, #374151 25%, #4B5563 50%, #374151 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Success flash animation */
+.success-flash {
+  animation: successFlash 0.8s ease-out;
+}
+
+@keyframes successFlash {
+  0% {
+    background-color: #10B981;
+    transform: scale(1);
+  }
+  50% {
+    background-color: #34D399;
+    transform: scale(1.02);
+  }
+  100% {
+    background-color: #10B981;
+    transform: scale(1);
+  }
+}
