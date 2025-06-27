@@ -1,0 +1,233 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "FitForge":
+    - /url: /
+    - img
+    - text: FitForge
+  - link "Dashboard":
+    - /url: /dashboard
+    - img
+    - text: Dashboard
+  - link "Start Workout":
+    - /url: /push-pull-legs
+    - img
+    - text: Start Workout
+  - link "Exercise Library":
+    - /url: /muscle-explorer
+    - img
+    - text: Exercise Library
+  - link "Analytics":
+    - /url: /analytics
+    - img
+    - text: Analytics
+  - link "Profile":
+    - /url: /profile
+    - img
+    - text: Profile
+  - link "Debug":
+    - /url: /debug-storage
+    - img
+    - text: Debug
+  - link "Quick Log":
+    - /url: /workout-simple
+    - img
+    - text: Quick Log
+  - button "Toggle theme":
+    - img
+    - img
+    - text: Toggle theme
+- main:
+  - button:
+    - img
+  - heading "Exercise Browser" [level=1]
+  - paragraph: 38 exercises available
+  - button "Sort":
+    - text: Sort
+    - img
+  - button "Equipment":
+    - text: Equipment
+    - img
+  - button "Target Muscle":
+    - text: Target Muscle
+    - img
+  - button "Group":
+    - text: Group
+    - img
+  - button "Fatigue" [disabled]:
+    - text: Fatigue
+    - img
+  - heading "Bench Press" [level=3]
+  - paragraph: Bench
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "Bench Sit-ups" [level=3]
+  - paragraph: Bench
+  - text: Abs Intermediate
+  - img
+  - heading "Bent Over Rows" [level=3]
+  - paragraph: Dumbbell
+  - text: Back Biceps Intermediate
+  - img
+  - heading "Box Step-ups" [level=3]
+  - paragraph: Plybox
+  - text: Legs Intermediate
+  - img
+  - heading "Calf Raises" [level=3]
+  - paragraph: Dumbbell
+  - text: Legs Beginner
+  - img
+  - heading "Chin-Ups" [level=3]
+  - paragraph: Pull-up_Bar
+  - text: Back Biceps Advanced
+  - img
+  - heading "Claps" [level=3]
+  - paragraph: Bodyweight
+  - text: Chest Triceps Advanced
+  - img
+  - heading "Concentration Curl" [level=3]
+  - paragraph: Dumbbell
+  - text: Back Biceps Beginner
+  - img
+  - heading "Dead Lifts" [level=3]
+  - paragraph: Dumbbell
+  - text: Legs Advanced
+  - img
+  - heading "Dips" [level=3]
+  - paragraph: Bench
+  - text: Chest Triceps Advanced
+  - img
+  - heading "Face Pull" [level=3]
+  - paragraph: TRX
+  - text: Back Biceps Intermediate
+  - img
+  - heading "Glute Bridges" [level=3]
+  - paragraph: Bodyweight
+  - text: Legs Beginner
+  - img
+  - heading "Goblet Squats" [level=3]
+  - paragraph: Kettlebell
+  - text: Legs Beginner
+  - img
+  - heading "Hanging Knee Raises" [level=3]
+  - paragraph: Pull-up_Bar
+  - text: Abs Intermediate
+  - img
+  - heading "Incline Bench Press" [level=3]
+  - paragraph: Bench
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "Incline Hammer Curl" [level=3]
+  - paragraph: Bench
+  - text: Back Biceps Intermediate
+  - img
+  - heading "Kettlebell Halos" [level=3]
+  - paragraph: Kettlebell
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "Kettlebell Press" [level=3]
+  - paragraph: Kettlebell
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "Kettlebell Swings" [level=3]
+  - paragraph: Kettlebell
+  - text: Legs Intermediate
+  - img
+  - heading "Neutral Grip Pull-ups" [level=3]
+  - paragraph: Pull-up_Bar
+  - text: Back Biceps Advanced
+  - img
+  - heading "Planks" [level=3]
+  - paragraph: Bodyweight
+  - text: Abs Beginner
+  - img
+  - heading "Pullover" [level=3]
+  - paragraph: Dumbbell
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "Pushup" [level=3]
+  - paragraph: Bodyweight
+  - text: Chest Triceps Beginner
+  - img
+  - heading "Renegade Rows" [level=3]
+  - paragraph: Dumbbell
+  - text: Back Biceps Advanced
+  - img
+  - heading "Shoulder Press" [level=3]
+  - paragraph: Dumbbell
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "Shoulder Shrugs" [level=3]
+  - paragraph: Dumbbell
+  - text: Back Biceps Beginner
+  - img
+  - heading "Single Arm Bench" [level=3]
+  - paragraph: Bench
+  - text: Chest Triceps Advanced
+  - img
+  - heading "Single Arm Incline" [level=3]
+  - paragraph: Bench
+  - text: Chest Triceps Advanced
+  - img
+  - heading "Single Arm Upright Row" [level=3]
+  - paragraph: Dumbbell
+  - text: Back Biceps Intermediate
+  - img
+  - heading "Spider Planks" [level=3]
+  - paragraph: Bodyweight
+  - text: Abs Intermediate
+  - img
+  - heading "Stiff Legged Deadlifts" [level=3]
+  - paragraph: Dumbbell
+  - text: Legs Advanced
+  - img
+  - heading "T Row" [level=3]
+  - paragraph: TRX
+  - text: Back Biceps Intermediate
+  - img
+  - heading "Tricep Extension" [level=3]
+  - paragraph: Dumbbell
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "TRX Bicep Curl" [level=3]
+  - paragraph: TRX
+  - text: Back Biceps Intermediate
+  - img
+  - heading "TRX Pushup" [level=3]
+  - paragraph: TRX
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "TRX Reverse Flys" [level=3]
+  - paragraph: TRX
+  - text: Chest Triceps Intermediate
+  - img
+  - heading "TRX Row" [level=3]
+  - paragraph: TRX
+  - text: Back Biceps Intermediate
+  - img
+  - heading "Wide Grip Pullups" [level=3]
+  - paragraph: Pull-up_Bar
+  - text: Back Biceps Advanced
+  - img
+  - heading "Bench Press" [level=2]
+  - button "✕"
+  - paragraph: Equipment
+  - paragraph: Bench
+  - paragraph: Difficulty
+  - paragraph: Intermediate
+  - paragraph: Category
+  - paragraph: Chest Triceps
+  - paragraph: Muscle Engagement
+  - text: Pectoralis Major 85% Anterior Deltoids 30% Triceps Brachii 25% Serratus Anterior 10%
+  - button "Add to Workout"
+- contentinfo:
+  - heading "FitForge" [level=3]
+  - paragraph: Smart fitness tracking with progressive overload intelligence
+  - text: 📱 Mobile Optimized 💾 Local Storage 📈 Smart Progression
+  - paragraph: Built with localStorage-first architecture • No backend required • Your data stays on your device
+- region "Notifications alt+T"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```

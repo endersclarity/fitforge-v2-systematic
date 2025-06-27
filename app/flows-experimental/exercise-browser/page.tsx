@@ -55,20 +55,26 @@ export default function ExperimentalExerciseBrowser() {
   // Apply filters and sorting
   const filteredAndSortedExercises = useMemo(() => {
     let filtered = [...exercises]
+    console.log('Starting with', filtered.length, 'exercises')
     
     // Apply equipment filter
     if (filterState.equipment.length > 0) {
+      const beforeCount = filtered.length
       filtered = filtered.filter(ex => filterState.equipment.includes(ex.equipment))
+      console.log('Equipment filter:', filterState.equipment, 'reduced from', beforeCount, 'to', filtered.length)
     }
     
     // Apply target muscle filter
     if (filterState.targetMuscle.length > 0) {
+      const beforeCount = filtered.length
       filtered = filtered.filter(ex => {
         const muscles = Object.keys(ex.muscleEngagement)
-        return filterState.targetMuscle.some(target => 
-          muscles.some(muscle => muscle.toLowerCase().includes(target.toLowerCase()))
+        // Direct comparison - filterState.targetMuscle now contains data names
+        return filterState.targetMuscle.some(targetMuscle => 
+          muscles.includes(targetMuscle)
         )
       })
+      console.log('Muscle filter:', filterState.targetMuscle, 'reduced from', beforeCount, 'to', filtered.length)
     }
     
     // Apply group filter
@@ -92,6 +98,7 @@ export default function ExperimentalExerciseBrowser() {
   }, [exercises, filterState, sortBy])
   
   const handleFilterChange = (newState: FilterState) => {
+    console.log('Filter state changed:', newState)
     setFilterState(newState)
   }
   
@@ -140,8 +147,6 @@ export default function ExperimentalExerciseBrowser() {
           
           {/* Filter Bar */}
           <CleanFilterBar
-            exercises={exercises}
-            filterState={filterState}
             onFilterChange={handleFilterChange}
           />
         </div>
