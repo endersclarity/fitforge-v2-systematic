@@ -10,7 +10,8 @@ import {
   Zap,
   ArrowRight,
   Star,
-  Target
+  Target,
+  Beaker
 } from "lucide-react"
 
 interface FlowingMenuProps {
@@ -304,5 +305,13 @@ export const defaultDashboardMenuItems: FlowingMenuItem[] = [
     href: '/workout-simple',
     icon: Zap,
     color: 'from-orange-500 to-orange-600',
+  },
+  {
+    id: 'experimental',
+    title: 'Experimental Flows',
+    subtitle: 'Try new features',
+    href: '/flows-experimental',
+    icon: Beaker,
+    color: 'from-pink-500 to-pink-600',
   }
 ]
