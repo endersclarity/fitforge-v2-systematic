@@ -39,70 +39,34 @@
     - img
     - text: Toggle theme
 - main:
-  - heading "Workout Builder" [level=1]
-  - button "Cancel"
-  - button "Save Workout"
-  - heading "2 Exercises" [level=3]
-  - button "Add an exercise"
+  - heading "Experimental Workout Execution" [level=1]
   - button:
     - img
-  - heading "Pushup" [level=3]
-  - paragraph: 3 sets × 8 reps
-  - button "Remove exercise":
-    - img
-  - text: Sets
+  - heading "Experimental Workout Execution" [level=1]
+  - img
+  - text: 0:05
+  - button "Finish" [disabled]
+  - text: Bench Press Barbell Intermediate
+  - paragraph: Exercise
+  - paragraph: 1/2
   - button:
     - img
-  - spinbutton: "3"
-  - button:
-    - img
+  - img
+  - text: Exercise Notes
+  - textbox "Form cues, technique notes..."
+  - text: Add Set 1
+  - button "Warm-up Set"
+  - text: Weight (lbs)
+  - spinbutton
   - text: Reps
-  - button:
+  - spinbutton
+  - text: Set Notes (Optional)
+  - textbox "Form notes, how it felt..."
+  - button "Add Set" [disabled]:
     - img
-  - spinbutton: "8"
-  - button:
-    - img
-  - text: Weight (lb)
-  - button [disabled]:
-    - img
-  - spinbutton: "0"
-  - button:
-    - img
-  - text: Rest Time (seconds)
-  - button "60s"
-  - button "90s"
-  - button "2m"
-  - button "3m"
-  - button:
-    - img
-  - heading "Single Arm Upright Row" [level=3]
-  - paragraph: 3 sets × 8 reps @ 135 lb
-  - button "Remove exercise":
-    - img
-  - text: Sets
-  - button:
-    - img
-  - spinbutton: "3"
-  - button:
-    - img
-  - text: Reps
-  - button:
-    - img
-  - spinbutton: "8"
-  - button:
-    - img
-  - text: Weight (lb)
-  - button:
-    - img
-  - spinbutton: "135"
-  - button:
-    - img
-  - text: Rest Time (seconds)
-  - button "60s"
-  - button "90s"
-  - button "2m"
-  - button "3m"
-  - status
+    - text: Add Set
+  - button "Previous" [disabled]
+  - button "Next Exercise"
 - contentinfo:
   - heading "FitForge" [level=3]
   - paragraph: Smart fitness tracking with progressive overload intelligence

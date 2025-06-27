@@ -1,0 +1,117 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "FitForge":
+    - /url: /
+    - img
+    - text: FitForge
+  - link "Dashboard":
+    - /url: /dashboard
+    - img
+    - text: Dashboard
+  - link "Start Workout":
+    - /url: /push-pull-legs
+    - img
+    - text: Start Workout
+  - link "Exercise Library":
+    - /url: /muscle-explorer
+    - img
+    - text: Exercise Library
+  - link "Analytics":
+    - /url: /analytics
+    - img
+    - text: Analytics
+  - link "Profile":
+    - /url: /profile
+    - img
+    - text: Profile
+  - link "Debug":
+    - /url: /debug-storage
+    - img
+    - text: Debug
+  - link "Quick Log":
+    - /url: /workout-simple
+    - img
+    - text: Quick Log
+  - button "Toggle theme":
+    - img
+    - img
+    - text: Toggle theme
+- main:
+  - heading "Experimental Workout Execution" [level=1]
+  - button:
+    - img
+  - heading "Experimental Workout Execution" [level=1]
+  - img
+  - text: 0:05
+  - button "Finish" [disabled]
+  - text: Bench Press Barbell Intermediate
+  - paragraph: Exercise
+  - paragraph: 1/1
+  - button:
+    - img
+  - img
+  - text: Exercise Notes
+  - textbox "Form cues, technique notes..."
+  - text: Add Set 1
+  - button "Warm-up Set"
+  - text: Weight (lbs)
+  - spinbutton: "95"
+  - text: Reps
+  - spinbutton: "12"
+  - text: Set Notes (Optional)
+  - textbox "Form notes, how it felt..."
+  - button "Add Set":
+    - img
+    - text: Add Set
+  - button "Previous" [disabled]
+  - button "Next Exercise" [disabled]
+  - img
+  - text: Rate Your Exertion
+  - button:
+    - img
+  - text: How difficult was 12 reps × 95 lbs?
+  - heading "Rate of Perceived Exertion (RPE)" [level=3]
+  - button "1 Very Light No effort, could do many more reps":
+    - text: 1 Very Light
+    - paragraph: No effort, could do many more reps
+  - button "2 Light Very easy, could do many more reps":
+    - text: 2 Light
+    - paragraph: Very easy, could do many more reps
+  - button "3 Moderate Easy, could do several more reps":
+    - text: 3 Moderate
+    - paragraph: Easy, could do several more reps
+  - button "4 Somewhat Hard Could do 3-5 more reps":
+    - text: 4 Somewhat Hard
+    - paragraph: Could do 3-5 more reps
+  - button "5 Hard Could do 2-3 more reps":
+    - text: 5 Hard
+    - paragraph: Could do 2-3 more reps
+  - button "6 Hard+ Could do 1-2 more reps":
+    - text: 6 Hard+
+    - paragraph: Could do 1-2 more reps
+  - button "7 Very Hard Could do 1 more rep":
+    - text: 7 Very Hard
+    - paragraph: Could do 1 more rep
+  - button "8 Very Hard+ Could maybe do 1 more rep":
+    - text: 8 Very Hard+
+    - paragraph: Could maybe do 1 more rep
+  - button "9 Near Max Could not do another rep":
+    - text: 9 Near Max
+    - paragraph: Could not do another rep
+  - button "10 Max Effort Could not do another rep, maximal effort":
+    - text: 10 Max Effort
+    - paragraph: Could not do another rep, maximal effort
+  - button "Cancel"
+  - button "Continue" [disabled]
+- contentinfo:
+  - heading "FitForge" [level=3]
+  - paragraph: Smart fitness tracking with progressive overload intelligence
+  - text: 📱 Mobile Optimized 💾 Local Storage 📈 Smart Progression
+  - paragraph: Built with localStorage-first architecture • No backend required • Your data stays on your device
+- region "Notifications alt+T"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```
