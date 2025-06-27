@@ -54,6 +54,7 @@ export default function ExperimentalExerciseBrowser() {
   
   // Apply filters and sorting
   const filteredAndSortedExercises = useMemo(() => {
+    console.log('🚨 [useMemo] RECALCULATING filtered exercises')
     let filtered = [...exercises]
     console.log('🔍 FILTER DEBUG:')
     console.log('  Starting with', filtered.length, 'exercises')
@@ -97,7 +98,7 @@ export default function ExperimentalExerciseBrowser() {
     }
     
     return filtered
-  }, [exercises, filterState, sortBy])
+  }, [exercises, filterState, sortBy]) // Dependencies: re-run when any of these change
   
   const handleFilterChange = (newState: FilterState) => {
     console.log('Filter state changed:', newState)
