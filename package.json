@@ -27,10 +27,16 @@
     "test:ci": "npm run test:all && npm run test:performance",
     "test:self-improve": "bash scripts/self-improving-test-cycle.sh",
     "test:evidence": "ts-node scripts/generate-test-evidence.ts",
-    "test:issue": "playwright test --grep"
+    "test:issue": "playwright test --grep",
+    "test:components": "jest tests/unit --testTimeout=5000",
+    "test:smoke": "playwright test --config=playwright.fast.config.ts --timeout=5000"
   },
   "dependencies": {
     "@anthropic-ai/claude-code": "^1.0.34",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.2",
     "@radix-ui/react-alert-dialog": "1.1.4",

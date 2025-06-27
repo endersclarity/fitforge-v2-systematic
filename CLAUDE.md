@@ -10,55 +10,53 @@
 ### 📋 **BEFORE ANY DEVELOPMENT WORK - REQUIRED CHECKLIST**
 
 **ALWAYS START WITH:**
-1. `npx task-master list` - Check TaskMaster status and current tasks
-2. `npx task-master next` - Get recommended next task based on dependencies
-3. `git checkout -b feature/task-name` - Create feature branch (NEVER work on main)
-4. Reference `DEVELOPMENT-WORKFLOW.md` for complete 10-step process
+1. Review GitHub issues with `/issue` workflow
+2. `git checkout -b feature/issue-name` - Create feature branch (NEVER work on main)
+3. Reference `DEVELOPMENT-WORKFLOW.md` for complete systematic process
 
 **TESTING ENVIRONMENT:**
 - ✅ **ONLY**: localhost:8080 (Docker container)
 - ❌ **FORBIDDEN**: npm run dev, localhost:3000, local testing
 
 **TASK MANAGEMENT:**
-- ✅ **ONLY**: TaskMaster commands and task references
-- ❌ **FORBIDDEN**: Claude todos, manual task lists, "quick tasks"
+- ✅ **ONLY**: GitHub issues with `/issue` and `/pr-review` workflows
+- ❌ **FORBIDDEN**: Manual task lists, "quick tasks" without issue tracking
 
 **GIT WORKFLOW:**
-- ✅ **ONLY**: Feature branches → main merge → cleanup
+- ✅ **ONLY**: Feature branches → PR → main merge → cleanup
 - ❌ **FORBIDDEN**: Direct commits to main, working without branches
 
 ### 🚨 **VIOLATION CONSEQUENCES**
 **If I deviate from this workflow:** STOP immediately and redirect to proper process
-**If I suggest Claude todos:** STOP and use TaskMaster instead
+**If I suggest working without issues:** STOP and create GitHub issue first
 **If I suggest local testing:** STOP and use Docker container at localhost:8080
 
 ### 🎯 **MANDATORY DAILY COMMANDS**
 ```bash
 # Session startup (REQUIRED)
-npx task-master list              # Check current task status
-npx task-master next              # Get next logical task
 git branch                        # Verify current branch
 docker ps                         # Confirm container running
 
-# Task workflow (REQUIRED)
-npx task-master set-status --id=X --status=in-progress    # Start task
-git checkout -b feature/task-name                         # Create branch
+# Issue-based workflow (REQUIRED)
+git checkout -b feature/issue-name               # Create branch for GitHub issue
 # ... development work ...
-curl localhost:8080                                       # Test in container
-git add . && git commit -m "feat: description"           # Commit work
-git checkout main && git merge feature/task-name         # Merge to main
-npx task-master set-status --id=X --status=done          # Complete task
+curl localhost:8080                              # Test in container
+git add . && git commit -m "feat: description"  # Commit work
+git push origin feature/issue-name               # Push for PR
+# Use /pr-review workflow for code review
 ```
 
 **Reference Documents**: 
 - `DEVELOPMENT-WORKFLOW.md` - Complete systematic process
 - `FITFORGE-ESSENTIAL-PRINCIPLES.md` - Core architecture rules
 - `tests/TESTING-GUIDE.md` - Testing methodology (Playwright, Vitest, Puppeteer)
+- GitHub Issues - Use `/issue` workflow for task management
+- Pull Requests - Use `/pr-review` workflow for code review
 
 ## 🚀 **Quick Start**
 - **System Overview**: `flows/memory-bank/system_manifest.md` ← Architecture overview
 - **Project Roadmap**: `flows/memory-bank/project_roadmap.md` - Development phases and milestones
-- **Current Implementation**: Task 1 from Equipment Filtering implementation plan
+- **Current Implementation**: GitHub issue-based development workflow
 - **Development**: `./start-fitforge-v2-dev.sh` (Docker on :8080) or `npm run dev`
 
 ## 📁 **HDTA Documentation Structure**

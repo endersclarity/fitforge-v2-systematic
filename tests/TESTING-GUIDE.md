@@ -188,6 +188,15 @@ test('navigation works correctly', async ({ page }) => {
 
 ## Running Tests
 
+### Quick Validation (< 5 seconds)
+```bash
+# Immediate filter validation for issues
+npm run test:components          # Jest/Vitest for filter logic
+npm run test:smoke -- --docker   # Playwright against localhost:8080
+node scripts/instant-test.js     # Custom instant tests
+```
+
+### Full Test Suite
 ```bash
 # Run all tests
 npm test

@@ -248,6 +248,25 @@ curl -s "http://localhost:8080/flows-experimental/exercise-browser?equipment=Dum
    - Clear back navigation
    - Connection to workout building flow
 
+## Test Evidence Summary
+
+### Phase 2 Implementation Results
+- [x] Created muscle name constants (single source of truth)
+- [x] Fixed CleanFilterBar to send data names
+- [x] Simplified filter logic in exercise browser
+- [x] Added comprehensive logging
+- [ ] Filters still don't work - state updates but doesn't re-render
+- [ ] Need to debug useMemo dependencies
+- [ ] Modal z-index blocking some interactions
+
+### Current Test Status
+```
+Equipment Filter: PARTIAL (works in Puppeteer, not Playwright)
+Muscle Filter: BROKEN (data contract fixed but still not filtering)
+Clear All: UNTESTABLE (filters not applying)
+URL Params: NOT IMPLEMENTED
+```
+
 ## Completion Checklist
 - [x] Experimental directory structure created
 - [x] Exercise browser page implemented
