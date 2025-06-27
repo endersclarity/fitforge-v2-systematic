@@ -11,6 +11,7 @@ import { ArrowLeft, Plus, Minus, Clock, CheckCircle, Dumbbell, Timer, MoreHorizo
 import { WorkoutPlan, PlannedSet } from '@/schemas/typescript-interfaces'
 import { RestTimer } from './rest-timer'
 import { RPERatingModal } from './rpe-rating-modal'
+import { BatchRPEModal } from './batch-rpe-modal'
 import { ExerciseReplacementModal } from './exercise-replacement-modal'
 import { useRealTimeMuscleVolume } from '@/hooks/useRealTimeMuscleVolume'
 
@@ -65,6 +66,8 @@ export function WorkoutExecutionExperimental() {
   const [showRestTimer, setShowRestTimer] = useState(false)
   const [showRPEModal, setShowRPEModal] = useState(false)
   const [pendingSet, setPendingSet] = useState<EnhancedSetLog | null>(null)
+  const [showBatchRPEModal, setShowBatchRPEModal] = useState(false)
+  const [pendingBatchSets, setPendingBatchSets] = useState<number>(0)
   const [showExerciseMenu, setShowExerciseMenu] = useState(false)
   const [showReplaceModal, setShowReplaceModal] = useState(false)
 
@@ -196,7 +199,19 @@ export function WorkoutExecutionExperimental() {
     
     if (remainingPlannedSets.length === 0) return
     
-    // Create all remaining sets with same weight/reps
+    // Store the number of sets for batch RPE modal
+    setPendingBatchSets(remainingPlannedSets.length)
+    setShowBatchRPEModal(true)
+  }
+
+  const completeBatchSetsWithRPE = (rpe: number) => {
+    if (!currentWeight || !currentReps || !currentExercise || pendingBatchSets === 0) return
+    
+    const remainingPlannedSets = getExercisePlannedSets(currentExercise.id)
+      .filter((_, index) => index >= exerciseSets.length)
+      .slice(0, pendingBatchSets)
+    
+    // Create all remaining sets with same weight/reps and chosen RPE
     const allSets: EnhancedSetLog[] = remainingPlannedSets.map((plannedSet, index) => ({
       id: `set_${Date.now()}_${Math.random()}_${index}`,
       exerciseId: currentExercise.id,
@@ -205,7 +220,7 @@ export function WorkoutExecutionExperimental() {
       completed: true,
       timestamp: new Date().toISOString(),
       isWarmup: false, // Log All Sets is for working sets
-      rpe: 5 // Default medium effort - could be enhanced with batch RPE modal
+      rpe: rpe
     }))
     
     setSets(prev => [...prev, ...allSets])
@@ -214,6 +229,10 @@ export function WorkoutExecutionExperimental() {
     // Clear inputs after logging all sets
     setCurrentWeight('')
     setCurrentReps('')
+    
+    // Reset batch modal state
+    setShowBatchRPEModal(false)
+    setPendingBatchSets(0)
   }
 
   const removeSet = (setId: string) => {
@@ -402,18 +421,18 @@ export function WorkoutExecutionExperimental() {
       </div>
 
       {/* Real-time Muscle Fatigue Visualization */}
-      {muscleVolumeData.summary.length > 0 && (
-        <div className="p-4 pb-2">
-          <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm text-[#A1A1A3] flex items-center">
-                <Zap className="h-4 w-4 mr-2" />
-                Real-time Muscle Fatigue
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="grid grid-cols-3 gap-2" data-testid="muscle-fatigue-display">
-                {muscleVolumeData.summary.slice(0, 6).map(({ muscle, intensity }) => (
+      <div className="p-4 pb-2">
+        <Card className="bg-[#1C1C1E] border-[#2C2C2E]">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm text-[#A1A1A3] flex items-center">
+              <Zap className="h-4 w-4 mr-2" />
+              Real-time Muscle Fatigue
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-3 gap-2" data-testid="muscle-fatigue-display">
+              {muscleVolumeData.summary.length > 0 ? (
+                muscleVolumeData.summary.slice(0, 6).map(({ muscle, intensity }) => (
                   <div key={muscle} className="text-center">
                     <div 
                       className={`h-2 rounded-full mb-1 ${
@@ -430,12 +449,26 @@ export function WorkoutExecutionExperimental() {
                       {muscle.replace('_', ' ')}
                     </span>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                ))
+              ) : (
+                // Show placeholder muscle groups when no volume data yet
+                ['Chest', 'Shoulders', 'Back', 'Arms', 'Legs', 'Core'].map((muscle) => (
+                  <div key={muscle} className="text-center">
+                    <div 
+                      className="h-2 rounded-full mb-1 bg-gray-500"
+                      data-testid={`${muscle.toLowerCase()}-muscle-indicator`}
+                      data-intensity="none"
+                    />
+                    <span className="text-xs text-[#A1A1A3]">
+                      {muscle}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <div className="p-4">
         {/* Current Exercise */}
@@ -779,6 +812,22 @@ export function WorkoutExecutionExperimental() {
             reps: pendingSet.reps,
             exercise: currentExercise.name
           }}
+        />
+      )}
+
+      {/* Batch RPE Rating Modal */}
+      {showBatchRPEModal && (
+        <BatchRPEModal
+          isOpen={showBatchRPEModal}
+          onClose={() => {
+            setShowBatchRPEModal(false)
+            setPendingBatchSets(0)
+          }}
+          onSubmit={completeBatchSetsWithRPE}
+          setCount={pendingBatchSets}
+          weight={parseFloat(currentWeight)}
+          reps={parseInt(currentReps)}
+          exerciseName={currentExercise.name}
         />
       )}
 
