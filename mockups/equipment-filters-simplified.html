@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simplified Equipment Filters - Cascading Dropdowns</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .exercise-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .page-header {
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #1a1a1a;
+        }
+        
+        /* Simplified Filter Bar */
+        .filter-bar {
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 24px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Filter Dropdown Buttons */
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .filter-button {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .filter-button:hover {
+            border-color: #007AFF;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filter-button.active {
+            background: #007AFF;
+            color: white;
+            border-color: #007AFF;
+        }
+        .filter-button .badge {
+            background: rgba(255,255,255,0.3);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: auto;
+        }
+        .filter-button.active .badge {
+            background: rgba(255,255,255,0.3);
+        }
+        .dropdown-arrow {
+            font-size: 10px;
+            margin-left: auto;
+        }
+        
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 4px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+        .dropdown-menu.show {
+            display: block;
+        }
+        .dropdown-item {
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .dropdown-item:hover {
+            background: #f5f5f5;
+        }
+        .dropdown-item.selected {
+            background: #e3f2fd;
+            color: #007AFF;
+        }
+        .dropdown-item input[type="checkbox"] {
+            margin: 0;
+        }
+        
+        /* Clear Filters */
+        .clear-filters {
+            margin-left: auto;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.2s;
+        }
+        .clear-filters:hover {
+            border-color: #007AFF;
+            color: #007AFF;
+        }
+        
+        /* Exercise List */
+        .exercise-list {
+            padding: 24px;
+        }
+        .results-count {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        .exercise-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+        .exercise-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .exercise-icon {
+            width: 60px;
+            height: 60px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .exercise-info {
+            flex: 1;
+        }
+        .exercise-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .exercise-details {
+            font-size: 14px;
+            color: #666;
+        }
+        .exercise-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .tag {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            color: #666;
+        }
+        .tag.equipment { background: #e3f2fd; color: #1976d2; }
+        .tag.muscle { background: #f3e5f5; color: #7b1fa2; }
+        .tag.group { background: #e8f5e9; color: #388e3c; }
+    </style>
+</head>
+<body>
+    <div class="exercise-page">
+        <div class="page-header">
+            <h1>Chest Exercises</h1>
+        </div>
+        
+        <!-- Simplified Filter Bar with Dropdowns -->
+        <div class="filter-bar">
+            <!-- Equipment Filter -->
+            <div class="filter-dropdown">
+                <button class="filter-button" onclick="toggleDropdown('equipment')">
+                    Equipment
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="equipment-dropdown">
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="barbell" />
+                        <label for="barbell">Barbell</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="dumbbell" />
+                        <label for="dumbbell">Dumbbell</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="cable" />
+                        <label for="cable">Cable</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="bodyweight" />
+                        <label for="bodyweight">Bodyweight</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="machine" />
+                        <label for="machine">Machine</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Target Muscle Filter -->
+            <div class="filter-dropdown">
+                <button class="filter-button" onclick="toggleDropdown('muscle')">
+                    Target Muscle
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="muscle-dropdown">
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="chest" />
+                        <label for="chest">Chest</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="shoulders" />
+                        <label for="shoulders">Shoulders</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="triceps" />
+                        <label for="triceps">Triceps</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="back" />
+                        <label for="back">Back</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="biceps" />
+                        <label for="biceps">Biceps</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Group Filter -->
+            <div class="filter-dropdown">
+                <button class="filter-button" onclick="toggleDropdown('group')">
+                    Group
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="group-dropdown">
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="push" />
+                        <label for="push">Push</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="pull" />
+                        <label for="pull">Pull</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="legs" />
+                        <label for="legs">Legs</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="checkbox" id="abs" />
+                        <label for="abs">Abs</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Fatigue Sort -->
+            <div class="filter-dropdown">
+                <button class="filter-button" onclick="toggleDropdown('fatigue')">
+                    Fatigue
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div class="dropdown-menu" id="fatigue-dropdown">
+                    <div class="dropdown-item">
+                        <input type="radio" name="fatigue" id="fresh-first" />
+                        <label for="fresh-first">Fresh Muscles First</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="radio" name="fatigue" id="fatigued-first" />
+                        <label for="fatigued-first">Fatigued Muscles First</label>
+                    </div>
+                    <div class="dropdown-item">
+                        <input type="radio" name="fatigue" id="all-muscles" checked />
+                        <label for="all-muscles">All (Default Order)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="clear-filters" style="display: none;">Clear All</button>
+        </div>
+        
+        <!-- Exercise List -->
+        <div class="exercise-list">
+            <div class="results-count">Showing 4 exercises</div>
+            
+            <div class="exercise-card">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Dumbbell Bench Press</div>
+                    <div class="exercise-details">Primary: Chest • Secondary: Shoulders, Triceps</div>
+                    <div class="exercise-tags">
+                        <span class="tag equipment">Dumbbell</span>
+                        <span class="tag muscle">Chest</span>
+                        <span class="tag group">Push</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-card">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Cable Crossover</div>
+                    <div class="exercise-details">Primary: Chest • Secondary: Shoulders</div>
+                    <div class="exercise-tags">
+                        <span class="tag equipment">Cable</span>
+                        <span class="tag muscle">Chest</span>
+                        <span class="tag group">Push</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-card">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Push-ups</div>
+                    <div class="exercise-details">Primary: Chest • Secondary: Shoulders, Triceps</div>
+                    <div class="exercise-tags">
+                        <span class="tag equipment">Bodyweight</span>
+                        <span class="tag muscle">Chest</span>
+                        <span class="tag group">Push</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-card">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Barbell Bench Press</div>
+                    <div class="exercise-details">Primary: Chest • Secondary: Shoulders, Triceps</div>
+                    <div class="exercise-tags">
+                        <span class="tag equipment">Barbell</span>
+                        <span class="tag muscle">Chest</span>
+                        <span class="tag group">Push</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle dropdown visibility
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id + '-dropdown');
+            const allDropdowns = document.querySelectorAll('.dropdown-menu');
+            
+            // Close all other dropdowns
+            allDropdowns.forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('show');
+                }
+            });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('show');
+        }
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.filter-dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(d => {
+                    d.classList.remove('show');
+                });
+            }
+        });
+        
+        // Handle checkbox changes
+        document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
+            input.addEventListener('change', function() {
+                updateFilterBadges();
+                updateClearButton();
+            });
+        });
+        
+        // Update filter badges with counts
+        function updateFilterBadges() {
+            const filters = {
+                'equipment': document.querySelectorAll('#equipment-dropdown input:checked').length,
+                'muscle': document.querySelectorAll('#muscle-dropdown input:checked').length,
+                'group': document.querySelectorAll('#group-dropdown input:checked').length,
+                'fatigue': document.querySelector('#fatigue-dropdown input:checked:not(#all-muscles)') ? 1 : 0
+            };
+            
+            Object.keys(filters).forEach(key => {
+                const button = document.querySelector(`#${key}-dropdown`).previousElementSibling;
+                const count = filters[key];
+                
+                if (count > 0) {
+                    button.classList.add('active');
+                    button.innerHTML = `${button.textContent.split(' ')[0]} <span class="badge">${count}</span> <span class="dropdown-arrow">▼</span>`;
+                } else {
+                    button.classList.remove('active');
+                    button.innerHTML = `${button.textContent.split(' ')[0]} <span class="dropdown-arrow">▼</span>`;
+                }
+            });
+        }
+        
+        // Show/hide clear button
+        function updateClearButton() {
+            const hasFilters = document.querySelectorAll('.filter-button.active').length > 0;
+            document.querySelector('.clear-filters').style.display = hasFilters ? 'block' : 'none';
+        }
+        
+        // Clear all filters
+        document.querySelector('.clear-filters').addEventListener('click', function() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('all-muscles').checked = true;
+            updateFilterBadges();
+            updateClearButton();
+        });
+    </script>
+</body>
+</html>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { FilterDropdown } from './filter-dropdown'
+import { SortDropdown } from './sort-dropdown'
 import { EQUIPMENT_OPTIONS } from '@/schemas/typescript-interfaces'
 import exercisesData from '@/data/exercises-real.json'
 
@@ -13,7 +14,8 @@ interface CleanFilterBarProps {
 export interface FilterState {
   equipment: string[]
   targetMuscle: string[]
-  muscleFatigue: string[]
+  group: string[]
+  fatigueSort: 'all' | 'fresh' | 'fatigued'
 }
 
 // Extract unique muscle groups from exercise data
@@ -52,11 +54,17 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
   const [filters, setFilters] = useState<FilterState>({
     equipment: [],
     targetMuscle: [],
-    muscleFatigue: []
+    group: [],
+    fatigueSort: 'all'
   })
 
   const muscleGroups = getMuscleGroups()
-  const fatigueOptions = ['Fresh', 'Moderately Fatigued', 'Highly Fatigued']
+  const groupOptions = ['Push', 'Pull', 'Legs', 'Abs']
+  const fatigueSortOptions = [
+    { value: 'fresh', label: 'Fresh Muscles First' },
+    { value: 'fatigued', label: 'Fatigued Muscles First' },
+    { value: 'all', label: 'All (Default Order)' }
+  ]
 
   // Notify parent of filter changes
   useEffect(() => {
@@ -71,13 +79,17 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
     setFilters(prev => ({ ...prev, targetMuscle: selected }))
   }
 
-  const handleFatigueChange = (selected: string[]) => {
-    setFilters(prev => ({ ...prev, muscleFatigue: selected }))
+  const handleGroupChange = (selected: string[]) => {
+    setFilters(prev => ({ ...prev, group: selected }))
+  }
+
+  const handleFatigueSortChange = (value: string) => {
+    setFilters(prev => ({ ...prev, fatigueSort: value as FilterState['fatigueSort'] }))
   }
 
   return (
     <div className={`bg-[#121212] border-b border-[#2C2C2E] p-4 ${className}`}>
-      <div className="flex items-center space-x-4 overflow-visible">
+      <div className="flex items-center space-x-4 overflow-x-auto">
         <FilterDropdown
           label="Equipment"
           options={EQUIPMENT_OPTIONS}
@@ -93,16 +105,23 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
         />
         
         <FilterDropdown
-          label="Muscle Fatigue"
-          options={fatigueOptions}
-          selectedOptions={filters.muscleFatigue}
-          onSelectionChange={handleFatigueChange}
+          label="Group"
+          options={groupOptions}
+          selectedOptions={filters.group}
+          onSelectionChange={handleGroupChange}
+        />
+        
+        <SortDropdown
+          label="Fatigue"
+          options={fatigueSortOptions}
+          selectedValue={filters.fatigueSort}
+          onValueChange={handleFatigueSortChange}
           disabled={true}
         />
       </div>
       
       {/* Active Filter Summary */}
-      {(filters.equipment.length > 0 || filters.targetMuscle.length > 0 || filters.muscleFatigue.length > 0) && (
+      {(filters.equipment.length > 0 || filters.targetMuscle.length > 0 || filters.group.length > 0 || filters.fatigueSort !== 'all') && (
         <div className="mt-3 flex items-center justify-between">
           <div className="flex items-center space-x-2 text-xs text-[#A1A1A3]">
             <span>Active filters:</span>
@@ -116,10 +135,20 @@ export function CleanFilterBar({ onFilterChange, className = '' }: CleanFilterBa
                 {filters.targetMuscle.length} Muscle
               </span>
             )}
+            {filters.group.length > 0 && (
+              <span className="bg-[#FF375F]/20 text-[#FF375F] px-2 py-1 rounded">
+                {filters.group.length} Group
+              </span>
+            )}
+            {filters.fatigueSort !== 'all' && (
+              <span className="bg-[#FF375F]/20 text-[#FF375F] px-2 py-1 rounded">
+                Fatigue Sort
+              </span>
+            )}
           </div>
           
           <button
-            onClick={() => setFilters({ equipment: [], targetMuscle: [], muscleFatigue: [] })}
+            onClick={() => setFilters({ equipment: [], targetMuscle: [], group: [], fatigueSort: 'all' })}
             className="text-xs text-[#FF375F] hover:text-[#E63050] transition-colors"
           >
             Clear All

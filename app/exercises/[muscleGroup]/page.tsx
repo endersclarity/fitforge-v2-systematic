@@ -36,7 +36,8 @@ export default function ExerciseSelection() {
   const [currentFilter, setCurrentFilter] = useState<FilterState>({ 
     equipment: [], 
     targetMuscle: [], 
-    muscleFatigue: [] 
+    group: [],
+    fatigueSort: 'all'
   })
   const [showWorkoutBuilder, setShowWorkoutBuilder] = useState(false)
 
@@ -71,6 +72,15 @@ export default function ExerciseSelection() {
       setAddedExercises(new Set(queue.map((ex: WorkoutExercise) => ex.id)))
     }
   }, [muscleGroup])
+
+  // Map exercise categories to groups
+  const getExerciseGroup = (category: string): string => {
+    if (category.includes('ChestTriceps')) return 'Push'
+    if (category.includes('BackBiceps')) return 'Pull'
+    if (category.includes('Legs')) return 'Legs'
+    if (category.includes('Abs')) return 'Abs'
+    return 'Other'
+  }
 
   // Apply filtering when filter state changes
   useEffect(() => {
@@ -112,7 +122,16 @@ export default function ExerciseSelection() {
       })
     }
 
-    // Future: Filter by muscle fatigue
+    // Filter by group
+    if (currentFilter.group.length > 0) {
+      filtered = filtered.filter(exercise => {
+        const exerciseGroup = getExerciseGroup(exercise.category)
+        return currentFilter.group.includes(exerciseGroup)
+      })
+    }
+
+    // TODO: Sort by muscle fatigue when fatigue data is available
+    // For now, fatigueSort is disabled in the UI
 
     setFilteredExercises(filtered)
   }, [exercises, currentFilter])
@@ -224,7 +243,7 @@ export default function ExerciseSelection() {
             <div>
               <h1 className="text-2xl font-bold">{muscleGroupTitles[muscleGroup]}</h1>
               <p className="text-[#A1A1A3] text-sm">
-                {(currentFilter.equipment.length === 0 && currentFilter.targetMuscle.length === 0)
+                {(currentFilter.equipment.length === 0 && currentFilter.targetMuscle.length === 0 && currentFilter.group.length === 0)
                   ? `${exercises.length} exercises available`
                   : `${filteredExercises.length} of ${exercises.length} exercises`
                 }

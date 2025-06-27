@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Filters - Horizontal Layout Mockup</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .exercise-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .page-header {
+            padding: 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .page-header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #1a1a1a;
+        }
+        
+        /* Horizontal Filter Bar */
+        .filter-bar {
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .filter-label {
+            font-size: 14px;
+            color: #666;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .filter-chip {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .filter-chip:hover {
+            border-color: #007AFF;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filter-chip.active {
+            background: #007AFF;
+            color: white;
+            border-color: #007AFF;
+        }
+        .filter-divider {
+            width: 1px;
+            height: 24px;
+            background: #ddd;
+            margin: 0 8px;
+            flex-shrink: 0;
+        }
+        
+        /* Active Filters Display */
+        .active-filters {
+            padding: 12px 24px;
+            background: #f0f7ff;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .active-filter-chip {
+            background: #007AFF;
+            color: white;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .active-filter-chip .remove {
+            cursor: pointer;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+        .active-filter-chip .remove:hover {
+            opacity: 1;
+        }
+        
+        /* Exercise List */
+        .exercise-list {
+            padding: 24px;
+        }
+        .exercise-card {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s;
+        }
+        .exercise-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .exercise-icon {
+            width: 60px;
+            height: 60px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .exercise-info {
+            flex: 1;
+        }
+        .exercise-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .exercise-equipment {
+            font-size: 14px;
+            color: #666;
+        }
+        .recovery-indicator {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .recovery-indicator.fresh {
+            background: #d4f4dd;
+            color: #2e7d46;
+        }
+        .recovery-indicator.recovering {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .recovery-indicator.fatigued {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="exercise-page">
+        <div class="page-header">
+            <h1>Chest Exercises</h1>
+        </div>
+        
+        <!-- Horizontal Filter Bar -->
+        <div class="filter-bar">
+            <span class="filter-label">Filter by:</span>
+            <div class="filter-chip active">All</div>
+            <div class="filter-chip">Barbell</div>
+            <div class="filter-chip">Dumbbell</div>
+            <div class="filter-chip">Cable</div>
+            <div class="filter-chip">Bodyweight</div>
+            <div class="filter-divider"></div>
+            <div class="filter-chip">Primary Target</div>
+            <div class="filter-chip">Secondary Target</div>
+            <div class="filter-divider"></div>
+            <div class="filter-chip">Fresh Muscles</div>
+            <div class="filter-chip">Home Equipment</div>
+        </div>
+        
+        <!-- Active Filters Display (shown when filters are selected) -->
+        <div class="active-filters" style="display: none;">
+            <span style="font-size: 13px; color: #666;">Active filters:</span>
+            <div class="active-filter-chip">
+                Dumbbell
+                <span class="remove">×</span>
+            </div>
+            <div class="active-filter-chip">
+                Fresh Muscles
+                <span class="remove">×</span>
+            </div>
+        </div>
+        
+        <!-- Exercise List -->
+        <div class="exercise-list">
+            <div class="exercise-card">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Dumbbell Bench Press</div>
+                    <div class="exercise-equipment">Equipment: Dumbbells, Bench</div>
+                </div>
+                <div class="recovery-indicator fresh">Fresh</div>
+            </div>
+            
+            <div class="exercise-card">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Incline Dumbbell Press</div>
+                    <div class="exercise-equipment">Equipment: Dumbbells, Incline Bench</div>
+                </div>
+                <div class="recovery-indicator fresh">Fresh</div>
+            </div>
+            
+            <div class="exercise-card">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Dumbbell Flyes</div>
+                    <div class="exercise-equipment">Equipment: Dumbbells, Bench</div>
+                </div>
+                <div class="recovery-indicator recovering">48h Recovery</div>
+            </div>
+            
+            <div class="exercise-card" style="opacity: 0.6;">
+                <div class="exercise-icon">🏋️</div>
+                <div class="exercise-info">
+                    <div class="exercise-name">Barbell Bench Press</div>
+                    <div class="exercise-equipment">Equipment: Barbell, Bench</div>
+                </div>
+                <div class="recovery-indicator fatigued">Fatigued</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Demo interaction
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                if (this.textContent === 'All') {
+                    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelector('.active-filters').style.display = 'none';
+                } else {
+                    document.querySelector('.filter-chip:first-of-type').classList.remove('active');
+                    this.classList.toggle('active');
+                    
+                    // Show active filters if any non-All filter is selected
+                    const hasActiveFilters = document.querySelectorAll('.filter-chip.active:not(:first-of-type)').length > 0;
+                    document.querySelector('.active-filters').style.display = hasActiveFilters ? 'flex' : 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

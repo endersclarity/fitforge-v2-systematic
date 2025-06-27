@@ -2,23 +2,28 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { ChevronDown, Check } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
 
-interface FilterDropdownProps {
+interface SortOption {
+  value: string
   label: string
-  options: string[]
-  selectedOptions: string[]
-  onSelectionChange: (selected: string[]) => void
+}
+
+interface SortDropdownProps {
+  label: string
+  options: SortOption[]
+  selectedValue: string
+  onValueChange: (value: string) => void
   disabled?: boolean
 }
 
-export function FilterDropdown({ 
+export function SortDropdown({ 
   label, 
   options, 
-  selectedOptions, 
-  onSelectionChange,
+  selectedValue, 
+  onValueChange,
   disabled = false 
-}: FilterDropdownProps) {
+}: SortDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -48,19 +53,8 @@ export function FilterDropdown({
     }
   }, [isOpen])
 
-  const handleOptionToggle = (option: string) => {
-    const newSelected = selectedOptions.includes(option)
-      ? selectedOptions.filter(item => item !== option)
-      : [...selectedOptions, option]
-    
-    onSelectionChange(newSelected)
-  }
-
-  const getDisplayText = () => {
-    if (selectedOptions.length === 0) return 'All'
-    if (selectedOptions.length === 1) return selectedOptions[0]
-    return `${selectedOptions.length} selected`
-  }
+  const selectedOption = options.find(opt => opt.value === selectedValue)
+  const displayText = selectedOption?.label || 'All'
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -69,7 +63,6 @@ export function FilterDropdown({
         ref={buttonRef}
         onClick={() => {
           if (!disabled) {
-            console.log('Dropdown clicked, current isOpen:', isOpen)
             setIsOpen(!isOpen)
           }
         }}
@@ -81,17 +74,11 @@ export function FilterDropdown({
             : 'bg-[#1C1C1E] border-[#2C2C2E] text-white hover:border-[#FF375F] hover:bg-[#2C2C2E]'
           }
           ${isOpen ? 'border-[#FF375F] bg-[#2C2C2E]' : ''}
+          ${selectedValue !== 'all' ? 'border-[#FF375F]' : ''}
           min-w-[140px]
         `}
       >
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium">{label}</span>
-          {selectedOptions.length > 0 && (
-            <span className="bg-[#FF375F] text-white text-xs px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
-              {selectedOptions.length}
-            </span>
-          )}
-        </div>
+        <span className="text-sm font-medium">{label}</span>
         <ChevronDown 
           className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
         />
@@ -108,30 +95,23 @@ export function FilterDropdown({
           }}
         >
           <div className="p-2">
-            {/* Clear All Option */}
-            {selectedOptions.length > 0 && (
-              <>
-                <button
-                  onClick={() => onSelectionChange([])}
-                  className="w-full text-left px-3 py-2 text-sm text-[#FF375F] hover:bg-[#2C2C2E] rounded-md transition-colors"
-                >
-                  Clear All
-                </button>
-                <div className="border-t border-[#2C2C2E] my-2" />
-              </>
-            )}
-            
             {/* Options */}
             {options.map((option) => (
               <button
-                key={option}
-                onClick={() => handleOptionToggle(option)}
-                className="w-full flex items-center justify-between px-3 py-2 text-sm text-white hover:bg-[#2C2C2E] rounded-md transition-colors"
+                key={option.value}
+                onClick={() => {
+                  onValueChange(option.value)
+                  setIsOpen(false)
+                }}
+                className={`
+                  w-full text-left px-3 py-2 text-sm rounded-md transition-colors
+                  ${selectedValue === option.value 
+                    ? 'bg-[#FF375F] text-white' 
+                    : 'text-white hover:bg-[#2C2C2E]'
+                  }
+                `}
               >
-                <span>{option}</span>
-                {selectedOptions.includes(option) && (
-                  <Check className="h-4 w-4 text-[#FF375F]" />
-                )}
+                {option.label}
               </button>
             ))}
           </div>
