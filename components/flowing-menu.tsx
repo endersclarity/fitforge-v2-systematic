@@ -304,5 +304,13 @@ export const defaultDashboardMenuItems: FlowingMenuItem[] = [
     href: '/workout-simple',
     icon: Zap,
     color: 'from-orange-500 to-orange-600',
+  },
+  {
+    id: 'experimental',
+    title: 'Experimental Flows',
+    subtitle: 'Try new features',
+    href: '/flows-experimental',
+    icon: Zap,
+    color: 'from-pink-500 to-pink-600',
   }
 ]

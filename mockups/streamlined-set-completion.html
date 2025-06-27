@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamlined Set Completion UX - Mockup</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .workout-logger {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Current Exercise Header */
+        .exercise-header {
+            background: #007AFF;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .exercise-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .exercise-progress {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        /* Quick Input Section */
+        .quick-input {
+            padding: 24px;
+            background: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .input-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .input-group {
+            flex: 1;
+        }
+        .input-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.2s;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #007AFF;
+            box-shadow: 0 0 0 3px rgba(0,122,255,0.1);
+        }
+        .input-field.prefilled {
+            color: #007AFF;
+        }
+        
+        /* Big Action Button */
+        .complete-set-button {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: 600;
+            background: #34C759;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .complete-set-button:hover {
+            background: #2FB252;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52,199,89,0.3);
+        }
+        .complete-set-button:active {
+            transform: translateY(0);
+        }
+        .complete-set-button.completed {
+            background: #e0e0e0;
+            color: #666;
+            animation: checkmark 0.4s ease;
+        }
+        
+        /* Set History */
+        .set-history {
+            padding: 20px;
+        }
+        .set-history-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .set-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #fafafa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .set-item.just-completed {
+            animation: slideIn 0.3s ease;
+            background: #d4f4dd;
+        }
+        .set-number {
+            width: 32px;
+            height: 32px;
+            background: #007AFF;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 16px;
+        }
+        .set-item.completed .set-number {
+            background: #34C759;
+        }
+        .set-details {
+            flex: 1;
+        }
+        .set-stats {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .set-time {
+            font-size: 12px;
+            color: #666;
+        }
+        .undo-button {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: transparent;
+            color: #007AFF;
+            border: 1px solid #007AFF;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .set-item.just-completed .undo-button {
+            opacity: 1;
+        }
+        
+        /* Rest Timer Popup */
+        .rest-timer-popup {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+        .rest-timer-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        .timer-display {
+            font-size: 24px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        .timer-controls {
+            display: flex;
+            gap: 8px;
+        }
+        .timer-button {
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        /* Number Pad Modal */
+        .number-pad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        .number-pad.active {
+            transform: translateY(0);
+        }
+        .number-pad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .number-pad-button {
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .number-pad-button:active {
+            background: #e0e0e0;
+            transform: scale(0.95);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes checkmark {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="workout-logger">
+        <!-- Current Exercise Header -->
+        <div class="exercise-header">
+            <div class="exercise-name">Bench Press</div>
+            <div class="exercise-progress">Set 3 of 4</div>
+        </div>
+        
+        <!-- Quick Input Section -->
+        <div class="quick-input">
+            <div class="input-row">
+                <div class="input-group">
+                    <div class="input-label">Weight</div>
+                    <input type="tel" class="input-field prefilled" value="185" />
+                </div>
+                <div class="input-group">
+                    <div class="input-label">Reps</div>
+                    <input type="tel" class="input-field" placeholder="?" />
+                </div>
+            </div>
+            
+            <button class="complete-set-button">
+                <span>Complete Set</span>
+                <span style="font-size: 20px;">✓</span>
+            </button>
+        </div>
+        
+        <!-- Set History -->
+        <div class="set-history">
+            <div class="set-history-title">Previous Sets</div>
+            
+            <div class="set-item completed just-completed">
+                <div class="set-number">2</div>
+                <div class="set-details">
+                    <div class="set-stats">185 lbs × 8 reps</div>
+                    <div class="set-time">Just now</div>
+                </div>
+                <button class="undo-button">Undo</button>
+            </div>
+            
+            <div class="set-item completed">
+                <div class="set-number">1</div>
+                <div class="set-details">
+                    <div class="set-stats">185 lbs × 10 reps</div>
+                    <div class="set-time">2 min ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rest Timer Popup -->
+    <div class="rest-timer-popup active">
+        <div class="timer-display">1:30</div>
+        <div class="timer-controls">
+            <button class="timer-button">Pause</button>
+            <button class="timer-button">+30s</button>
+            <button class="timer-button">Skip</button>
+        </div>
+    </div>
+    
+    <!-- Number Pad Modal (hidden by default) -->
+    <div class="number-pad">
+        <div class="number-pad-grid">
+            <button class="number-pad-button">1</button>
+            <button class="number-pad-button">2</button>
+            <button class="number-pad-button">3</button>
+            <button class="number-pad-button">4</button>
+            <button class="number-pad-button">5</button>
+            <button class="number-pad-button">6</button>
+            <button class="number-pad-button">7</button>
+            <button class="number-pad-button">8</button>
+            <button class="number-pad-button">9</button>
+            <button class="number-pad-button">.</button>
+            <button class="number-pad-button">0</button>
+            <button class="number-pad-button">⌫</button>
+        </div>
+        <button class="complete-set-button">Done</button>
+    </div>
+    
+    <script>
+        // Demo interactions
+        document.querySelector('.complete-set-button').addEventListener('click', function() {
+            if (!this.classList.contains('completed')) {
+                this.classList.add('completed');
+                this.innerHTML = '<span>Set Completed!</span> <span style="font-size: 20px;">✓</span>';
+                
+                // Show rest timer
+                setTimeout(() => {
+                    document.querySelector('.rest-timer-popup').classList.add('active');
+                }, 500);
+            }
+        });
+        
+        // Focus on input shows number pad
+        document.querySelectorAll('.input-field').forEach(input => {
+            input.addEventListener('focus', function() {
+                document.querySelector('.number-pad').classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
