@@ -2,7 +2,46 @@
 
 **GitHub Issue**: https://github.com/fitforge/fitforge-v2-systematic/issues/27
 **Created**: 2025-06-27
-**Status**: PLANNING
+**Status**: ADDRESS_FEEDBACK (Sandy Metz Review)
+
+## 🔄 SANDY METZ REVIEW FEEDBACK (PR #35)
+
+### ❌ CRITICAL ARCHITECTURAL VIOLATIONS
+1. **MASSIVE COMPONENT (867 Lines)**: WorkoutExecutionExperimental violates "small, focused classes" principle
+2. **COMPLEX STATE (15+ Variables)**: 15+ useState hooks violate Single Responsibility Principle  
+3. **OVERSIZED PR (+2029 Lines)**: Too large for safe review and rollback
+
+### 📋 REQUIRED REFACTORING TASKS
+
+#### Phase 1: Break Down Component (PRIORITY 1)
+- [ ] Extract WorkoutHeader component (<50 lines)
+- [ ] Extract SetLoggingForm component (<100 lines)
+- [ ] Extract WorkoutProgress component (<75 lines)  
+- [ ] Extract ExerciseQueue component (<100 lines)
+- [ ] Create container component (<100 lines)
+
+#### Phase 2: Extract State Management (PRIORITY 2)
+- [ ] Create useWorkoutSession custom hook
+- [ ] Create useSetLogging custom hook
+- [ ] Create useWorkoutProgress custom hook
+- [ ] Remove useState from main component
+
+#### Phase 3: Separate Business Logic (PRIORITY 3)
+- [ ] Extract workout flow logic to workoutService.ts
+- [ ] Extract set management to setLoggingService.ts
+- [ ] Extract exercise operations to exerciseService.ts
+
+#### Phase 4: Split Into Focused PRs (FUTURE)
+- [ ] PR 1: RPE rating feature only
+- [ ] PR 2: Batch logging feature only
+- [ ] PR 3: Exercise replacement only
+- [ ] PR 4: Warm-up tracking only
+
+### ✅ APPROVED ASPECTS TO MAINTAIN
+- Excellent TypeScript interface design
+- Good modal component separation
+- Comprehensive test coverage
+- Clear git workflow
 
 ## Issue Analysis
 

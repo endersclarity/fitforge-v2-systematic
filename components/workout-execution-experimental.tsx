@@ -14,6 +14,7 @@ import { RPERatingModal } from './rpe-rating-modal'
 import { BatchRPEModal } from './batch-rpe-modal'
 import { ExerciseReplacementModal } from './exercise-replacement-modal'
 import { useRealTimeMuscleVolume } from '@/hooks/useRealTimeMuscleVolume'
+import { WorkoutHeader } from './workout-header'
 
 interface WorkoutExercise {
   id: string
@@ -350,10 +351,15 @@ export function WorkoutExecutionExperimental() {
     }, 2000)
   }
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
+  const formatTime = (seconds: number): string => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    }
+    return `${minutes}:${secs.toString().padStart(2, '0')}`
   }
 
   const getDifficultyColor = (difficulty: string) => {
@@ -405,34 +411,11 @@ export function WorkoutExecutionExperimental() {
   return (
     <div className="min-h-screen bg-[#121212] text-white">
       {/* Header */}
-      <div className="sticky top-0 bg-[#121212]/95 backdrop-blur-sm border-b border-[#2C2C2E] z-10">
-        <div className="flex items-center justify-between p-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.push('/')}
-            className="text-[#A1A1A3] hover:text-white hover:bg-[#2C2C2E]"
-          >
-            <ArrowLeft className="h-6 w-6" />
-          </Button>
-          
-          <div className="text-center">
-            <h1 className="text-lg font-semibold">Experimental Workout Execution</h1>
-            <div className="flex items-center space-x-2 text-sm text-[#A1A1A3]">
-              <Timer className="h-4 w-4" />
-              <span>{formatTime(elapsedTime)}</span>
-            </div>
-          </div>
-
-          <Button
-            onClick={finishWorkout}
-            disabled={sets.length === 0}
-            className="bg-[#FF375F] hover:bg-[#E63050] text-white text-sm px-3"
-          >
-            Finish
-          </Button>
-        </div>
-      </div>
+      <WorkoutHeader 
+        elapsedTime={elapsedTime}
+        onFinishWorkout={finishWorkout}
+        isFinishDisabled={sets.length === 0}
+      />
 
       {/* Progress Bar */}
       <div className="bg-[#2C2C2E] h-1">
