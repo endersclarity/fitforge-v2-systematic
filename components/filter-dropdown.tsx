@@ -81,6 +81,7 @@ export function FilterDropdown({
             : 'bg-[#1C1C1E] border-[#2C2C2E] text-white hover:border-[#FF375F] hover:bg-[#2C2C2E]'
           }
           ${isOpen ? 'border-[#FF375F] bg-[#2C2C2E]' : ''}
+          ${selectedOptions.length > 0 && !disabled ? 'border-[#FF375F]' : ''}
           min-w-[140px]
         `}
       >
