@@ -41,145 +41,68 @@
 - main:
   - heading "Workout Builder" [level=1]
   - button "Cancel"
-  - button "Save Workout" [disabled]
-  - heading "Start building your workout" [level=2]
-  - paragraph: Add exercises to create your custom workout
+  - button "Save Workout"
+  - heading "2 Exercises" [level=3]
   - button "Add an exercise"
-  - heading "Select Exercises" [level=2]
   - button:
     - img
-  - img
-  - textbox "Search exercises..."
-  - combobox:
-    - option "All Equipment" [selected]
-    - option "Bench"
-    - option "Bodyweight"
-    - option "Dumbbell"
-    - option "Kettlebell"
-    - option "Plybox"
-    - option "Pull-up_Bar"
-    - option "TRX"
-  - text: "Equipment:"
-  - button "Bench"
-  - button "Bodyweight"
-  - button "Dumbbell"
-  - button "Kettlebell"
-  - button "Plybox"
-  - text: 38 exercises found
-  - img
-  - heading "Single Arm Upright Row" [level=3]
-  - text: Dumbbell Intermediate BackBiceps
-  - img
-  - heading "TRX Bicep Curl" [level=3]
-  - text: TRX Intermediate BackBiceps
-  - img
-  - heading "Chin-Ups" [level=3]
-  - text: Pull-up_Bar Advanced BackBiceps
-  - img
-  - heading "Face Pull" [level=3]
-  - text: TRX Intermediate BackBiceps
-  - img
-  - heading "Concentration Curl" [level=3]
-  - text: Dumbbell Beginner BackBiceps
-  - img
-  - heading "Wide Grip Pullups" [level=3]
-  - text: Pull-up_Bar Advanced BackBiceps
-  - img
-  - heading "Shoulder Shrugs" [level=3]
-  - text: Dumbbell Beginner BackBiceps
-  - img
-  - heading "T Row" [level=3]
-  - text: TRX Intermediate BackBiceps
-  - img
-  - heading "Incline Hammer Curl" [level=3]
-  - text: Bench Intermediate BackBiceps
-  - img
-  - heading "Neutral Grip Pull-ups" [level=3]
-  - text: Pull-up_Bar Advanced BackBiceps
-  - img
-  - heading "Bent Over Rows" [level=3]
-  - text: Dumbbell Intermediate BackBiceps
-  - img
-  - heading "Renegade Rows" [level=3]
-  - text: Dumbbell Advanced BackBiceps
-  - img
-  - heading "TRX Row" [level=3]
-  - text: TRX Intermediate BackBiceps
-  - img
-  - heading "Bench Press" [level=3]
-  - text: Bench Intermediate ChestTriceps
-  - img
-  - heading "TRX Reverse Flys" [level=3]
-  - text: TRX Intermediate ChestTriceps
-  - img
-  - heading "Tricep Extension" [level=3]
-  - text: Dumbbell Intermediate ChestTriceps
-  - img
-  - heading "TRX Pushup" [level=3]
-  - text: TRX Intermediate ChestTriceps
-  - img
-  - heading "Single Arm Bench" [level=3]
-  - text: Bench Advanced ChestTriceps
-  - img
-  - heading "Single Arm Incline" [level=3]
-  - text: Bench Advanced ChestTriceps
-  - img
-  - heading "Pullover" [level=3]
-  - text: Dumbbell Intermediate ChestTriceps
-  - img
-  - heading "Claps" [level=3]
-  - text: Bodyweight Advanced ChestTriceps
-  - img
   - heading "Pushup" [level=3]
-  - text: Bodyweight Beginner ChestTriceps
-  - img
-  - heading "Incline Bench Press" [level=3]
-  - text: Bench Intermediate ChestTriceps
-  - img
-  - heading "Shoulder Press" [level=3]
-  - text: Dumbbell Intermediate ChestTriceps
-  - img
-  - heading "Dips" [level=3]
-  - text: Bench Advanced ChestTriceps
-  - img
-  - heading "Kettlebell Halos" [level=3]
-  - text: Kettlebell Intermediate ChestTriceps
-  - img
-  - heading "Kettlebell Press" [level=3]
-  - text: Kettlebell Intermediate ChestTriceps
-  - img
-  - heading "Goblet Squats" [level=3]
-  - text: Kettlebell Beginner Legs
-  - img
-  - heading "Dead Lifts" [level=3]
-  - text: Dumbbell Advanced Legs
-  - img
-  - heading "Calf Raises" [level=3]
-  - text: Dumbbell Beginner Legs
-  - img
-  - heading "Glute Bridges" [level=3]
-  - text: Bodyweight Beginner Legs
-  - img
-  - heading "Box Step-ups" [level=3]
-  - text: Plybox Intermediate Legs
-  - img
-  - heading "Stiff Legged Deadlifts" [level=3]
-  - text: Dumbbell Advanced Legs
-  - img
-  - heading "Kettlebell Swings" [level=3]
-  - text: Kettlebell Intermediate Legs
-  - img
-  - heading "Hanging Knee Raises" [level=3]
-  - text: Pull-up_Bar Intermediate Abs
-  - img
-  - heading "Spider Planks" [level=3]
-  - text: Bodyweight Intermediate Abs
-  - img
-  - heading "Planks" [level=3]
-  - text: Bodyweight Beginner Abs
-  - img
-  - heading "Bench Sit-ups" [level=3]
-  - text: Bench Intermediate Abs
+  - paragraph: 3 sets × 8 reps
+  - button "Remove exercise":
+    - img
+  - text: Sets
+  - button:
+    - img
+  - spinbutton: "3"
+  - button:
+    - img
+  - text: Reps
+  - button:
+    - img
+  - spinbutton: "8"
+  - button:
+    - img
+  - text: Weight (lb)
+  - button [disabled]:
+    - img
+  - spinbutton: "0"
+  - button:
+    - img
+  - text: Rest Time (seconds)
+  - button "60s"
+  - button "90s"
+  - button "2m"
+  - button "3m"
+  - button:
+    - img
+  - heading "Single Arm Upright Row" [level=3]
+  - paragraph: 3 sets × 8 reps @ 135 lb
+  - button "Remove exercise":
+    - img
+  - text: Sets
+  - button:
+    - img
+  - spinbutton: "3"
+  - button:
+    - img
+  - text: Reps
+  - button:
+    - img
+  - spinbutton: "8"
+  - button:
+    - img
+  - text: Weight (lb)
+  - button:
+    - img
+  - spinbutton: "135"
+  - button:
+    - img
+  - text: Rest Time (seconds)
+  - button "60s"
+  - button "90s"
+  - button "2m"
+  - button "3m"
+  - status
 - contentinfo:
   - heading "FitForge" [level=3]
   - paragraph: Smart fitness tracking with progressive overload intelligence

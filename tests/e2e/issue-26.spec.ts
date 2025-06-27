@@ -29,7 +29,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
     await expect(page.getByPlaceholder('Search exercises...')).toBeVisible();
     
     // Should show exercises from data (check for a known exercise)
-    await expect(page.getByText('Bench Press')).toBeVisible();
+    await expect(page.getByText('Pushup', { exact: true })).toBeVisible();
   });
 
   test('should add exercise to workout when selected', async ({ page }) => {
@@ -37,11 +37,11 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
     await page.getByRole('button', { name: 'Add an exercise' }).click();
     
     // Select an exercise
-    await page.getByText('Bench Press').click();
+    await page.getByText('Pushup', { exact: true }).click();
     await page.getByRole('button', { name: 'Add to Workout' }).click();
     
     // Exercise should appear in workout
-    await expect(page.getByText('Bench Press')).toBeVisible();
+    await expect(page.getByText('Pushup', { exact: true })).toBeVisible();
     await expect(page.getByText('3 sets × 8 reps')).toBeVisible(); // Default values
     
     // Empty state should be gone
@@ -51,7 +51,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
   test('should allow configuring sets, reps, and weight for exercises', async ({ page }) => {
     // Add an exercise first
     await page.getByRole('button', { name: 'Add an exercise' }).click();
-    await page.getByText('Bench Press').click();
+    await page.getByText('Pushup', { exact: true }).click();
     await page.getByRole('button', { name: 'Add to Workout' }).click();
     
     // Configure sets
@@ -70,7 +70,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
   test('should create superset when grouping exercises', async ({ page }) => {
     // Add two exercises
     await page.getByRole('button', { name: 'Add an exercise' }).click();
-    await page.getByText('Bench Press').click();
+    await page.getByText('Pushup', { exact: true }).click();
     await page.getByRole('button', { name: 'Add to Workout' }).click();
     
     await page.getByRole('button', { name: 'Add an exercise' }).click();
@@ -92,7 +92,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
 
   test('should allow reordering exercises with drag and drop', async ({ page }) => {
     // Add three exercises
-    const exercises = ['Bench Press', 'Single Arm Upright Row', 'TRX Bicep Curl'];
+    const exercises = ['Pushup', 'Single Arm Upright Row', 'TRX Bicep Curl'];
     
     for (const exercise of exercises) {
       await page.getByRole('button', { name: 'Add an exercise' }).click();
@@ -104,7 +104,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
     const firstExercise = page.getByTestId('draggable-exercise-0');
     const thirdExercise = page.getByTestId('draggable-exercise-2');
     
-    await expect(firstExercise.getByText('Bench Press')).toBeVisible();
+    await expect(firstExercise.getByText('Pushup', { exact: true })).toBeVisible();
     await expect(thirdExercise.getByText('TRX Bicep Curl')).toBeVisible();
     
     // Drag first exercise after third (simulate drag and drop)
@@ -118,7 +118,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
   test('should save workout as template', async ({ page }) => {
     // Add an exercise
     await page.getByRole('button', { name: 'Add an exercise' }).click();
-    await page.getByText('Bench Press').click();
+    await page.getByText('Pushup', { exact: true }).click();
     await page.getByRole('button', { name: 'Add to Workout' }).click();
     
     // Configure exercise
@@ -144,7 +144,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
     
     // Add exercises
     await page.getByRole('button', { name: 'Add an exercise' }).click();
-    await page.getByText('Bench Press').click();
+    await page.getByText('Pushup', { exact: true }).click();
     await page.getByRole('button', { name: 'Add to Workout' }).click();
     
     // Should show drag handles on mobile
@@ -176,7 +176,7 @@ test.describe('Issue #26: Experimental Workout Builder with Drag-and-Drop', () =
     await page.getByText('Dumbbell').click();
     
     // Should only show dumbbell exercises (check for a known dumbbell exercise from our data)
-    await expect(page.getByText('Bench Press')).toBeVisible();
+    await expect(page.getByText('Pushup', { exact: true })).toBeVisible();
     await expect(page.getByText('Kettlebell Press')).not.toBeVisible();
   });
 
