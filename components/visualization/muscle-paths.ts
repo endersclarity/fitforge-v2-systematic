@@ -12,30 +12,6 @@ export interface MusclePath {
   side?: 'left' | 'right'
 }
 
-// Color mapping for fatigue levels (0-100%)
-export function getMuscleColor(fatigueLevel: number): string {
-  const clampedLevel = Math.max(0, Math.min(100, fatigueLevel))
-  
-  if (clampedLevel <= 20) return '#10B981' // Green - Recovered
-  if (clampedLevel <= 40) return '#F59E0B' // Yellow - Light fatigue  
-  if (clampedLevel <= 60) return '#FF8C42' // Orange - Moderate fatigue
-  if (clampedLevel <= 80) return '#FF6B6B' // Red - High fatigue
-  return '#FF375F' // Dark Red - Severe fatigue
-}
-
-// Utility function to get unique muscle names
-export function getUniqueMuscleNames(): string[] {
-  const allMuscles = [...frontMusclePaths, ...backMusclePaths]
-  const uniqueNames = new Set(allMuscles.map(muscle => muscle.scientificName))
-  return Array.from(uniqueNames).sort()
-}
-
-// Utility function to get muscles by group
-export function getMusclesByGroup(group: 'Push' | 'Pull' | 'Legs' | 'Core'): MusclePath[] {
-  const allMuscles = [...frontMusclePaths, ...backMusclePaths]
-  return allMuscles.filter(muscle => muscle.group === group)
-}
-
 // Front view muscle paths - Major muscle groups
 export const frontMusclePaths: MusclePath[] = [
   // CHEST (Push)
@@ -250,7 +226,50 @@ export const backMusclePaths: MusclePath[] = [
   }
 ]
 
+// Color mapping for fatigue levels (0-100%)
+export function getMuscleColor(fatigueLevel: number): string {
+  // Input validation
+  if (typeof fatigueLevel !== 'number' || isNaN(fatigueLevel)) {
+    throw new Error('Fatigue level must be a valid number')
+  }
+  
+  const clampedLevel = Math.max(0, Math.min(100, fatigueLevel))
+  
+  if (clampedLevel <= 20) return '#10B981' // Green - Recovered
+  if (clampedLevel <= 40) return '#F59E0B' // Yellow - Light fatigue  
+  if (clampedLevel <= 60) return '#FF8C42' // Orange - Moderate fatigue
+  if (clampedLevel <= 80) return '#FF6B6B' // Red - High fatigue
+  return '#FF375F' // Dark Red - Severe fatigue
+}
+
+// Utility function to get unique muscle names
+export function getUniqueMuscleNames(): string[] {
+  try {
+    const allMuscles = [...frontMusclePaths, ...backMusclePaths]
+    const uniqueNames = new Set(allMuscles.map(muscle => muscle.scientificName))
+    return Array.from(uniqueNames).sort()
+  } catch (error) {
+    throw new Error('Failed to get unique muscle names: ' + error.message)
+  }
+}
+
+// Utility function to get muscles by group
+export function getMusclesByGroup(group: 'Push' | 'Pull' | 'Legs' | 'Core'): MusclePath[] {
+  // Input validation
+  if (!group || !['Push', 'Pull', 'Legs', 'Core'].includes(group)) {
+    throw new Error('Group must be one of: Push, Pull, Legs, Core')
+  }
+  
+  try {
+    const allMuscles = [...frontMusclePaths, ...backMusclePaths]
+    return allMuscles.filter(muscle => muscle.group === group)
+  } catch (error) {
+    throw new Error('Failed to get muscles by group: ' + error.message)
+  }
+}
+
 // Human body outline paths for front and back views
 export const bodyOutlineFront = 'M200 80 C 210 75, 230 85, 240 100 C 245 120, 250 140, 245 160 L 245 180 C 250 200, 255 220, 250 240 L 250 280 C 245 300, 240 320, 235 340 L 230 360 C 225 365, 220 365, 215 360 L 210 340 C 205 320, 200 300, 200 280 L 200 240 C 195 220, 190 200, 195 180 L 155 160 C 150 140, 155 120, 160 100 C 170 85, 190 75, 200 80 Z'
 
-export const bodyOutlineBack = 'M200 80 C 210 75, 230 85, 240 100 C 245 120, 250 140, 245 160 L 245 180 C 250 200, 255 220, 250 240 L 250 280 C 245 300, 240 320, 235 340 L 230 360 C 225 365, 220 365, 215 360 L 210 340 C 205 320, 200 300, 200 280 L 200 240 C 195 220, 190 200, 195 180 L 155 160 C 150 140, 155 120, 160 100 C 170 85, 190 75, 200 80 Z'
+// Back view outline - anatomically different with shoulder blade prominence and spine curvature
+export const bodyOutlineBack = 'M200 80 C 210 75, 230 85, 240 100 C 248 120, 252 140, 248 160 L 248 180 C 252 200, 255 220, 250 240 L 250 280 C 245 300, 240 320, 235 340 L 230 360 C 225 365, 220 365, 215 360 L 210 340 C 205 320, 200 300, 200 280 L 200 240 C 195 220, 188 200, 192 180 L 152 160 C 148 140, 152 120, 160 100 C 170 85, 190 75, 200 80 Z'
