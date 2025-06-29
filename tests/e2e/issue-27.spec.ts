@@ -44,8 +44,6 @@ test.describe('Issue #27: Experimental Workout Execution with Advanced Set Loggi
   });
 
   test('should provide "Log All Sets" quick action for consistent sets', async ({ page }) => {
-    // This test will fail initially - feature not implemented
-    
     // Setup workout with planned sets
     await page.addInitScript(() => {
       const mockWorkout = {
@@ -70,7 +68,14 @@ test.describe('Issue #27: Experimental Workout Execution with Advanced Set Loggi
     
     await page.reload();
     
-    // Should show "Log All Sets" button for consistent planned sets
+    // Wait for the form to load
+    await page.waitForSelector('input[placeholder="135"]', { timeout: 5000 });
+    
+    // Fill in weight and reps to enable "Log All Sets" button
+    await page.fill('input[placeholder="135"]', '135');
+    await page.fill('input[placeholder="10"]', '10');
+    
+    // Now the "Log All Sets" button should be visible for consistent planned sets
     await expect(page.locator('button:has-text("Log All Sets")')).toBeVisible();
     
     // Click to log all sets at once
@@ -262,9 +267,12 @@ test.describe('Issue #27: Experimental Workout Execution with Advanced Set Loggi
     // Wait for page to load properly
     await expect(page.locator('h1')).toContainText('Experimental Workout Execution');
     
+    // Wait for the form to be rendered
+    await page.waitForSelector('input[placeholder="135"]', { timeout: 5000 });
+    
     // Complete a set
-    await page.fill('[placeholder="135"]', '135');
-    await page.fill('[placeholder="10"]', '10');
+    await page.fill('input[placeholder="135"]', '135');
+    await page.fill('input[placeholder="10"]', '10');
     await page.click('button:has-text("Add Set")');
     
     // Complete RPE rating
@@ -296,14 +304,17 @@ test.describe('Issue #27: Experimental Workout Execution with Advanced Set Loggi
     // Wait for component to load
     await expect(page.locator('h1')).toContainText('Experimental Workout Execution');
     
+    // Wait for form elements to be rendered
+    await page.waitForSelector('[data-testid="exercise-notes"]', { timeout: 5000 });
+    
     // Add exercise notes
     await page.fill('[data-testid="exercise-notes"]', 'Focus on form');
     
     // Add a set with all new data fields
     await page.click('[data-testid="warmup-toggle"]'); // Mark as warm-up
     await page.fill('[data-testid="set-notes-input"]', 'Good form');
-    await page.fill('[placeholder="135"]', '95');
-    await page.fill('[placeholder="10"]', '12');
+    await page.fill('input[placeholder="135"]', '95');
+    await page.fill('input[placeholder="10"]', '12');
     await page.click('button:has-text("Add Set")');
     
     // Complete RPE rating
