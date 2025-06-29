@@ -476,6 +476,31 @@ export interface ProgressionRecommendation {
 }
 
 // ============================================================================
+// RECOVERY DASHBOARD INTERFACES
+// ============================================================================
+
+export interface MuscleRecoveryData {
+  name: string; // Scientific muscle name (e.g., 'Pectoralis_Major')
+  displayName: string; // User-friendly name (e.g., 'Chest')
+  fatigueScore: number; // 0-100 scale
+  recoveryPercentage: number; // 0-100 scale
+  lastTrainedDate: Date | null;
+  daysSinceLastTrained: number;
+  volumeLastWeek: number; // Total volume in lbs
+  status: 'Recovered' | 'Recovering' | 'Fatigued';
+}
+
+export interface RecoveryDashboardData {
+  lastWorkoutDate: Date | null;
+  daysSinceLastWorkout: number;
+  muscleGroups: Record<string, MuscleRecoveryData>;
+  overallRecoveryScore: number; // 0-100 scale
+  recommendedFocus: string[]; // Muscle groups ready for training
+  needingRest: string[]; // Muscle groups that need more recovery
+  deloadRecommended: boolean;
+}
+
+// ============================================================================
 // VALIDATION SCHEMAS FOR RUNTIME TYPE CHECKING
 // ============================================================================
 

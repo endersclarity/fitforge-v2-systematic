@@ -11,6 +11,8 @@ import { ClientMuscleHeatmap } from '@/components/visualization/ClientMuscleHeat
 import { ClientFatigueAnalyzer } from '@/lib/client-fatigue-analyzer'
 import exercisesData from '@/data/exercises-real.json'
 import { differenceInDays, format } from 'date-fns'
+import { dataToDisplayName } from '@/lib/muscle-name-constants'
+import { MuscleRecoveryData } from '@/schemas/typescript-interfaces'
 
 interface WorkoutSession {
   id: string
@@ -25,34 +27,6 @@ interface WorkoutSession {
       rpe?: number
     }>
   }>
-}
-
-interface MuscleRecoveryData {
-  name: string
-  displayName: string
-  fatigueScore: number
-  recoveryPercentage: number
-  lastTrainedDate: Date | null
-  daysSinceLastTrained: number
-  volumeLastWeek: number
-  status: 'Recovered' | 'Recovering' | 'Fatigued'
-}
-
-// Map scientific muscle names to display names
-const MUSCLE_DISPLAY_NAMES: Record<string, string> = {
-  'Pectoralis_Major': 'Chest',
-  'Triceps_Brachii': 'Triceps',
-  'Biceps_Brachii': 'Biceps',
-  'Latissimus_Dorsi': 'Lats',
-  'Deltoids': 'Shoulders',
-  'Quadriceps': 'Quadriceps',
-  'Hamstrings': 'Hamstrings',
-  'Gluteus_Maximus': 'Glutes',
-  'Gastrocnemius': 'Calves',
-  'Core': 'Core',
-  'Abs': 'Abs',
-  'Trapezius': 'Traps',
-  'Rhomboids': 'Rhomboids'
 }
 
 export default function RecoveryDashboardPage() {
@@ -89,15 +63,13 @@ export default function RecoveryDashboardPage() {
 
         // Use ClientFatigueAnalyzer to calculate muscle fatigue
         const analyzer = new ClientFatigueAnalyzer()
-        console.log('🔥 [RecoveryDashboard] Starting fatigue analysis...')
         const fatigueAnalysis = await analyzer.analyzeFatigue('demo-user', 7)
-        console.log('🔧 [RecoveryDashboard] Fatigue analysis complete:', fatigueAnalysis)
         
         // Transform fatigue data for display
         const muscleDataMap: Record<string, MuscleRecoveryData> = {}
         
         Object.entries(fatigueAnalysis.muscleGroups).forEach(([muscleName, data]) => {
-          const displayName = MUSCLE_DISPLAY_NAMES[muscleName] || muscleName
+          const displayName = dataToDisplayName(muscleName)
           muscleDataMap[muscleName] = {
             name: muscleName,
             displayName,
