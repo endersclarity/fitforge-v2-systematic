@@ -28,10 +28,10 @@ export default function ExperimentalFlowsLanding() {
     {
       id: 'workout-execution',
       title: 'Workout Execution',
-      description: 'Advanced set logging with rest timers and progress tracking',
+      description: 'Advanced set logging with RPE ratings, batch actions, and muscle fatigue visualization',
       icon: BarChart,
       route: '/flows-experimental/workout-execution',
-      status: 'coming-soon'
+      status: 'active'
     },
     {
       id: 'recovery-dashboard',
