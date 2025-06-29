@@ -5,14 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { MoreHorizontal, Zap, NotebookPen } from "lucide-react"
-
-interface WorkoutExercise {
-  id: string
-  name: string
-  category: string
-  equipment: string
-  difficulty: string
-}
+import { WorkoutExercise } from '@/schemas/typescript-interfaces'
 
 interface MuscleVolumeData {
   summary: Array<{

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, Plus, Minus, Clock, CheckCircle, Dumbbell, Timer, MoreHorizontal, Zap, NotebookPen } from "lucide-react"
-import { WorkoutPlan, PlannedSet } from '@/schemas/typescript-interfaces'
+import { WorkoutPlan, PlannedSet, WorkoutExercise } from '@/schemas/typescript-interfaces'
 import { RestTimer } from './rest-timer'
 import { RPERatingModal } from './rpe-rating-modal'
 import { BatchRPEModal } from './batch-rpe-modal'
@@ -18,14 +18,6 @@ import { WorkoutHeader } from './workout-header'
 import { SetLoggingForm } from './set-logging-form'
 import { WorkoutProgress } from './workout-progress'
 import { ExerciseQueue } from './exercise-queue'
-
-interface WorkoutExercise {
-  id: string
-  name: string
-  category: string
-  equipment: string
-  difficulty: string
-}
 
 interface EnhancedSetLog {
   id: string

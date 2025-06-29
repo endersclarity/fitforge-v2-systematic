@@ -7,14 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { X, Search, RefreshCw, Dumbbell } from "lucide-react"
 import exercisesData from '@/data/exercises-real.json'
-
-interface WorkoutExercise {
-  id: string
-  name: string
-  category: string
-  equipment: string
-  difficulty: string
-}
+import { WorkoutExercise } from '@/schemas/typescript-interfaces'
 
 interface ExerciseReplacementModalProps {
   isOpen: boolean

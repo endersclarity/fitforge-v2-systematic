@@ -4,15 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Plus } from "lucide-react"
-import { PlannedSet } from '@/schemas/typescript-interfaces'
-
-interface WorkoutExercise {
-  id: string
-  name: string
-  category: string
-  equipment: string
-  difficulty: string
-}
+import { PlannedSet, WorkoutExercise } from '@/schemas/typescript-interfaces'
 
 interface EnhancedSetLog {
   id: string

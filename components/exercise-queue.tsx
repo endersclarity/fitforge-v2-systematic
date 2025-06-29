@@ -4,15 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Minus, ArrowLeft, ArrowRight } from "lucide-react"
-import { WorkoutPlan, PlannedSet } from '@/schemas/typescript-interfaces'
-
-interface WorkoutExercise {
-  id: string
-  name: string
-  category: string
-  equipment: string
-  difficulty: string
-}
+import { WorkoutPlan, PlannedSet, WorkoutExercise } from '@/schemas/typescript-interfaces'
 
 interface EnhancedSetLog {
   id: string
