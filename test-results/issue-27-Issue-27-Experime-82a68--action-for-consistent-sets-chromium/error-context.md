@@ -44,7 +44,7 @@
     - img
   - heading "Experimental Workout Execution" [level=1]
   - img
-  - text: 0:26
+  - text: 0:05
   - button "Finish" [disabled]
   - img
   - text: Real-time Muscle Fatigue Chest Shoulders Back Arms Legs Core Bench Press Barbell Intermediate
@@ -55,6 +55,19 @@
   - img
   - text: Exercise Notes
   - textbox "Form cues, technique notes..."
+  - text: "Set 1 (Planned: 135 lb × 10 reps)"
+  - button "Warm-up Set"
+  - text: Weight (lbs)
+  - spinbutton
+  - text: Reps
+  - spinbutton
+  - text: Set Notes (Optional)
+  - textbox "Form notes, how it felt..."
+  - button "Use Planned Values (135 lb × 10 reps)"
+  - button "Add Set" [disabled]:
+    - img
+    - text: Add Set
+  - text: Planned Workout Your planned sets for this exercise Set 1 135 lb × 10 reps Set 2 135 lb × 10 reps Set 3 135 lb × 10 reps
   - button "Previous Exercise" [disabled]:
     - img
     - text: Previous Exercise

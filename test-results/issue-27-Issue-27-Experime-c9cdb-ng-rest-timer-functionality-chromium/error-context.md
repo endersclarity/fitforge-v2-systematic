@@ -44,10 +44,10 @@
     - img
   - heading "Experimental Workout Execution" [level=1]
   - img
-  - text: 0:28
-  - button "Finish" [disabled]
+  - text: 0:05
+  - button "Finish"
   - img
-  - text: Real-time Muscle Fatigue Chest Shoulders Back Arms Legs Core Bench Press Barbell Intermediate
+  - text: Real-time Muscle Fatigue Anterior Deltoids Pectoralis Major Triceps Brachii Serratus Anterior Bench Press Barbell Intermediate
   - paragraph: Exercise
   - paragraph: 1/1
   - button:
@@ -55,11 +55,40 @@
   - img
   - text: Exercise Notes
   - textbox "Form cues, technique notes..."
+  - text: Add Set 2
+  - button "Warm-up Set"
+  - text: Weight (lbs)
+  - spinbutton: "135"
+  - text: Reps
+  - spinbutton
+  - text: Set Notes (Optional)
+  - textbox "Form notes, how it felt..."
+  - button "Add Set" [disabled]:
+    - img
+    - text: Add Set
+  - text: Sets Completed (1)
+  - img
+  - text: "Set 1: 135 lbs × 10 reps RPE 5"
+  - button:
+    - img
   - button "Previous Exercise" [disabled]:
     - img
     - text: Previous Exercise
   - button "Next Exercise" [disabled]:
     - text: Next Exercise
+    - img
+  - img
+  - text: 1:30
+  - button:
+    - img
+  - text: "Duration: 1:30"
+  - button:
+    - img
+  - text: Adjust in 15-second increments (30s - 5min)
+  - button "Start":
+    - img
+    - text: Start
+  - button:
     - img
 - contentinfo:
   - heading "FitForge" [level=3]
