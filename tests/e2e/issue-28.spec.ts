@@ -62,9 +62,9 @@ test.describe('Issue #28: Experimental Recovery Dashboard', () => {
   test('should display days since last workout', async ({ page }) => {
     await page.goto('http://localhost:8080/flows-experimental/recovery')
     
-    // Wait for data to load
+    // Wait for data to load (Firefox needs more time)
     await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(3000)
     
     // Check for days since workout card
     const daysSinceCard = page.locator('text=DAYS SINCE YOUR LAST WORKOUT')
@@ -78,14 +78,14 @@ test.describe('Issue #28: Experimental Recovery Dashboard', () => {
   test('should display muscle recovery statistics', async ({ page }) => {
     await page.goto('http://localhost:8080/flows-experimental/recovery')
     
-    // Wait for data to load
+    // Wait for data to load (Firefox needs more time)
     await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(3000)
     
     // Check for recovery stats cards
     await expect(page.locator('text=Fresh Muscles')).toBeVisible()
     await expect(page.locator('text=Recovering')).toBeVisible()
-    await expect(page.locator('text=Fatigued')).toBeVisible()
+    await expect(page.locator('.text-gray-400').filter({ hasText: 'Fatigued' }).first()).toBeVisible()
     
     // Check that we have some muscle data
     const freshCount = page.locator('text=ready to train').first()
@@ -95,9 +95,9 @@ test.describe('Issue #28: Experimental Recovery Dashboard', () => {
   test('should show muscle recovery list', async ({ page }) => {
     await page.goto('http://localhost:8080/flows-experimental/recovery')
     
-    // Wait for data to load
+    // Wait for data to load (Firefox needs more time)
     await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(3000)
     
     // Check for muscle recovery status section
     await expect(page.locator('text=Muscle Recovery Status')).toBeVisible()
@@ -114,9 +114,9 @@ test.describe('Issue #28: Experimental Recovery Dashboard', () => {
   test('should show training recommendations', async ({ page }) => {
     await page.goto('http://localhost:8080/flows-experimental/recovery')
     
-    // Wait for data to load
+    // Wait for data to load (Firefox needs more time)
     await page.waitForLoadState('networkidle')
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(3000)
     
     // Check for recommendations section
     await expect(page.locator('text=Training Recommendations')).toBeVisible()

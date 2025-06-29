@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ArrowLeft, Activity, Calendar, TrendingUp, Edit2 } from 'lucide-react'
-import { MuscleHeatmap } from '@/components/visualization/MuscleHeatmap'
+import { ClientMuscleHeatmap } from '@/components/visualization/ClientMuscleHeatmap'
 import { ClientFatigueAnalyzer } from '@/lib/client-fatigue-analyzer'
 import exercisesData from '@/data/exercises-real.json'
 import { differenceInDays, format } from 'date-fns'
@@ -73,6 +73,9 @@ export default function RecoveryDashboardPage() {
         const sessions: WorkoutSession[] = sessionsJson ? JSON.parse(sessionsJson) : []
         
         if (sessions.length === 0) {
+          // Set empty muscle data instead of just returning
+          setMuscleData({})
+          setLastWorkoutDate(null)
           setLoading(false)
           return
         }
@@ -86,7 +89,9 @@ export default function RecoveryDashboardPage() {
 
         // Use ClientFatigueAnalyzer to calculate muscle fatigue
         const analyzer = new ClientFatigueAnalyzer()
+        console.log('🔥 [RecoveryDashboard] Starting fatigue analysis...')
         const fatigueAnalysis = await analyzer.analyzeFatigue('demo-user', 7)
+        console.log('🔧 [RecoveryDashboard] Fatigue analysis complete:', fatigueAnalysis)
         
         // Transform fatigue data for display
         const muscleDataMap: Record<string, MuscleRecoveryData> = {}
@@ -107,7 +112,10 @@ export default function RecoveryDashboardPage() {
         
         setMuscleData(muscleDataMap)
       } catch (error) {
-        console.error('Error calculating recovery:', error)
+        console.error('🚨 [RecoveryDashboard] Error calculating recovery:', error)
+        // Set empty data on error so page doesn't stay in loading state
+        setMuscleData({})
+        setLastWorkoutDate(null)
       } finally {
         setLoading(false)
       }
@@ -248,25 +256,10 @@ export default function RecoveryDashboardPage() {
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Muscle Heat Map */}
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-fitbod-accent" />
-                    Muscle Heat Map
-                  </CardTitle>
-                  <CardDescription>
-                    Visual representation of muscle fatigue levels
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[500px]">
-                    {/* Simplified heat map for now - will integrate MuscleHeatmap component */}
-                    <div className="text-gray-400 text-center pt-20">
-                      Muscle visualization coming soon...
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <ClientMuscleHeatmap
+                muscleData={muscleData}
+                className="bg-gray-900 border-gray-800"
+              />
 
               {/* Muscle Recovery List */}
               <Card className="bg-gray-900 border-gray-800">
