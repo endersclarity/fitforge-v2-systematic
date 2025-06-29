@@ -10,6 +10,7 @@ import { useRealTimeMuscleVolume } from '@/hooks/useRealTimeMuscleVolume'
 import { useWorkoutSession } from '@/hooks/useWorkoutSession'
 import { useSetLogging } from '@/hooks/useSetLogging'
 import { useWorkoutProgress } from '@/hooks/useWorkoutProgress'
+import { WorkoutExecutionProvider } from '@/contexts/WorkoutExecutionContext'
 import { WorkoutHeader } from './workout-header'
 import { SetLoggingForm } from './set-logging-form'
 import { WorkoutProgress } from './workout-progress'
@@ -127,112 +128,120 @@ export function WorkoutExecutionExperimental() {
     )
   }
 
+  // Context provider data
+  const sessionData = {
+    workoutQueue: workoutSession.workoutQueue,
+    currentExerciseIndex: workoutSession.currentExerciseIndex,
+    currentExercise: workoutSession.currentExercise,
+    workoutPlan: workoutSession.workoutPlan,
+    exerciseNotes: workoutSession.exerciseNotes,
+    getCurrentPlannedSet: workoutSession.getCurrentPlannedSet,
+    getExercisePlannedSets: workoutSession.getExercisePlannedSets,
+    updateExerciseNotes: workoutSession.updateExerciseNotes
+  }
+
+  const loggingData = {
+    sets: setLogging.sets,
+    currentWeight: setLogging.currentWeight,
+    currentReps: setLogging.currentReps,
+    isWarmupSet: setLogging.isWarmupSet,
+    setNotes: setLogging.setNotes,
+    setCurrentWeight: setLogging.setCurrentWeight,
+    setCurrentReps: setLogging.setCurrentReps,
+    setIsWarmupSet: setLogging.setIsWarmupSet,
+    setSetNotes: setLogging.setSetNotes,
+    removeSet: setLogging.removeSet,
+    getExerciseSets: setLogging.getExerciseSets,
+    getRPEColor: setLogging.getRPEColor
+  }
+
   return (
-    <div className="min-h-screen bg-[#121212] text-white">
-      {/* Header */}
-      <WorkoutHeader 
-        elapsedTime={workoutSession.elapsedTime}
-        onFinishWorkout={handleFinishWorkout}
-        isFinishDisabled={setLogging.sets.length === 0}
-      />
-
-      {/* Workout Progress */}
-      <WorkoutProgress
-        currentExerciseIndex={workoutSession.currentExerciseIndex}
-        workoutQueue={workoutSession.workoutQueue}
-        currentExercise={currentExercise}
-        muscleVolumeData={muscleVolumeData}
-        exerciseNotes={workoutSession.exerciseNotes}
-        showExerciseMenu={workoutProgress.showExerciseMenu}
-        setShowExerciseMenu={workoutProgress.setShowExerciseMenu}
-        setShowReplaceModal={workoutProgress.setShowReplaceModal}
-        updateExerciseNotes={workoutSession.updateExerciseNotes}
-      />
-
-      <div className="p-4">
-        {/* Set Logging Form */}
-        <SetLoggingForm
-          currentExercise={currentExercise}
-          currentWeight={setLogging.currentWeight}
-          setCurrentWeight={setLogging.setCurrentWeight}
-          currentReps={setLogging.currentReps}
-          setCurrentReps={setLogging.setCurrentReps}
-          isWarmupSet={setLogging.isWarmupSet}
-          setIsWarmupSet={setLogging.setIsWarmupSet}
-          setNotes={setLogging.setNotes}
-          setSetNotes={setLogging.setSetNotes}
-          exerciseSets={exerciseSets}
-          getCurrentPlannedSet={workoutSession.getCurrentPlannedSet}
-          onAddSet={handleAddSet}
+    <WorkoutExecutionProvider session={sessionData} logging={loggingData}>
+      <div className="min-h-screen bg-[#121212] text-white">
+        {/* Header */}
+        <WorkoutHeader 
+          elapsedTime={workoutSession.elapsedTime}
+          onFinishWorkout={handleFinishWorkout}
+          isFinishDisabled={setLogging.sets.length === 0}
         />
 
-        {/* Exercise Queue Component - Consolidated UI */}
-        <ExerciseQueue
-          currentExercise={currentExercise}
-          exerciseSets={exerciseSets}
-          workoutPlan={workoutSession.workoutPlan}
-          currentWeight={setLogging.currentWeight}
-          currentReps={setLogging.currentReps}
+        {/* Workout Progress */}
+        <WorkoutProgress
           currentExerciseIndex={workoutSession.currentExerciseIndex}
           workoutQueue={workoutSession.workoutQueue}
-          getExercisePlannedSets={workoutSession.getExercisePlannedSets}
-          logAllSets={handleLogAllSets}
-          removeSet={setLogging.removeSet}
-          getRPEColor={setLogging.getRPEColor}
-          previousExercise={handlePreviousExercise}
-          nextExercise={handleNextExercise}
-        />
-      </div>
-
-      {/* Rest Timer */}
-      {workoutProgress.showRestTimer && (
-        <RestTimer
-          onComplete={workoutProgress.handleRestTimerComplete}
-        />
-      )}
-
-      {/* RPE Rating Modal */}
-      {setLogging.showRPEModal && setLogging.pendingSet && (
-        <RPERatingModal
-          isOpen={setLogging.showRPEModal}
-          onClose={() => {
-            setLogging.setShowRPEModal(false)
-            setLogging.setPendingSet(null)
-          }}
-          onSubmit={handleCompleteSetWithRPE}
-          setDetails={{
-            weight: setLogging.pendingSet.weight,
-            reps: setLogging.pendingSet.reps,
-            exercise: currentExercise.name
-          }}
-        />
-      )}
-
-      {/* Batch RPE Rating Modal */}
-      {setLogging.showBatchRPEModal && (
-        <BatchRPEModal
-          isOpen={setLogging.showBatchRPEModal}
-          onClose={() => {
-            setLogging.setShowBatchRPEModal(false)
-            setLogging.setPendingBatchSets(0)
-          }}
-          onSubmit={handleCompleteBatchSetsWithRPE}
-          setCount={setLogging.pendingBatchSets}
-          weight={parseFloat(setLogging.currentWeight)}
-          reps={parseInt(setLogging.currentReps)}
-          exerciseName={currentExercise.name}
-        />
-      )}
-
-      {/* Exercise Replacement Modal */}
-      {workoutProgress.showReplaceModal && (
-        <ExerciseReplacementModal
-          isOpen={workoutProgress.showReplaceModal}
-          onClose={workoutProgress.closeReplaceModal}
-          onReplace={handleReplaceExercise}
           currentExercise={currentExercise}
+          muscleVolumeData={muscleVolumeData}
+          exerciseNotes={workoutSession.exerciseNotes}
+          showExerciseMenu={workoutProgress.showExerciseMenu}
+          setShowExerciseMenu={workoutProgress.setShowExerciseMenu}
+          setShowReplaceModal={workoutProgress.setShowReplaceModal}
+          updateExerciseNotes={workoutSession.updateExerciseNotes}
         />
-      )}
-    </div>
+
+        <div className="p-4">
+          {/* Set Logging Form - Now with reduced props */}
+          <SetLoggingForm
+            onAddSet={handleAddSet}
+          />
+
+          {/* Exercise Queue Component - Now with reduced props */}
+          <ExerciseQueue
+            logAllSets={handleLogAllSets}
+            previousExercise={handlePreviousExercise}
+            nextExercise={handleNextExercise}
+          />
+        </div>
+
+        {/* Rest Timer */}
+        {workoutProgress.showRestTimer && (
+          <RestTimer
+            onComplete={workoutProgress.handleRestTimerComplete}
+          />
+        )}
+
+        {/* RPE Rating Modal */}
+        {setLogging.showRPEModal && setLogging.pendingSet && (
+          <RPERatingModal
+            isOpen={setLogging.showRPEModal}
+            onClose={() => {
+              setLogging.setShowRPEModal(false)
+              setLogging.setPendingSet(null)
+            }}
+            onSubmit={handleCompleteSetWithRPE}
+            setDetails={{
+              weight: setLogging.pendingSet.weight,
+              reps: setLogging.pendingSet.reps,
+              exercise: currentExercise.name
+            }}
+          />
+        )}
+
+        {/* Batch RPE Rating Modal */}
+        {setLogging.showBatchRPEModal && (
+          <BatchRPEModal
+            isOpen={setLogging.showBatchRPEModal}
+            onClose={() => {
+              setLogging.setShowBatchRPEModal(false)
+              setLogging.setPendingBatchSets(0)
+            }}
+            onSubmit={handleCompleteBatchSetsWithRPE}
+            setCount={setLogging.pendingBatchSets}
+            weight={parseFloat(setLogging.currentWeight)}
+            reps={parseInt(setLogging.currentReps)}
+            exerciseName={currentExercise.name}
+          />
+        )}
+
+        {/* Exercise Replacement Modal */}
+        {workoutProgress.showReplaceModal && (
+          <ExerciseReplacementModal
+            isOpen={workoutProgress.showReplaceModal}
+            onClose={workoutProgress.closeReplaceModal}
+            onReplace={handleReplaceExercise}
+            currentExercise={currentExercise}
+          />
+        )}
+      </div>
+    </WorkoutExecutionProvider>
   )
 }

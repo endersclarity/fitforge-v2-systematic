@@ -4,53 +4,23 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Plus } from "lucide-react"
-import { PlannedSet, WorkoutExercise } from '@/schemas/typescript-interfaces'
-
-interface EnhancedSetLog {
-  id: string
-  exerciseId: string
-  weight: number
-  reps: number
-  completed: boolean
-  timestamp: string
-  rpe?: number
-  isWarmup?: boolean
-  notes?: string
-}
+import { useWorkoutExecution } from '@/contexts/WorkoutExecutionContext'
 
 interface SetLoggingFormProps {
-  currentExercise: WorkoutExercise
-  currentWeight: string
-  setCurrentWeight: (weight: string) => void
-  currentReps: string
-  setCurrentReps: (reps: string) => void
-  isWarmupSet: boolean
-  setIsWarmupSet: (isWarmup: boolean) => void
-  setNotes: string
-  setSetNotes: (notes: string) => void
-  exerciseSets: EnhancedSetLog[]
-  getCurrentPlannedSet: (exerciseId: string, setNumber: number) => PlannedSet | undefined
   onAddSet: () => void
 }
 
-export function SetLoggingForm({
-  currentExercise,
-  currentWeight,
-  setCurrentWeight,
-  currentReps,
-  setCurrentReps,
-  isWarmupSet,
-  setIsWarmupSet,
-  setNotes,
-  setSetNotes,
-  exerciseSets,
-  getCurrentPlannedSet,
-  onAddSet
-}: SetLoggingFormProps) {
-  const nextSetNumber = exerciseSets.length + 1
-  const plannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
+export function SetLoggingForm({ onAddSet }: SetLoggingFormProps) {
+  const { session, logging } = useWorkoutExecution()
+  const currentExercise = session.currentExercise
   
-  const isAddSetDisabled = !currentReps || (currentExercise.equipment !== 'Bodyweight' && !currentWeight)
+  if (!currentExercise) return null
+  
+  const exerciseSets = logging.getExerciseSets(currentExercise.id)
+  const nextSetNumber = exerciseSets.length + 1
+  const plannedSet = session.getCurrentPlannedSet(currentExercise.id, nextSetNumber)
+  
+  const isAddSetDisabled = !logging.currentReps || (currentExercise.equipment !== 'Bodyweight' && !logging.currentWeight)
 
   return (
     <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
@@ -63,11 +33,11 @@ export function SetLoggingForm({
           </CardTitle>
           {/* Warm-up Toggle */}
           <Button
-            variant={isWarmupSet ? "default" : "outline"}
+            variant={logging.isWarmupSet ? "default" : "outline"}
             size="sm"
-            onClick={() => setIsWarmupSet(!isWarmupSet)}
+            onClick={() => logging.setIsWarmupSet(!logging.isWarmupSet)}
             className={`text-xs ${
-              isWarmupSet 
+              logging.isWarmupSet 
                 ? "bg-[#FF375F] text-white" 
                 : "bg-[#2C2C2E] border-[#3C3C3E] text-[#A1A1A3] hover:bg-[#3C3C3E] hover:text-white"
             }`}
@@ -86,19 +56,19 @@ export function SetLoggingForm({
             </label>
             <Input
               type="number"
-              value={currentWeight}
-              onChange={(e) => setCurrentWeight(e.target.value)}
+              value={logging.currentWeight}
+              onChange={(e) => logging.setCurrentWeight(e.target.value)}
               placeholder="135"
               className="bg-[#2C2C2E] border-[#3C3C3E] text-white"
-              disabled={currentExercise.equipment === 'Bodyweight' && !isWarmupSet}
+              disabled={currentExercise.equipment === 'Bodyweight' && !logging.isWarmupSet}
             />
           </div>
           <div>
             <label className="text-sm text-[#A1A1A3] mb-2 block">Reps</label>
             <Input
               type="number"
-              value={currentReps}
-              onChange={(e) => setCurrentReps(e.target.value)}
+              value={logging.currentReps}
+              onChange={(e) => logging.setCurrentReps(e.target.value)}
               placeholder="10"
               className="bg-[#2C2C2E] border-[#3C3C3E] text-white"
             />
@@ -110,8 +80,8 @@ export function SetLoggingForm({
           <label className="text-sm text-[#A1A1A3] mb-2 block">Set Notes (Optional)</label>
           <Input
             type="text"
-            value={setNotes}
-            onChange={(e) => setSetNotes(e.target.value)}
+            value={logging.setNotes}
+            onChange={(e) => logging.setSetNotes(e.target.value)}
             placeholder="Form notes, how it felt..."
             className="bg-[#2C2C2E] border-[#3C3C3E] text-white"
             data-testid="set-notes-input"
@@ -123,8 +93,8 @@ export function SetLoggingForm({
           <Button
             variant="outline"
             onClick={() => {
-              setCurrentWeight(plannedSet.targetWeight.toString())
-              setCurrentReps(plannedSet.targetReps.toString())
+              logging.setCurrentWeight(plannedSet.targetWeight.toString())
+              logging.setCurrentReps(plannedSet.targetReps.toString())
             }}
             className="w-full bg-[#2C2C2E] border-[#3C3C3E] text-[#A1A1A3] hover:bg-[#3C3C3E] hover:text-white"
           >

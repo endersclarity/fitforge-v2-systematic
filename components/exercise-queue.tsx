@@ -4,55 +4,29 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle, Minus, ArrowLeft, ArrowRight } from "lucide-react"
-import { WorkoutPlan, PlannedSet, WorkoutExercise } from '@/schemas/typescript-interfaces'
-
-interface EnhancedSetLog {
-  id: string
-  exerciseId: string
-  weight: number
-  reps: number
-  completed: boolean
-  timestamp: string
-  rpe?: number
-  isWarmup?: boolean
-  notes?: string
-}
+import { useWorkoutExecution } from '@/contexts/WorkoutExecutionContext'
 
 interface ExerciseQueueProps {
-  currentExercise: WorkoutExercise
-  exerciseSets: EnhancedSetLog[]
-  workoutPlan: WorkoutPlan | null
-  currentWeight: string
-  currentReps: string
-  currentExerciseIndex: number
-  workoutQueue: WorkoutExercise[]
-  getExercisePlannedSets: (exerciseId: string) => PlannedSet[]
   logAllSets: () => void
-  removeSet: (setId: string) => void
-  getRPEColor: (rpe: number) => string
   previousExercise: () => void
   nextExercise: () => void
 }
 
 export function ExerciseQueue({
-  currentExercise,
-  exerciseSets,
-  workoutPlan,
-  currentWeight,
-  currentReps,
-  currentExerciseIndex,
-  workoutQueue,
-  getExercisePlannedSets,
   logAllSets,
-  removeSet,
-  getRPEColor,
   previousExercise,
   nextExercise
 }: ExerciseQueueProps) {
+  const { session, logging } = useWorkoutExecution()
+  const currentExercise = session.currentExercise
+  
+  if (!currentExercise) return null
+  
+  const exerciseSets = logging.getExerciseSets(currentExercise.id)
   return (
     <>
       {/* Planned Sets Preview with Log All Sets */}
-      {workoutPlan && getExercisePlannedSets(currentExercise.id).length > 0 && (
+      {session.workoutPlan && session.getExercisePlannedSets(currentExercise.id).length > 0 && (
         <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -63,8 +37,8 @@ export function ExerciseQueue({
                 </CardDescription>
               </div>
               {/* Log All Sets Button */}
-              {exerciseSets.length < getExercisePlannedSets(currentExercise.id).length && 
-               currentWeight && currentReps && (
+              {exerciseSets.length < session.getExercisePlannedSets(currentExercise.id).length && 
+               logging.currentWeight && logging.currentReps && (
                 <Button
                   onClick={logAllSets}
                   className="bg-[#FF375F] hover:bg-[#E63050] text-white text-sm"
@@ -76,7 +50,7 @@ export function ExerciseQueue({
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {getExercisePlannedSets(currentExercise.id).map((plannedSet, index) => {
+              {session.getExercisePlannedSets(currentExercise.id).map((plannedSet, index) => {
                 const isCompleted = exerciseSets.length > index
                 const actualSet = exerciseSets[index]
                 
@@ -105,7 +79,7 @@ export function ExerciseQueue({
                           <span>{actualSet.reps} reps</span>
                         </span>
                         {actualSet.rpe && (
-                          <span className={`text-xs ${getRPEColor(actualSet.rpe)}`}>
+                          <span className={`text-xs ${logging.getRPEColor(actualSet.rpe)}`}>
                             RPE {actualSet.rpe}
                           </span>
                         )}
@@ -148,7 +122,7 @@ export function ExerciseQueue({
                           </Badge>
                         )}
                         {set.rpe && (
-                          <span className={`text-xs ${getRPEColor(set.rpe)}`}>
+                          <span className={`text-xs ${logging.getRPEColor(set.rpe)}`}>
                             RPE {set.rpe}
                           </span>
                         )}
@@ -161,7 +135,7 @@ export function ExerciseQueue({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeSet(set.id)}
+                    onClick={() => logging.removeSet(set.id)}
                     className="text-[#A1A1A3] hover:text-[#FF375F]"
                   >
                     <Minus className="h-4 w-4" />
@@ -178,7 +152,7 @@ export function ExerciseQueue({
         <Button
           variant="outline"
           onClick={previousExercise}
-          disabled={currentExerciseIndex === 0}
+          disabled={session.currentExerciseIndex === 0}
           className="flex-1 bg-[#2C2C2E] border-[#3C3C3E] text-[#A1A1A3] hover:bg-[#3C3C3E] hover:text-white disabled:opacity-50"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -187,7 +161,7 @@ export function ExerciseQueue({
         <Button
           variant="outline"
           onClick={nextExercise}
-          disabled={currentExerciseIndex >= workoutQueue.length - 1}
+          disabled={session.currentExerciseIndex >= session.workoutQueue.length - 1}
           className="flex-1 bg-[#2C2C2E] border-[#3C3C3E] text-[#A1A1A3] hover:bg-[#3C3C3E] hover:text-white disabled:opacity-50"
         >
           Next Exercise
