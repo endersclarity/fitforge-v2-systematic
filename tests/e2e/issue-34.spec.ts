@@ -177,7 +177,8 @@ test.describe('Issue #34: Workout Template Management', () => {
       // Verify we're in workout execution with the template loaded
       await expect(page).toHaveURL(/.*workout-execution/);
       await expect(page.locator('text=Bench Press')).toBeVisible();
-      await expect(page.locator('[data-testid="exercise-set-row"]')).toBeVisible();
+      // The workout starts with no sets - user needs to add them
+      await expect(page.locator('text=Add Set 1')).toBeVisible();
     });
   });
 
@@ -201,6 +202,10 @@ test.describe('Issue #34: Workout Template Management', () => {
       // Create hypertrophy template
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Tricep Extension').first().click();
+      await page.locator('button:has-text("Add to Workout")').click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Hypertrophy Template');
       await page.getByTestId('workout-category-select').selectOption('hypertrophy');
@@ -236,6 +241,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Goblet Squats').first().click();
       await page.locator('button:has-text("Add to Workout")').click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Lower Body Strength');
       await page.locator('button:has-text("Save Template")').click();

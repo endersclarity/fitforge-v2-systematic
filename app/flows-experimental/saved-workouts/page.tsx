@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Plus, Edit, Copy, Trash2, Play, Search } from 'lucide-react'
+import exercisesData from '@/data/exercises-real.json'
 
 interface WorkoutTemplate {
   id: string
@@ -104,13 +105,17 @@ export default function SavedWorkoutsPage() {
   const handleStartWorkout = (template: WorkoutTemplate) => {
     // Convert template to workout session format
     const workoutSession = {
-      exercises: template.exercises.map(ex => ({
-        id: ex.exerciseId,
-        name: ex.exerciseName || ex.exerciseId,
-        category: 'General', // We could map this from exercise data
-        equipment: 'Unknown', // We could map this from exercise data
-        difficulty: 'Intermediate'
-      }))
+      exercises: template.exercises.map(ex => {
+        // Find the exercise in the database to get full details
+        const exerciseInfo = exercisesData.find(e => e.id === ex.exerciseId)
+        return {
+          id: ex.exerciseId,
+          name: ex.exerciseName || exerciseInfo?.name || ex.exerciseId,
+          category: exerciseInfo?.category || 'General',
+          equipment: exerciseInfo?.equipment || 'Unknown',
+          difficulty: exerciseInfo?.difficulty || 'Intermediate'
+        }
+      })
     }
     
     // Store for workout execution
