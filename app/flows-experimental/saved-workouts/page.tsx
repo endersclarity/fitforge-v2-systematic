@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Plus, Edit, Copy, Trash2, Play, Search } from 'lucide-react'
+import { ArrowLeft, Plus, Edit, Copy, Trash2, Play, Search, AlertTriangle } from 'lucide-react'
 import exercisesData from '@/data/exercises-real.json'
+import { LocalStorageService } from '@/lib/localStorage-service'
 
 interface WorkoutTemplate {
   id: string
@@ -33,22 +34,30 @@ export default function SavedWorkoutsPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
+  const [storageWarning, setStorageWarning] = useState(false)
 
   // IMPORTANT: localStorage has a 5MB limit across all stored data
   // With average template size of ~2KB, this allows for ~2500 templates
   // Future implementation should migrate to IndexedDB or server storage
+  // 
+  // Storage Management:
+  // - Service layer handles quota protection
+  // - Warning shown when storage > 80% full
+  // - Errors shown when quota exceeded
+  // - Automatic fallback to read-only mode if storage fails
 
   // Load templates from localStorage
   useEffect(() => {
     const loadTemplates = () => {
       try {
-        const stored = localStorage.getItem('fitforge_workout_templates')
-        if (stored) {
-          const parsed = JSON.parse(stored)
-          // Validate that parsed data is an array
-          if (Array.isArray(parsed)) {
-            setTemplates(parsed)
-            setFilteredTemplates(parsed)
+        const loadedTemplates = LocalStorageService.getTemplates()
+        setTemplates(loadedTemplates)
+        setFilteredTemplates(loadedTemplates)
+        
+        // Check storage usage and show warning if needed
+        const storageInfo = LocalStorageService.getStorageInfo()
+        if (storageInfo.percentage > 80) {
+          setStorageWarning(true)
           } else {
             console.error('Invalid template data format')
             setTemplates([])
@@ -230,6 +239,22 @@ export default function SavedWorkoutsPage() {
           </div>
         </div>
       </div>
+
+      {/* Storage Warning */}
+      {storageWarning && (
+        <div className="px-4 pt-4">
+          <div className="bg-yellow-900/20 border border-yellow-600/50 rounded-lg p-4 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-yellow-200">
+              <p className="font-medium">Storage space running low</p>
+              <p className="mt-1 text-yellow-300/80">
+                Your template storage is over 80% full. Consider deleting unused templates 
+                or the app will stop saving new templates when the limit is reached.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       <div className="p-4">

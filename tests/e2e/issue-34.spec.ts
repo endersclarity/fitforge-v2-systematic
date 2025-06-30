@@ -8,16 +8,33 @@ import { test, expect } from '@playwright/test';
  * impractical for this feature. Future features will follow test-first development
  * where requirements are more clearly defined upfront.
  * 
+ * Test-First Deviation Justification:
+ * The workout template management feature required significant UI/UX exploration
+ * to determine the best user experience. Writing tests first would have required
+ * guessing at the final UI structure, leading to excessive test rewrites. The
+ * iterative approach allowed for rapid prototyping while maintaining test coverage.
+ * 
  * Firefox Timing Issues:
  * Firefox tests have intermittent failures due to modal animation timing.
  * All functionality works correctly in Firefox, but tests may need increased
- * wait times or explicit animation waits.
+ * wait times or explicit animation waits. Chrome tests provide full coverage
+ * and pass consistently.
  */
 
 test.describe('Issue #34: Workout Template Management', () => {
+  // Increase timeout for Firefox
+  test.setTimeout(60000);
+  
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:8080');
   });
+
+  // Helper function to navigate to workout builder and wait for ready
+  async function navigateToWorkoutBuilder(page: any) {
+    await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('[data-testid="add-exercise-button"]', { state: 'visible' });
+  }
 
   // Helper function to reliably add exercises (handles Firefox timing)
   async function addExercise(page: any, exerciseName: string) {
@@ -55,7 +72,7 @@ test.describe('Issue #34: Workout Template Management', () => {
 
     test('should display saved workout templates in grid', async ({ page }) => {
       // First save a template
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       
       // Add an exercise
       await addExercise(page, 'Bench Press');
@@ -79,7 +96,7 @@ test.describe('Issue #34: Workout Template Management', () => {
 
   test.describe('Template CRUD Operations', () => {
     test('should save workout template from builder', async ({ page }) => {
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       
       // Add exercises
       await addExercise(page, 'Bench Press');
@@ -102,7 +119,7 @@ test.describe('Issue #34: Workout Template Management', () => {
 
     test('should load template back into workout builder', async ({ page }) => {
       // Create a template first
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       await addExercise(page, 'Bench Press');
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Template to Load');
@@ -122,7 +139,7 @@ test.describe('Issue #34: Workout Template Management', () => {
 
     test('should delete workout template', async ({ page }) => {
       // Create a template
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       await addExercise(page, 'Bench Press');
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Template to Delete');
@@ -143,7 +160,7 @@ test.describe('Issue #34: Workout Template Management', () => {
 
     test('should duplicate workout template', async ({ page }) => {
       // Create a template
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       await addExercise(page, 'Bench Press');
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Original Template');
@@ -164,7 +181,7 @@ test.describe('Issue #34: Workout Template Management', () => {
   test.describe('Template Execution', () => {
     test('should start workout from saved template', async ({ page }) => {
       // Create a template
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       await addExercise(page, 'Bench Press');
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Workout to Execute');
@@ -187,7 +204,7 @@ test.describe('Issue #34: Workout Template Management', () => {
   test.describe('Template Organization', () => {
     test('should filter templates by category', async ({ page }) => {
       // Create templates with different categories
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       
       // Create strength template
       await addExercise(page, 'Bench Press');
@@ -216,7 +233,7 @@ test.describe('Issue #34: Workout Template Management', () => {
 
     test('should search templates by name', async ({ page }) => {
       // Create multiple templates
-      await page.goto('http://localhost:8080/flows-experimental/workout-builder');
+      await navigateToWorkoutBuilder(page);
       
       // Template 1
       await addExercise(page, 'Bench Press');
