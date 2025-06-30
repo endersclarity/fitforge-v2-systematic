@@ -20,16 +20,43 @@ interface SaveWorkoutModalProps {
   workoutExercises: WorkoutExerciseData[];
   onSave: (workoutData: any) => void;
   onClose: () => void;
+  existingTemplateNames?: string[];
 }
 
-export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWorkoutModalProps) {
+export function SaveWorkoutModal({ workoutExercises, onSave, onClose, existingTemplateNames = [] }: SaveWorkoutModalProps) {
   const [workoutName, setWorkoutName] = useState('');
   const [workoutType, setWorkoutType] = useState<'A' | 'B' | 'C' | 'D'>('A');
   const [category, setCategory] = useState<'strength' | 'hypertrophy' | 'endurance' | 'general'>('general');
+  const [validationError, setValidationError] = useState('');
+
+  const validateWorkoutName = (name: string): string => {
+    if (!name.trim()) {
+      return 'Workout name cannot be empty';
+    }
+    
+    if (name.trim().length < 3) {
+      return 'Workout name must be at least 3 characters';
+    }
+    
+    if (name.trim().length > 50) {
+      return 'Workout name must be less than 50 characters';
+    }
+    
+    const isDuplicate = existingTemplateNames.some(
+      existingName => existingName.toLowerCase() === name.trim().toLowerCase()
+    );
+    
+    if (isDuplicate) {
+      return 'A workout with this name already exists';
+    }
+    
+    return '';
+  };
 
   const handleSave = () => {
-    if (!workoutName.trim()) {
-      alert('Please enter a workout name');
+    const error = validateWorkoutName(workoutName);
+    if (error) {
+      setValidationError(error);
       return;
     }
 
@@ -83,11 +110,21 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
             <input
               type="text"
               value={workoutName}
-              onChange={(e) => setWorkoutName(e.target.value)}
+              onChange={(e) => {
+                setWorkoutName(e.target.value);
+                setValidationError(''); // Clear error when user types
+              }}
               placeholder="Workout name..."
-              className="w-full px-3 py-2 border border-fitbod-subtle rounded-md focus:ring-2 focus:ring-fitbod-accent focus:border-fitbod-accent bg-fitbod-background text-fitbod-text"
+              className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-fitbod-accent bg-fitbod-background text-fitbod-text ${
+                validationError ? 'border-red-500 focus:border-red-500' : 'border-fitbod-subtle focus:border-fitbod-accent'
+              }`}
               data-testid="workout-name-input"
             />
+            {validationError && (
+              <p className="mt-1 text-sm text-red-500" data-testid="validation-error">
+                {validationError}
+              </p>
+            )}
           </div>
 
           {/* Workout Type */}

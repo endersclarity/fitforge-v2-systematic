@@ -41,6 +41,7 @@ export default function WorkoutBuilderPage() {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [workoutName, setWorkoutName] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [existingTemplateNames, setExistingTemplateNames] = useState<string[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -81,6 +82,20 @@ export default function WorkoutBuilderPage() {
       sessionStorage.removeItem('editTemplateId');
     }
   }, [exercises]);
+
+  // Load existing template names for validation
+  useEffect(() => {
+    const stored = localStorage.getItem('fitforge_workout_templates');
+    if (stored) {
+      try {
+        const templates = JSON.parse(stored);
+        const names = templates.map((t: any) => t.name);
+        setExistingTemplateNames(names);
+      } catch (error) {
+        console.error('Error loading template names:', error);
+      }
+    }
+  }, [showSaveModal]); // Reload when save modal opens
 
   const handleAddExercise = (exercise: Exercise) => {
     const newWorkoutExercise: WorkoutExerciseData = {
@@ -290,6 +305,7 @@ export default function WorkoutBuilderPage() {
             workoutExercises={workoutExercises}
             onSave={handleWorkoutSaved}
             onClose={() => setShowSaveModal(false)}
+            existingTemplateNames={existingTemplateNames}
           />
         )}
       </div>
