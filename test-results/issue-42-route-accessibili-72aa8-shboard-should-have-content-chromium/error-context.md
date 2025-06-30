@@ -39,38 +39,29 @@
     - img
     - text: Toggle theme
 - main:
-  - text: 6 of 6 100%
-  - heading "What equipment do you have? 🏋️" [level=1]
-  - paragraph: Select all that apply - we'll customize everything for you!
-  - button "Bodyweight Only":
+  - button:
     - img
-    - text: Bodyweight Only
-  - button "Dumbbells":
+  - heading "Recovery Dashboard" [level=1]
+  - paragraph: Muscle recovery tracking and fatigue management
+  - button "Edit":
     - img
-    - text: Dumbbells
-  - button "Resistance Bands":
-    - img
-    - text: Resistance Bands
-  - button "Pull-up Bar":
-    - img
-    - text: Pull-up Bar
-  - button "Home Gym":
-    - img
-    - text: Home Gym
-  - button "Full Gym":
-    - img
-    - text: Full Gym
-  - button "Setting up your profile..." [disabled]
+    - text: Edit
+  - text: Fresh Muscles 0 ready to train Recovering 0 partially ready Fatigued 0 need rest
+  - img
+  - text: Muscle Heat Map Visual representation of muscle fatigue levels NaN% Overall 0 Ready 0 Fatigued
+  - heading "Upper Body" [level=4]
+  - heading "Lower Body" [level=4]
+  - heading "Core" [level=4]
+  - heading "Fatigue Scale" [level=4]
+  - text: Recovered Light Moderate High Severe Muscle Recovery Status Detailed recovery percentages by muscle group
+  - img
+  - text: Training Recommendations
 - contentinfo:
   - heading "FitForge" [level=3]
   - paragraph: Smart fitness tracking with progressive overload intelligence
   - text: 📱 Mobile Optimized 💾 Local Storage 📈 Smart Progression
   - paragraph: Built with localStorage-first architecture • No backend required • Your data stays on your device
-- region "Notifications alt+T":
-  - list:
-    - listitem:
-      - img
-      - text: Welcome to FitForge, Test User! 🎉
+- region "Notifications alt+T"
 - alert
 - button "Open Next.js Dev Tools":
   - img

@@ -1,11 +1,11 @@
 # Comprehensive E2E Test Report
 
-Generated: 2025-06-30T22:03:11.876Z
+Generated: 2025-06-30T22:16:43.917Z
 
 ## Summary
 - Test Files Run: 5
-- Passed: 1
-- Failed: 4
+- Passed: 2
+- Failed: 3
 - Status: ❌ SOME TESTS FAILED
 
 ## Critical Issues Status
@@ -33,7 +33,7 @@ Generated: 2025-06-30T22:03:11.876Z
 ## Test Results by Category
 
 ### issue-42-data-integrity.spec.ts
-- Status: FAILED
+- Status: PASSED
 - Details: See test output for specifics
 
 ### issue-42-route-accessibility.spec.ts

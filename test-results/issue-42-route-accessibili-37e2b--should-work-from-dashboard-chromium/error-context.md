@@ -1,0 +1,216 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "FitForge":
+    - /url: /
+    - img
+    - text: FitForge
+  - link "Dashboard":
+    - /url: /dashboard
+    - img
+    - text: Dashboard
+  - link "Start Workout":
+    - /url: /push-pull-legs
+    - img
+    - text: Start Workout
+  - link "Exercise Library":
+    - /url: /muscle-explorer
+    - img
+    - text: Exercise Library
+  - link "Analytics":
+    - /url: /analytics
+    - img
+    - text: Analytics
+  - link "Profile":
+    - /url: /profile
+    - img
+    - text: Profile
+  - link "Debug":
+    - /url: /debug-storage
+    - img
+    - text: Debug
+  - link "Quick Log":
+    - /url: /workout-simple
+    - img
+    - text: Quick Log
+  - button "Toggle theme":
+    - img
+    - img
+    - text: Toggle theme
+- main:
+  - heading "Welcome back! 👋" [level=1]
+  - paragraph: Ready to crush your fitness goals?
+  - navigation:
+    - img
+    - text: Templates & routines
+    - heading "Workouts" [level=3]
+    - text: Explore
+    - img
+    - img
+    - text: Workouts
+    - img
+    - text: Templates & routines
+    - img
+    - text: Workouts
+    - img
+    - text: Templates & routines
+    - img
+    - text: Workouts
+    - img
+    - text: Templates & routines
+    - img
+    - text: Workouts
+    - img
+    - text: Templates & routines
+    - img
+    - text: Workouts
+    - img
+    - text: Templates & routines
+    - img
+    - text: Workouts
+    - img
+    - text: Templates & routines
+    - button "Open Workouts"
+    - img
+    - text: Browse & discover
+    - heading "Exercise Library" [level=3]
+    - text: Explore
+    - img
+    - img
+    - text: Exercise Library
+    - img
+    - text: Browse & discover
+    - img
+    - text: Exercise Library
+    - img
+    - text: Browse & discover
+    - img
+    - text: Exercise Library
+    - img
+    - text: Browse & discover
+    - img
+    - text: Exercise Library
+    - img
+    - text: Browse & discover
+    - img
+    - text: Exercise Library
+    - img
+    - text: Browse & discover
+    - img
+    - text: Exercise Library
+    - img
+    - text: Browse & discover
+    - button "Open Exercise Library"
+    - img
+    - text: Progress & insights
+    - heading "Analytics" [level=3]
+    - text: Explore
+    - img
+    - img
+    - text: Analytics
+    - img
+    - text: Progress & insights
+    - img
+    - text: Analytics
+    - img
+    - text: Progress & insights
+    - img
+    - text: Analytics
+    - img
+    - text: Progress & insights
+    - img
+    - text: Analytics
+    - img
+    - text: Progress & insights
+    - img
+    - text: Analytics
+    - img
+    - text: Progress & insights
+    - img
+    - text: Analytics
+    - img
+    - text: Progress & insights
+    - button "Open Analytics"
+    - img
+    - text: Fast workout entry
+    - heading "Quick Log" [level=3]
+    - text: Explore
+    - img
+    - img
+    - text: Quick Log
+    - img
+    - text: Fast workout entry
+    - img
+    - text: Quick Log
+    - img
+    - text: Fast workout entry
+    - img
+    - text: Quick Log
+    - img
+    - text: Fast workout entry
+    - img
+    - text: Quick Log
+    - img
+    - text: Fast workout entry
+    - img
+    - text: Quick Log
+    - img
+    - text: Fast workout entry
+    - img
+    - text: Quick Log
+    - img
+    - text: Fast workout entry
+    - button "Open Quick Log"
+    - img
+    - text: Try new features
+    - heading "Experimental Flows" [level=3]
+    - text: Explore
+    - img
+    - img
+    - text: Experimental Flows
+    - img
+    - text: Try new features
+    - img
+    - text: Experimental Flows
+    - img
+    - text: Try new features
+    - img
+    - text: Experimental Flows
+    - img
+    - text: Try new features
+    - img
+    - text: Experimental Flows
+    - img
+    - text: Try new features
+    - img
+    - text: Experimental Flows
+    - img
+    - text: Try new features
+    - img
+    - text: Experimental Flows
+    - img
+    - text: Try new features
+    - button "Open Experimental Flows"
+  - img
+  - paragraph: Goal
+  - paragraph: Set in intake
+  - img
+  - paragraph: Level
+  - paragraph: Beginner
+  - img
+  - paragraph: Frequency
+  - paragraph: 3 days/week
+  - img
+  - paragraph: Equipment
+  - paragraph: 0 types
+- contentinfo:
+  - heading "FitForge" [level=3]
+  - paragraph: Smart fitness tracking with progressive overload intelligence
+  - text: 📱 Mobile Optimized 💾 Local Storage 📈 Smart Progression
+  - paragraph: Built with localStorage-first architecture • No backend required • Your data stays on your device
+- region "Notifications alt+T"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```

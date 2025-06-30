@@ -92,7 +92,7 @@ test.describe('Data Integrity Tests', () => {
   });
 
   test('all categories should be valid', async () => {
-    const validCategories = ['Push', 'Pull', 'Legs', 'Core', 'BackBiceps', 'ChestTriceps', 'Shoulders', 'LegsGlutes'];
+    const validCategories = ['Push', 'Pull', 'Legs', 'Core', 'BackBiceps', 'ChestTriceps', 'Shoulders', 'LegsGlutes', 'Abs'];
     const invalidCategories: string[] = [];
 
     exerciseData.forEach(exercise => {

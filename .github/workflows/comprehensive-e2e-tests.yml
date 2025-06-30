@@ -30,7 +30,7 @@ jobs:
         npm run build
         npm run start &
         sleep 10
-        curl -f http://localhost:3000 || exit 1
+        curl -f http://localhost:8080 || exit 1
     
     - name: Run comprehensive E2E tests
       run: node scripts/run-comprehensive-e2e-tests.js
