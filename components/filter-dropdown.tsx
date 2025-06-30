@@ -43,15 +43,10 @@ export function FilterDropdown({
 
 
   const handleOptionToggle = (option: string) => {
-    console.log('🔥 [handleOptionToggle] ENTRY - option clicked:', option)
-    console.log('🔧 [handleOptionToggle] Current selectedOptions:', selectedOptions)
-    
     const newSelected = selectedOptions.includes(option)
       ? selectedOptions.filter(item => item !== option)
       : [...selectedOptions, option]
     
-    console.log('🔧 [handleOptionToggle] New selectedOptions:', newSelected)
-    console.log('🔧 [handleOptionToggle] Calling onSelectionChange...')
     onSelectionChange(newSelected)
   }
 
@@ -68,7 +63,6 @@ export function FilterDropdown({
         ref={buttonRef}
         onClick={() => {
           if (!disabled) {
-            console.log('Dropdown clicked, current isOpen:', isOpen)
             setIsOpen(!isOpen)
           }
         }}
@@ -127,12 +121,10 @@ export function FilterDropdown({
                 onClick={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
-                  console.log('🚨 BUTTON CLICKED:', option)
                   handleOptionToggle(option)
                 }}
                 onMouseDown={(e) => {
                   e.stopPropagation()
-                  console.log('🚨 MOUSEDOWN:', option)
                 }}
                 className="w-full flex items-center justify-between px-3 py-2 text-sm text-white hover:bg-[#2C2C2E] rounded-md transition-colors"
               >

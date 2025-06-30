@@ -101,7 +101,6 @@ export default function ExperimentalExerciseBrowser() {
   }, [exercises, filterState, sortBy]) // Dependencies: re-run when any of these change
   
   const handleFilterChange = (newState: FilterState) => {
-    console.log('Filter state changed:', newState)
     setFilterState(newState)
   }
   
