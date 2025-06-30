@@ -3,19 +3,21 @@
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowLeft, Dumbbell, Calendar, Heart, BarChart } from 'lucide-react'
+import { ArrowLeft, Dumbbell, Calendar, Heart, BarChart, BookOpen, Navigation, TrendingUp, Users } from 'lucide-react'
 
 export default function ExperimentalFlowsLanding() {
   const router = useRouter()
 
   const experimentalFlows = [
+    // Completed Features
     {
       id: 'exercise-browser',
       title: 'Exercise Browser',
       description: 'Browse and filter exercises with Fitbod-style UX patterns',
       icon: Dumbbell,
       route: '/flows-experimental/exercise-browser',
-      status: 'active'
+      status: 'active',
+      issueNumber: 25
     },
     {
       id: 'workout-builder',
@@ -23,7 +25,8 @@ export default function ExperimentalFlowsLanding() {
       description: 'Drag-and-drop workout creation with exercise grouping',
       icon: Calendar,
       route: '/flows-experimental/workout-builder',
-      status: 'active'
+      status: 'active',
+      issueNumber: 26
     },
     {
       id: 'workout-execution',
@@ -31,7 +34,8 @@ export default function ExperimentalFlowsLanding() {
       description: 'Advanced set logging with RPE ratings, batch actions, and muscle fatigue visualization',
       icon: BarChart,
       route: '/flows-experimental/workout-execution',
-      status: 'active'
+      status: 'active',
+      issueNumber: 27
     },
     {
       id: 'recovery-dashboard',
@@ -39,7 +43,43 @@ export default function ExperimentalFlowsLanding() {
       description: 'Visual muscle recovery tracking and fatigue management',
       icon: Heart,
       route: '/flows-experimental/recovery',
-      status: 'active'
+      status: 'active',
+      issueNumber: 28
+    },
+    {
+      id: 'saved-workouts',
+      title: 'Saved Workouts',
+      description: 'Manage, organize, and execute saved workout templates',
+      icon: BookOpen,
+      route: '/flows-experimental/saved-workouts',
+      status: 'active',
+      issueNumber: 34
+    },
+    // Planned Features (Placeholders)
+    {
+      id: 'flow-navigation',
+      title: 'Flow Navigation Hub',
+      description: 'Unified navigation system for all experimental flows',
+      icon: Navigation,
+      route: '/flows-experimental/navigation-hub',
+      status: 'coming-soon',
+      issueNumber: 29
+    },
+    {
+      id: 'progress-tracking',
+      title: 'Progress Tracking',
+      description: 'Visual progress charts and personal records tracking',
+      icon: TrendingUp,
+      route: '/flows-experimental/progress-tracking',
+      status: 'coming-soon'
+    },
+    {
+      id: 'social-features',
+      title: 'Social & Sharing',
+      description: 'Share workouts and compete with friends',
+      icon: Users,
+      route: '/flows-experimental/social',
+      status: 'coming-soon'
     }
   ]
 
