@@ -7,11 +7,11 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Trapezius": 41.38,
-      "Deltoids": 27.59,
-      "Biceps_Brachii": 13.79,
-      "Core": 10.34,
-      "Grip_Forearms": 6.9
+      "Trapezius": 60,
+      "Deltoids": 40,
+      "Biceps_Brachii": 20,
+      "Core": 15,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -22,11 +22,11 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Biceps_Brachii": 64,
-      "Brachialis": 12,
-      "Brachioradialis": 4,
-      "Core": 12,
-      "Grip_Forearms": 8
+      "Biceps_Brachii": 80,
+      "Brachialis": 15,
+      "Brachioradialis": 5,
+      "Core": 15,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -37,11 +37,11 @@
     "difficulty": "Advanced",
     "variation": "B",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 53.13,
-      "Biceps_Brachii": 18.75,
-      "Rhomboids": 12.5,
-      "Trapezius": 9.38,
-      "Grip_Forearms": 6.25
+      "Latissimus_Dorsi": 85,
+      "Biceps_Brachii": 30,
+      "Rhomboids": 20,
+      "Trapezius": 15,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -52,10 +52,10 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Trapezius": 34.48,
-      "Rhomboids": 27.59,
-      "Rear_Deltoids": 27.59,
-      "Rotator_Cuff": 10.34
+      "Trapezius": 50,
+      "Rhomboids": 40,
+      "Rear_Deltoids": 40,
+      "Rotator_Cuff": 15
     }
   },
   {
@@ -66,9 +66,9 @@
     "difficulty": "Beginner",
     "variation": "A",
     "muscleEngagement": {
-      "Biceps_Brachii": 81.82,
-      "Brachialis": 9.09,
-      "Grip_Forearms": 9.09
+      "Biceps_Brachii": 90,
+      "Brachialis": 10,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -79,11 +79,11 @@
     "difficulty": "Advanced",
     "variation": "A",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 60,
-      "Biceps_Brachii": 13.33,
-      "Rhomboids": 10,
-      "Trapezius": 10,
-      "Grip_Forearms": 6.67
+      "Latissimus_Dorsi": 90,
+      "Biceps_Brachii": 20,
+      "Rhomboids": 15,
+      "Trapezius": 15,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -106,11 +106,11 @@
     "difficulty": "Intermediate",
     "variation": "B",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 58.62,
-      "Rhomboids": 17.24,
-      "Trapezius": 10.34,
-      "Biceps_Brachii": 8.28,
-      "Grip_Forearms": 5.52
+      "Latissimus_Dorsi": 85,
+      "Rhomboids": 25,
+      "Trapezius": 15,
+      "Biceps_Brachii": 12,
+      "Grip_Forearms": 8
     }
   },
   {
@@ -121,10 +121,10 @@
     "difficulty": "Intermediate",
     "variation": "B",
     "muscleEngagement": {
-      "Biceps_Brachii": 63.64,
-      "Brachialis": 18.18,
-      "Brachioradialis": 9.09,
-      "Grip_Forearms": 9.09
+      "Biceps_Brachii": 70,
+      "Brachialis": 20,
+      "Brachioradialis": 10,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -135,11 +135,11 @@
     "difficulty": "Advanced",
     "variation": "B",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 56.66,
-      "Biceps_Brachii": 16.67,
-      "Rhomboids": 10,
-      "Trapezius": 10,
-      "Grip_Forearms": 6.67
+      "Latissimus_Dorsi": 85,
+      "Biceps_Brachii": 25,
+      "Rhomboids": 15,
+      "Trapezius": 15,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -150,11 +150,11 @@
     "difficulty": "Intermediate",
     "variation": "A",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 56.25,
-      "Rhomboids": 15.63,
-      "Trapezius": 12.5,
-      "Biceps_Brachii": 9.38,
-      "Grip_Forearms": 6.25
+      "Latissimus_Dorsi": 90,
+      "Rhomboids": 25,
+      "Trapezius": 20,
+      "Biceps_Brachii": 15,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -165,12 +165,12 @@
     "difficulty": "Advanced",
     "variation": "A/B",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 41.18,
-      "Rhomboids": 14.71,
-      "Trapezius": 11.76,
-      "Biceps_Brachii": 8.82,
-      "Core": 17.65,
-      "Grip_Forearms": 5.88
+      "Latissimus_Dorsi": 70,
+      "Rhomboids": 25,
+      "Trapezius": 20,
+      "Biceps_Brachii": 15,
+      "Core": 30,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -181,13 +181,13 @@
     "difficulty": "Intermediate",
     "variation": "A",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 26.99,
-      "Rhomboids": 22.22,
-      "Trapezius": 20.63,
-      "Rear_Deltoids": 11.11,
-      "Biceps_Brachii": 7.94,
-      "Core": 6.35,
-      "Grip_Forearms": 4.76
+      "Latissimus_Dorsi": 85,
+      "Rhomboids": 70,
+      "Trapezius": 65,
+      "Rear_Deltoids": 35,
+      "Biceps_Brachii": 25,
+      "Core": 20,
+      "Grip_Forearms": 15
     }
   },
   {
@@ -198,10 +198,10 @@
     "difficulty": "Intermediate",
     "variation": "A",
     "muscleEngagement": {
-      "Pectoralis_Major": 56.66,
-      "Triceps_Brachii": 16.67,
-      "Anterior_Deltoids": 20,
-      "Serratus_Anterior": 6.67
+      "Pectoralis_Major": 85,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 30,
+      "Serratus_Anterior": 10
     }
   },
   {
@@ -212,10 +212,10 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Rhomboids": 45.16,
-      "Trapezius": 25.81,
-      "Rear_Deltoids": 19.35,
-      "Core": 9.68
+      "Rhomboids": 70,
+      "Trapezius": 40,
+      "Rear_Deltoids": 30,
+      "Core": 15
     }
   },
   {
@@ -226,8 +226,8 @@
     "difficulty": "Intermediate",
     "variation": "A",
     "muscleEngagement": {
-      "Triceps_Brachii": 73.91,
-      "Anconeus": 26.09
+      "Triceps_Brachii": 85,
+      "Anconeus": 30
     }
   },
   {
@@ -238,10 +238,10 @@
     "difficulty": "Intermediate",
     "variation": "A",
     "muscleEngagement": {
-      "Pectoralis_Major": 50,
-      "Triceps_Brachii": 18.75,
-      "Anterior_Deltoids": 15.63,
-      "Core": 15.63
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 30,
+      "Anterior_Deltoids": 25,
+      "Core": 25
     }
   },
   {
@@ -252,10 +252,10 @@
     "difficulty": "Advanced",
     "variation": "A/B",
     "muscleEngagement": {
-      "Pectoralis_Major": 53.33,
-      "Triceps_Brachii": 16.67,
-      "Anterior_Deltoids": 16.67,
-      "Core": 13.33
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 25,
+      "Core": 20
     }
   },
   {
@@ -266,10 +266,10 @@
     "difficulty": "Advanced",
     "variation": "A/B",
     "muscleEngagement": {
-      "Pectoralis_Major": 50,
-      "Triceps_Brachii": 16.67,
-      "Anterior_Deltoids": 20,
-      "Core": 13.33
+      "Pectoralis_Major": 75,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 30,
+      "Core": 20
     }
   },
   {
@@ -280,10 +280,10 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Latissimus_Dorsi": 46.43,
-      "Pectoralis_Major": 25,
-      "Triceps_Brachii": 17.86,
-      "Serratus_Anterior": 10.71
+      "Latissimus_Dorsi": 65,
+      "Pectoralis_Major": 35,
+      "Triceps_Brachii": 25,
+      "Serratus_Anterior": 15
     }
   },
   {
@@ -294,9 +294,9 @@
     "difficulty": "Advanced",
     "variation": "A/B",
     "muscleEngagement": {
-      "Pectoralis_Major": 66.66,
-      "Triceps_Brachii": 16.67,
-      "Anterior_Deltoids": 16.67
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 20,
+      "Anterior_Deltoids": 20
     }
   },
   {
@@ -307,10 +307,10 @@
     "difficulty": "Beginner",
     "variation": "A/B",
     "muscleEngagement": {
-      "Pectoralis_Major": 53.33,
-      "Triceps_Brachii": 20,
-      "Anterior_Deltoids": 16.67,
-      "Core": 10
+      "Pectoralis_Major": 80,
+      "Triceps_Brachii": 30,
+      "Anterior_Deltoids": 25,
+      "Core": 15
     }
   },
   {
@@ -321,10 +321,10 @@
     "difficulty": "Intermediate",
     "variation": "B",
     "muscleEngagement": {
-      "Pectoralis_Major": 51.72,
-      "Triceps_Brachii": 17.24,
-      "Anterior_Deltoids": 24.14,
-      "Serratus_Anterior": 6.9
+      "Pectoralis_Major": 75,
+      "Triceps_Brachii": 25,
+      "Anterior_Deltoids": 35,
+      "Serratus_Anterior": 10
     }
   },
   {
@@ -335,10 +335,10 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Deltoids": 55.17,
-      "Triceps_Brachii": 20.69,
-      "Trapezius": 13.79,
-      "Serratus_Anterior": 10.34
+      "Deltoids": 80,
+      "Triceps_Brachii": 30,
+      "Trapezius": 20,
+      "Serratus_Anterior": 15
     }
   },
   {
@@ -349,10 +349,10 @@
     "difficulty": "Advanced",
     "variation": "B",
     "muscleEngagement": {
-      "Pectoralis_Major": 37.14,
-      "Triceps_Brachii": 40.01,
-      "Anterior_Deltoids": 17.14,
-      "Core": 5.71
+      "Pectoralis_Major": 65,
+      "Triceps_Brachii": 70,
+      "Anterior_Deltoids": 30,
+      "Core": 10
     }
   },
   {
@@ -363,11 +363,11 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Deltoids": 37.5,
-      "Trapezius": 18.75,
-      "Triceps_Brachii": 15.63,
-      "Core": 18.75,
-      "Grip_Forearms": 9.38
+      "Deltoids": 60,
+      "Trapezius": 30,
+      "Triceps_Brachii": 25,
+      "Core": 30,
+      "Grip_Forearms": 15
     }
   },
   {
@@ -378,10 +378,10 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Deltoids": 43.75,
-      "Triceps_Brachii": 25,
-      "Core": 21.88,
-      "Grip_Forearms": 9.38
+      "Deltoids": 70,
+      "Triceps_Brachii": 40,
+      "Core": 35,
+      "Grip_Forearms": 15
     }
   },
   {
@@ -392,11 +392,11 @@
     "difficulty": "Beginner",
     "variation": "A",
     "muscleEngagement": {
-      "Quadriceps": 39.39,
-      "Gluteus_Maximus": 30.3,
-      "Hamstrings": 12.12,
-      "Core": 15.15,
-      "Grip_Forearms": 3.03
+      "Quadriceps": 65,
+      "Gluteus_Maximus": 50,
+      "Hamstrings": 20,
+      "Core": 25,
+      "Grip_Forearms": 5
     }
   },
   {
@@ -407,11 +407,11 @@
     "difficulty": "Advanced",
     "variation": "A",
     "muscleEngagement": {
-      "Hamstrings": 25.45,
-      "Gluteus_Maximus": 32.73,
-      "Erector_Spinae": 21.82,
-      "Core": 10.91,
-      "Grip_Forearms": 9.09
+      "Hamstrings": 70,
+      "Gluteus_Maximus": 90,
+      "Erector_Spinae": 60,
+      "Core": 30,
+      "Grip_Forearms": 25
     }
   },
   {
@@ -422,8 +422,8 @@
     "difficulty": "Beginner",
     "variation": "A",
     "muscleEngagement": {
-      "Gastrocnemius": 53.33,
-      "Soleus": 46.67
+      "Gastrocnemius": 80,
+      "Soleus": 70
     }
   },
   {
@@ -434,10 +434,10 @@
     "difficulty": "Beginner",
     "variation": "B",
     "muscleEngagement": {
-      "Gluteus_Maximus": 56.25,
-      "Hamstrings": 25,
-      "Core": 12.5,
-      "Quadriceps": 6.25
+      "Gluteus_Maximus": 90,
+      "Hamstrings": 40,
+      "Core": 20,
+      "Quadriceps": 10
     }
   },
   {
@@ -448,10 +448,10 @@
     "difficulty": "Intermediate",
     "variation": "B",
     "muscleEngagement": {
-      "Quadriceps": 33.33,
-      "Gluteus_Maximus": 43.6,
-      "Hamstrings": 15.38,
-      "Erector_Spinae": 7.69
+      "Quadriceps": 65,
+      "Gluteus_Maximus": 85,
+      "Hamstrings": 30,
+      "Erector_Spinae": 15
     }
   },
   {
@@ -462,11 +462,11 @@
     "difficulty": "Advanced",
     "variation": "B",
     "muscleEngagement": {
-      "Gluteus_Maximus": 30,
-      "Hamstrings": 34,
-      "Erector_Spinae": 20,
-      "Core": 10,
-      "Grip_Forearms": 6
+      "Gluteus_Maximus": 75,
+      "Hamstrings": 85,
+      "Erector_Spinae": 50,
+      "Core": 25,
+      "Grip_Forearms": 15
     }
   },
   {
@@ -477,11 +477,11 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Gluteus_Maximus": 36.36,
-      "Hamstrings": 31.82,
-      "Core": 18.18,
-      "Shoulders": 6.82,
-      "Grip_Forearms": 6.82
+      "Gluteus_Maximus": 80,
+      "Hamstrings": 70,
+      "Core": 40,
+      "Shoulders": 15,
+      "Grip_Forearms": 15
     }
   },
   {
@@ -492,10 +492,10 @@
     "difficulty": "Intermediate",
     "variation": "A",
     "muscleEngagement": {
-      "Rectus_Abdominis": 52.29,
-      "Hip_Flexors": 15.03,
-      "Obliques": 26.14,
-      "Grip_Forearms": 6.54
+      "Rectus_Abdominis": 80,
+      "Hip_Flexors": 23,
+      "Obliques": 40,
+      "Grip_Forearms": 10
     }
   },
   {
@@ -506,11 +506,11 @@
     "difficulty": "Intermediate",
     "variation": "A",
     "muscleEngagement": {
-      "Rectus_Abdominis": 42.86,
-      "Transverse_Abdominis": 21.43,
-      "Obliques": 21.43,
-      "Erector_Spinae": 7.14,
-      "Shoulders": 7.14
+      "Rectus_Abdominis": 60,
+      "Transverse_Abdominis": 30,
+      "Obliques": 30,
+      "Erector_Spinae": 10,
+      "Shoulders": 10
     }
   },
   {
@@ -521,11 +521,11 @@
     "difficulty": "Beginner",
     "variation": "A/B",
     "muscleEngagement": {
-      "Transverse_Abdominis": 35.89,
-      "Rectus_Abdominis": 23.08,
-      "Obliques": 17.95,
-      "Shoulders": 12.82,
-      "Glutes": 10.26
+      "Transverse_Abdominis": 70,
+      "Rectus_Abdominis": 45,
+      "Obliques": 35,
+      "Shoulders": 25,
+      "Glutes": 20
     }
   },
   {
@@ -536,11 +536,11 @@
     "difficulty": "Intermediate",
     "variation": "A/B",
     "muscleEngagement": {
-      "Rectus_Abdominis": 34.88,
-      "Hip_Flexors": 27.91,
-      "Obliques": 16.28,
-      "Transverse_Abdominis": 11.63,
-      "Core_Stabilizers": 9.3
+      "Rectus_Abdominis": 75,
+      "Hip_Flexors": 60,
+      "Obliques": 35,
+      "Transverse_Abdominis": 25,
+      "Core_Stabilizers": 20
     }
   }
 ]
