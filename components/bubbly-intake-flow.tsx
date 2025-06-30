@@ -112,7 +112,15 @@ export function BubblyIntakeFlow() {
   const progress = ((currentQuestion + 1) / questions.length) * 100
 
   const handleAnswer = (field: string, value: any) => {
-    setProfile(prev => ({ ...prev, [field]: value }))
+    // Map question IDs to correct profile field names
+    const fieldMapping: Record<string, string> = {
+      'goal': 'primaryGoal',
+      'experience': 'experienceLevel', 
+      'frequency': 'weeklyWorkouts'
+    }
+    
+    const correctField = fieldMapping[field] || field
+    setProfile(prev => ({ ...prev, [correctField]: value }))
     
     // Auto-advance for most question types
     if (currentQuestion < questions.length - 1) {

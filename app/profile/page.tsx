@@ -22,12 +22,37 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load user profile from localStorage
+    // Load user profile from localStorage with migration
     const savedProfile = localStorage.getItem('userProfile');
     if (savedProfile) {
       try {
         const parsedProfile = JSON.parse(savedProfile);
-        setProfile(parsedProfile);
+        
+        // Check if profile needs migration from old format
+        const needsMigration = parsedProfile.goal || parsedProfile.experience || parsedProfile.frequency;
+        
+        if (needsMigration) {
+          console.log('🔄 Migrating profile data from old format...');
+          const migratedProfile = {
+            ...parsedProfile,
+            // Migrate old field names to new field names
+            primaryGoal: parsedProfile.goal || parsedProfile.primaryGoal,
+            experienceLevel: parsedProfile.experience || parsedProfile.experienceLevel,
+            weeklyWorkouts: parsedProfile.frequency || parsedProfile.weeklyWorkouts,
+          };
+          
+          // Remove old field names
+          delete migratedProfile.goal;
+          delete migratedProfile.experience;
+          delete migratedProfile.frequency;
+          
+          // Save migrated data back to localStorage
+          localStorage.setItem('userProfile', JSON.stringify(migratedProfile));
+          console.log('✅ Profile migration complete:', migratedProfile);
+          setProfile(migratedProfile);
+        } else {
+          setProfile(parsedProfile);
+        }
       } catch (error) {
         console.error('Error parsing user profile:', error);
       }
