@@ -45,11 +45,28 @@ export default function SavedWorkoutsPage() {
         const stored = localStorage.getItem('fitforge_workout_templates')
         if (stored) {
           const parsed = JSON.parse(stored)
-          setTemplates(parsed)
-          setFilteredTemplates(parsed)
+          // Validate that parsed data is an array
+          if (Array.isArray(parsed)) {
+            setTemplates(parsed)
+            setFilteredTemplates(parsed)
+          } else {
+            console.error('Invalid template data format')
+            setTemplates([])
+            setFilteredTemplates([])
+            // Attempt to fix corrupted data
+            localStorage.removeItem('fitforge_workout_templates')
+          }
         }
       } catch (error) {
         console.error('Error loading templates:', error)
+        if (error instanceof SyntaxError) {
+          // Corrupted JSON data
+          console.error('Corrupted template data, clearing storage')
+          localStorage.removeItem('fitforge_workout_templates')
+          alert('Template data was corrupted and has been cleared. Please recreate your templates.')
+        }
+        setTemplates([])
+        setFilteredTemplates([])
       } finally {
         setLoading(false)
       }
@@ -80,24 +97,40 @@ export default function SavedWorkoutsPage() {
   const handleDelete = (id: string) => {
     // For now, use confirm. In production, would use a proper modal
     if (confirm('Are you sure you want to delete this template?')) {
-      const updated = templates.filter(t => t.id !== id)
-      setTemplates(updated)
-      localStorage.setItem('fitforge_workout_templates', JSON.stringify(updated))
+      try {
+        const updated = templates.filter(t => t.id !== id)
+        setTemplates(updated)
+        localStorage.setItem('fitforge_workout_templates', JSON.stringify(updated))
+      } catch (error) {
+        console.error('Error deleting template:', error)
+        alert('Failed to delete template. Please try again.')
+        // Reload templates to ensure consistency
+        window.location.reload()
+      }
     }
   }
 
   const handleDuplicate = (template: WorkoutTemplate) => {
-    const duplicate = {
-      ...template,
-      id: Date.now().toString(),
-      name: `${template.name} (Copy)`,
-      createdAt: new Date().toISOString(),
-      timesUsed: 0,
-      lastUsedAt: undefined
+    try {
+      const duplicate = {
+        ...template,
+        id: Date.now().toString(),
+        name: `${template.name} (Copy)`,
+        createdAt: new Date().toISOString(),
+        timesUsed: 0,
+        lastUsedAt: undefined
+      }
+      const updated = [...templates, duplicate]
+      localStorage.setItem('fitforge_workout_templates', JSON.stringify(updated))
+      setTemplates(updated)
+    } catch (error) {
+      console.error('Error duplicating template:', error)
+      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+        alert('Storage limit reached. Please delete some templates before duplicating.')
+      } else {
+        alert('Failed to duplicate template. Please try again.')
+      }
     }
-    const updated = [...templates, duplicate]
-    setTemplates(updated)
-    localStorage.setItem('fitforge_workout_templates', JSON.stringify(updated))
   }
 
   const handleEdit = (id: string) => {

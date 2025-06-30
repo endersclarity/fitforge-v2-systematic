@@ -200,7 +200,20 @@ export default function WorkoutBuilderPage() {
       }, 3000);
     } catch (error) {
       console.error('Error saving workout template:', error);
-      alert('Failed to save workout template');
+      
+      // Check for specific localStorage errors
+      if (error instanceof DOMException) {
+        if (error.name === 'QuotaExceededError') {
+          alert('Storage limit reached. Please delete some templates before saving new ones.');
+        } else {
+          alert('Failed to save workout template. Please try again.');
+        }
+      } else if (error instanceof SyntaxError) {
+        // Corrupted localStorage data
+        alert('Template storage is corrupted. Please clear your browser data and try again.');
+      } else {
+        alert('Failed to save workout template. Please try again.');
+      }
     }
   };
 
