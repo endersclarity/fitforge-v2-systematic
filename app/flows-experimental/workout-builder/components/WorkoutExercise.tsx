@@ -56,7 +56,7 @@ export function WorkoutExercise({ exercise, index, onUpdate, onRemove }: Workout
       ref={setNodeRef}
       style={style}
       className="bg-fitbod-card rounded-lg border border-fitbod-subtle p-4 shadow-sm"
-      data-testid={`draggable-exercise-${index}`}
+      data-testid="workout-exercise"
     >
       <div className="flex items-start gap-3">
         {/* Drag Handle */}

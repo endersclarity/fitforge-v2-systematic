@@ -37,10 +37,7 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // Firefox removed - 3% market share, constant timing failures, not worth it
   ],
 
   webServer: {

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Metadata } from 'next';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -41,6 +41,7 @@ export default function WorkoutBuilderPage() {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [workoutName, setWorkoutName] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [existingTemplateNames, setExistingTemplateNames] = useState<string[]>([]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -48,6 +49,53 @@ export default function WorkoutBuilderPage() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Load template if editing
+  useEffect(() => {
+    const templateId = sessionStorage.getItem('editTemplateId');
+    if (templateId) {
+      const stored = localStorage.getItem('fitforge_workout_templates');
+      if (stored) {
+        const templates = JSON.parse(stored);
+        const template = templates.find((t: any) => t.id === templateId);
+        if (template) {
+          setWorkoutName(template.name);
+          
+          // Convert template exercises to workout exercises
+          const loadedExercises = template.exercises.map((ex: any, index: number) => ({
+            id: `${ex.exerciseId}-${Date.now()}-${index}`,
+            exerciseId: ex.exerciseId,
+            name: ex.exerciseName || exercises.find(e => e.id === ex.exerciseId)?.name || ex.exerciseId,
+            sets: ex.targetSets,
+            reps: ex.targetRepsMin || ex.targetRepsMax || 10,
+            weight: ex.targetWeight || 0,
+            restTime: ex.restTimeSeconds || 90,
+            orderIndex: ex.orderIndex || index,
+            isSuperset: ex.isSuperset || false,
+            supersetGroup: ex.supersetGroup
+          }));
+          
+          setWorkoutExercises(loadedExercises);
+        }
+      }
+      // Clear the edit template ID
+      sessionStorage.removeItem('editTemplateId');
+    }
+  }, [exercises]);
+
+  // Load existing template names for validation
+  useEffect(() => {
+    const stored = localStorage.getItem('fitforge_workout_templates');
+    if (stored) {
+      try {
+        const templates = JSON.parse(stored);
+        const names = templates.map((t: any) => t.name);
+        setExistingTemplateNames(names);
+      } catch (error) {
+        console.error('Error loading template names:', error);
+      }
+    }
+  }, [showSaveModal]); // Reload when save modal opens
 
   const handleAddExercise = (exercise: Exercise) => {
     const newWorkoutExercise: WorkoutExerciseData = {
@@ -116,17 +164,57 @@ export default function WorkoutBuilderPage() {
     setShowSaveModal(true);
   };
 
-  const handleWorkoutSaved = () => {
-    // Could integrate with workout template service here
-    setShowSuccessMessage(true);
-    setShowSaveModal(false);
-    setWorkoutExercises([]);
-    setWorkoutName('');
+  const handleWorkoutSaved = (workoutData: any) => {
+    // Create template object
+    const template = {
+      id: Date.now().toString(),
+      name: workoutData.name,
+      type: workoutData.type,
+      category: workoutData.category,
+      exercises: workoutData.exercises.map((ex: any) => ({
+        ...ex,
+        exerciseName: exercises.find(e => e.id === ex.exerciseId)?.name || ex.exerciseId
+      })),
+      estimatedDuration: workoutData.estimatedDuration,
+      createdAt: new Date().toISOString(),
+      timesUsed: 0
+    };
     
-    // Hide success message after 3 seconds
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-    }, 3000);
+    // Save to localStorage
+    // NOTE: localStorage has a 5MB limit. Each template is ~2KB, allowing ~2500 templates
+    // TODO: Implement storage quota check and migrate to IndexedDB for larger datasets
+    try {
+      const existing = localStorage.getItem('fitforge_workout_templates');
+      const templates = existing ? JSON.parse(existing) : [];
+      templates.push(template);
+      localStorage.setItem('fitforge_workout_templates', JSON.stringify(templates));
+      
+      setShowSuccessMessage(true);
+      setShowSaveModal(false);
+      setWorkoutExercises([]);
+      setWorkoutName('');
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Error saving workout template:', error);
+      
+      // Check for specific localStorage errors
+      if (error instanceof DOMException) {
+        if (error.name === 'QuotaExceededError') {
+          alert('Storage limit reached. Please delete some templates before saving new ones.');
+        } else {
+          alert('Failed to save workout template. Please try again.');
+        }
+      } else if (error instanceof SyntaxError) {
+        // Corrupted localStorage data
+        alert('Template storage is corrupted. Please clear your browser data and try again.');
+      } else {
+        alert('Failed to save workout template. Please try again.');
+      }
+    }
   };
 
   return (
@@ -146,6 +234,7 @@ export default function WorkoutBuilderPage() {
               className="px-4 py-2 bg-fitbod-accent text-white rounded disabled:opacity-50 hover:bg-fitbod-accent/90"
               onClick={handleSaveWorkout}
               disabled={workoutExercises.length === 0}
+              data-testid="save-workout-button"
             >
               Save Workout
             </button>
@@ -169,6 +258,7 @@ export default function WorkoutBuilderPage() {
               <button 
                 className="px-6 py-3 bg-fitbod-accent text-white rounded-lg font-medium hover:bg-fitbod-accent/90"
                 onClick={() => setShowExerciseSelector(true)}
+                data-testid="add-exercise-button"
               >
                 Add an exercise
               </button>
@@ -184,6 +274,7 @@ export default function WorkoutBuilderPage() {
               <button 
                 className="px-4 py-2 bg-fitbod-accent text-white rounded font-medium hover:bg-fitbod-accent/90"
                 onClick={() => setShowExerciseSelector(true)}
+                data-testid="add-exercise-button"
               >
                 Add an exercise
               </button>
@@ -229,6 +320,7 @@ export default function WorkoutBuilderPage() {
             workoutExercises={workoutExercises}
             onSave={handleWorkoutSaved}
             onClose={() => setShowSaveModal(false)}
+            existingTemplateNames={existingTemplateNames}
           />
         )}
       </div>
