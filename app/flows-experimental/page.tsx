@@ -39,7 +39,7 @@ export default function ExperimentalFlowsLanding() {
       description: 'Visual muscle recovery tracking and fatigue management',
       icon: Heart,
       route: '/flows-experimental/recovery',
-      status: 'coming-soon'
+      status: 'active'
     }
   ]
 
