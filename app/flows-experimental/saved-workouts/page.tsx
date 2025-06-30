@@ -58,13 +58,6 @@ export default function SavedWorkoutsPage() {
         const storageInfo = LocalStorageService.getStorageInfo()
         if (storageInfo.percentage > 80) {
           setStorageWarning(true)
-          } else {
-            console.error('Invalid template data format')
-            setTemplates([])
-            setFilteredTemplates([])
-            // Attempt to fix corrupted data
-            localStorage.removeItem('fitforge_workout_templates')
-          }
         }
       } catch (error) {
         console.error('Error loading templates:', error)

@@ -1,4 +1,3 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { LocalStorageService } from '../localStorage-service'
 
 // Mock localStorage
@@ -171,14 +170,14 @@ describe('LocalStorageService', () => {
 
     it('should reject adding template when storage is full', () => {
       // Mock canStore to return false
-      vi.spyOn(LocalStorageService, 'canStore').mockReturnValue(false)
+      jest.spyOn(LocalStorageService, 'canStore').mockReturnValue(false)
       
       const result = LocalStorageService.addTemplate({ id: '1', name: 'Test' })
       
       expect(result.success).toBe(false)
       expect(result.error).toContain('Not enough storage space')
       
-      vi.restoreAllMocks()
+      jest.restoreAllMocks()
     })
   })
 

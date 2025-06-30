@@ -95,7 +95,7 @@ export class LocalStorageService {
     } catch (error) {
       console.error('Error saving templates:', error)
       
-      if (error instanceof DOMException && error.name === 'QuotaExceededError') {
+      if (error instanceof Error && error.name === 'QuotaExceededError') {
         return {
           success: false,
           error: 'Storage quota exceeded. Please delete some templates before saving.'
