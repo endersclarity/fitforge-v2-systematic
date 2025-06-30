@@ -1,0 +1,62 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "FitForge":
+    - /url: /
+    - img
+    - text: FitForge
+  - link "Dashboard":
+    - /url: /dashboard
+    - img
+    - text: Dashboard
+  - link "Start Workout":
+    - /url: /push-pull-legs
+    - img
+    - text: Start Workout
+  - link "Exercise Library":
+    - /url: /muscle-explorer
+    - img
+    - text: Exercise Library
+  - link "Analytics":
+    - /url: /analytics
+    - img
+    - text: Analytics
+  - link "Profile":
+    - /url: /profile
+    - img
+    - text: Profile
+  - link "Debug":
+    - /url: /debug-storage
+    - img
+    - text: Debug
+  - link "Quick Log":
+    - /url: /workout-simple
+    - img
+    - text: Quick Log
+  - button "Toggle theme":
+    - img
+    - img
+    - text: Toggle theme
+- main:
+  - button:
+    - img
+  - heading "Build Your Push Workout" [level=1]
+  - paragraph: Add exercises from Push A, Push B, or shared exercises
+  - text: Push A
+  - paragraph: "Shared (A/B):"
+  - text: Push B
+  - paragraph: "Shared (A/B):"
+  - text: Your Workout
+  - img
+  - text: 0min
+  - paragraph: Add exercises to build your workout
+  - text: Muscle Fatigue Map
+  - paragraph: Add exercises to see muscle fatigue levels
+- contentinfo:
+  - heading "FitForge" [level=3]
+  - paragraph: Smart fitness tracking with progressive overload intelligence
+  - text: 📱 Mobile Optimized 💾 Local Storage 📈 Smart Progression
+  - paragraph: Built with localStorage-first architecture • No backend required • Your data stays on your device
+- region "Notifications alt+T"
+```

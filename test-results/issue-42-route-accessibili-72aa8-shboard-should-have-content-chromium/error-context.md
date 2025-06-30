@@ -1,0 +1,68 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - link "FitForge":
+    - /url: /
+    - img
+    - text: FitForge
+  - link "Dashboard":
+    - /url: /dashboard
+    - img
+    - text: Dashboard
+  - link "Start Workout":
+    - /url: /push-pull-legs
+    - img
+    - text: Start Workout
+  - link "Exercise Library":
+    - /url: /muscle-explorer
+    - img
+    - text: Exercise Library
+  - link "Analytics":
+    - /url: /analytics
+    - img
+    - text: Analytics
+  - link "Profile":
+    - /url: /profile
+    - img
+    - text: Profile
+  - link "Debug":
+    - /url: /debug-storage
+    - img
+    - text: Debug
+  - link "Quick Log":
+    - /url: /workout-simple
+    - img
+    - text: Quick Log
+  - button "Toggle theme":
+    - img
+    - img
+    - text: Toggle theme
+- main:
+  - button:
+    - img
+  - heading "Recovery Dashboard" [level=1]
+  - paragraph: Muscle recovery tracking and fatigue management
+  - button "Edit":
+    - img
+    - text: Edit
+  - text: Fresh Muscles 0 ready to train Recovering 0 partially ready Fatigued 0 need rest
+  - img
+  - text: Muscle Heat Map Visual representation of muscle fatigue levels NaN% Overall 0 Ready 0 Fatigued
+  - heading "Upper Body" [level=4]
+  - heading "Lower Body" [level=4]
+  - heading "Core" [level=4]
+  - heading "Fatigue Scale" [level=4]
+  - text: Recovered Light Moderate High Severe Muscle Recovery Status Detailed recovery percentages by muscle group
+  - img
+  - text: Training Recommendations
+- contentinfo:
+  - heading "FitForge" [level=3]
+  - paragraph: Smart fitness tracking with progressive overload intelligence
+  - text: 📱 Mobile Optimized 💾 Local Storage 📈 Smart Progression
+  - paragraph: Built with localStorage-first architecture • No backend required • Your data stays on your device
+- region "Notifications alt+T"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```
