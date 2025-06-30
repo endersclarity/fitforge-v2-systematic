@@ -34,6 +34,10 @@ export default function SavedWorkoutsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [loading, setLoading] = useState(true)
 
+  // IMPORTANT: localStorage has a 5MB limit across all stored data
+  // With average template size of ~2KB, this allows for ~2500 templates
+  // Future implementation should migrate to IndexedDB or server storage
+
   // Load templates from localStorage
   useEffect(() => {
     const loadTemplates = () => {

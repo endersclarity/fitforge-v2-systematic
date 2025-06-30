@@ -181,6 +181,8 @@ export default function WorkoutBuilderPage() {
     };
     
     // Save to localStorage
+    // NOTE: localStorage has a 5MB limit. Each template is ~2KB, allowing ~2500 templates
+    // TODO: Implement storage quota check and migrate to IndexedDB for larger datasets
     try {
       const existing = localStorage.getItem('fitforge_workout_templates');
       const templates = existing ? JSON.parse(existing) : [];
