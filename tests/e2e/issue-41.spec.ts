@@ -145,7 +145,92 @@ test.describe('Issue #41: Profile page schema fix', () => {
     await expect(page.locator('text=Loading profile...')).not.toBeVisible();
   });
 
-  test('should navigate to intake form when editing profile', async ({ page }) => {
+  test('should enable edit mode and show form inputs when clicking Edit Profile', async ({ page }) => {
+    // Set up valid profile data
+    await page.goto('http://localhost:8080');
+    await page.evaluate(() => {
+      const profileData = {
+        name: 'Edit Test User',
+        age: 28,
+        primaryGoal: 'strength',
+        experienceLevel: 'intermediate',
+        weeklyWorkouts: 4,
+        availableEquipment: ['Dumbbells', 'Barbell']
+      };
+      localStorage.setItem('userProfile', JSON.stringify(profileData));
+    });
+    
+    // Navigate to profile page
+    await page.goto('http://localhost:8080/profile');
+    
+    // Click Edit Profile button
+    await page.click('button:has-text("Edit Profile")');
+    
+    // Should show Save and Cancel buttons
+    await expect(page.locator('button:has-text("Save Changes")')).toBeVisible();
+    await expect(page.locator('button:has-text("Cancel")')).toBeVisible();
+    
+    // Should show input fields instead of text
+    await expect(page.locator('input[type="text"][value="Edit Test User"]')).toBeVisible();
+    await expect(page.locator('input[type="number"][value="28"]')).toBeVisible();
+    
+    // Should show select dropdowns
+    await expect(page.locator('button[role="combobox"]')).toHaveCount(3); // Goal, Experience, Weekly workouts
+  });
+
+  test('should save profile changes when clicking Save Changes', async ({ page }) => {
+    // Set up profile data
+    await page.goto('http://localhost:8080');
+    await page.evaluate(() => {
+      const profileData = {
+        name: 'Original Name',
+        age: 25,
+        primaryGoal: 'strength',
+        experienceLevel: 'beginner',
+        weeklyWorkouts: 3,
+        availableEquipment: ['Dumbbells']
+      };
+      localStorage.setItem('userProfile', JSON.stringify(profileData));
+    });
+    
+    // Navigate to profile page
+    await page.goto('http://localhost:8080/profile');
+    
+    // Enter edit mode
+    await page.click('button:has-text("Edit Profile")');
+    
+    // Modify the name
+    const nameInput = page.locator('input[type="text"]').first();
+    await nameInput.clear();
+    await nameInput.fill('Updated Name');
+    
+    // Modify the age
+    const ageInput = page.locator('input[type="number"]').first();
+    await ageInput.clear();
+    await ageInput.fill('30');
+    
+    // Save changes
+    await page.click('button:has-text("Save Changes")');
+    
+    // Should exit edit mode
+    await expect(page.locator('button:has-text("Edit Profile")')).toBeVisible();
+    await expect(page.locator('button:has-text("Save Changes")')).not.toBeVisible();
+    
+    // Should display updated values
+    await expect(page.locator('text=Updated Name')).toBeVisible();
+    await expect(page.locator('text=30 years old')).toBeVisible();
+    
+    // Verify localStorage was updated
+    const updatedProfile = await page.evaluate(() => {
+      const data = localStorage.getItem('userProfile');
+      return data ? JSON.parse(data) : null;
+    });
+    
+    expect(updatedProfile.name).toBe('Updated Name');
+    expect(updatedProfile.age).toBe(30);
+  });
+
+  test('should cancel edit mode without saving changes', async ({ page }) => {
     // Set up valid profile data
     await page.goto('http://localhost:8080');
     await page.evaluate(() => {
@@ -163,11 +248,31 @@ test.describe('Issue #41: Profile page schema fix', () => {
     // Navigate to profile page
     await page.goto('http://localhost:8080/profile');
     
-    // Click Edit Profile button
+    // Enter edit mode
     await page.click('button:has-text("Edit Profile")');
     
-    // Should navigate to intake form
-    await page.waitForURL('**/intake');
-    await expect(page.locator('text=Hi there! 👋')).toBeVisible();
+    // Modify the name but don't save
+    const nameInput = page.locator('input[type="text"]').first();
+    await nameInput.clear();
+    await nameInput.fill('This should not be saved');
+    
+    // Click Cancel
+    await page.click('button:has-text("Cancel")');
+    
+    // Should exit edit mode
+    await expect(page.locator('button:has-text("Edit Profile")')).toBeVisible();
+    await expect(page.locator('button:has-text("Cancel")')).not.toBeVisible();
+    
+    // Should still show original values
+    await expect(page.locator('text=Edit Test')).toBeVisible();
+    await expect(page.locator('text=This should not be saved')).not.toBeVisible();
+    
+    // Verify localStorage was NOT updated
+    const profileData = await page.evaluate(() => {
+      const data = localStorage.getItem('userProfile');
+      return data ? JSON.parse(data) : null;
+    });
+    
+    expect(profileData.name).toBe('Edit Test'); // Original name preserved
   });
 });
