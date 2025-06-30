@@ -117,6 +117,7 @@ export function SaveWorkoutModal({ workoutExercises, onSave, onClose }: SaveWork
               value={category}
               onChange={(e) => setCategory(e.target.value as any)}
               className="w-full px-3 py-2 border border-fitbod-subtle rounded-md focus:ring-2 focus:ring-fitbod-accent focus:border-fitbod-accent bg-fitbod-background text-fitbod-text"
+              data-testid="workout-category-select"
             >
               <option value="general">General Fitness</option>
               <option value="strength">Strength</option>
