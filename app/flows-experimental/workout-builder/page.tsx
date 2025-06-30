@@ -204,6 +204,7 @@ export default function WorkoutBuilderPage() {
               className="px-4 py-2 bg-fitbod-accent text-white rounded disabled:opacity-50 hover:bg-fitbod-accent/90"
               onClick={handleSaveWorkout}
               disabled={workoutExercises.length === 0}
+              data-testid="save-workout-button"
             >
               Save Workout
             </button>
@@ -227,6 +228,7 @@ export default function WorkoutBuilderPage() {
               <button 
                 className="px-6 py-3 bg-fitbod-accent text-white rounded-lg font-medium hover:bg-fitbod-accent/90"
                 onClick={() => setShowExerciseSelector(true)}
+                data-testid="add-exercise-button"
               >
                 Add an exercise
               </button>
@@ -242,6 +244,7 @@ export default function WorkoutBuilderPage() {
               <button 
                 className="px-4 py-2 bg-fitbod-accent text-white rounded font-medium hover:bg-fitbod-accent/90"
                 onClick={() => setShowExerciseSelector(true)}
+                data-testid="add-exercise-button"
               >
                 Add an exercise
               </button>

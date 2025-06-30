@@ -26,6 +26,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
       
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
+      
       // Save the workout
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Test Push Workout');
@@ -50,6 +53,13 @@ test.describe('Issue #34: Workout Template Management', () => {
       // Add exercises
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
+      
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Tricep Extension').first().click();
       
@@ -73,6 +83,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       await page.goto('http://localhost:8080/flows-experimental/workout-builder');
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Template to Load');
       await page.locator('button:has-text("Save Template")').click();
@@ -94,6 +107,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       await page.goto('http://localhost:8080/flows-experimental/workout-builder');
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Template to Delete');
       await page.locator('button:has-text("Save Template")').click();
@@ -116,6 +132,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       await page.goto('http://localhost:8080/flows-experimental/workout-builder');
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Original Template');
       await page.locator('button:has-text("Save Template")').click();
@@ -138,6 +157,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       await page.goto('http://localhost:8080/flows-experimental/workout-builder');
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Workout to Execute');
       await page.locator('button:has-text("Save Template")').click();
@@ -163,6 +185,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       // Create strength template
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Strength Template');
       await page.locator('select[name="category"]').selectOption('strength');
@@ -194,6 +219,9 @@ test.describe('Issue #34: Workout Template Management', () => {
       // Template 1
       await page.getByTestId('add-exercise-button').click();
       await page.locator('text=Bench Press').first().click();
+      
+      // Wait for modal to close
+      await page.waitForSelector('[data-testid="exercise-selector-modal"]', { state: 'hidden' });
       await page.getByTestId('save-workout-button').click();
       await page.getByTestId('workout-name-input').fill('Upper Body Power');
       await page.locator('button:has-text("Save Template")').click();
