@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Edit, User, Target, Dumbbell, Calendar, Settings } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ArrowLeft, Edit, User, Target, Dumbbell, Calendar, Settings, Save, X, Check } from 'lucide-react';
 
 interface UserProfile {
   name: string;
@@ -20,14 +22,41 @@ export default function ProfilePage() {
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
+  const [editedProfile, setEditedProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    // Load user profile from localStorage
+    // Load user profile from localStorage with migration
     const savedProfile = localStorage.getItem('userProfile');
     if (savedProfile) {
       try {
         const parsedProfile = JSON.parse(savedProfile);
-        setProfile(parsedProfile);
+        
+        // Check if profile needs migration from old format
+        const needsMigration = parsedProfile.goal || parsedProfile.experience || parsedProfile.frequency;
+        
+        if (needsMigration) {
+          console.log('🔄 Migrating profile data from old format...');
+          const migratedProfile = {
+            ...parsedProfile,
+            // Migrate old field names to new field names
+            primaryGoal: parsedProfile.goal || parsedProfile.primaryGoal,
+            experienceLevel: parsedProfile.experience || parsedProfile.experienceLevel,
+            weeklyWorkouts: parsedProfile.frequency || parsedProfile.weeklyWorkouts,
+          };
+          
+          // Remove old field names
+          delete migratedProfile.goal;
+          delete migratedProfile.experience;
+          delete migratedProfile.frequency;
+          
+          // Save migrated data back to localStorage
+          localStorage.setItem('userProfile', JSON.stringify(migratedProfile));
+          console.log('✅ Profile migration complete:', migratedProfile);
+          setProfile(migratedProfile);
+        } else {
+          setProfile(parsedProfile);
+        }
       } catch (error) {
         console.error('Error parsing user profile:', error);
       }
@@ -36,9 +65,46 @@ export default function ProfilePage() {
   }, []);
 
   const handleEditProfile = () => {
-    // Navigate to intake form to re-do setup
-    router.push('/intake');
+    setEditMode(true);
+    setEditedProfile(profile);
   };
+
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setEditedProfile(null);
+  };
+
+  const handleSaveProfile = () => {
+    if (editedProfile) {
+      // Save to localStorage
+      localStorage.setItem('userProfile', JSON.stringify(editedProfile));
+      setProfile(editedProfile);
+      setEditMode(false);
+      setEditedProfile(null);
+    }
+  };
+
+  const handleEquipmentToggle = (equipment: string) => {
+    if (!editedProfile) return;
+    const currentEquipment = editedProfile.availableEquipment || [];
+    const newEquipment = currentEquipment.includes(equipment)
+      ? currentEquipment.filter(e => e !== equipment)
+      : [...currentEquipment, equipment];
+    setEditedProfile({ ...editedProfile, availableEquipment: newEquipment });
+  };
+
+  const availableEquipmentOptions = [
+    'Dumbbells',
+    'Barbell',
+    'Pull-up Bar',
+    'Resistance Bands',
+    'Cable Machine',
+    'Kettlebells',
+    'Medicine Ball',
+    'Bench',
+    'Squat Rack',
+    'Full Gym Access'
+  ];
 
   const getGoalColor = (goal: string) => {
     if (!goal) return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400';
@@ -129,13 +195,33 @@ export default function ProfilePage() {
             </div>
           </div>
           
-          <Button
-            onClick={handleEditProfile}
-            className="bg-fitbod-accent hover:bg-red-600 text-white"
-          >
-            <Edit className="h-4 w-4 mr-2" />
-            Edit Profile
-          </Button>
+          {editMode ? (
+            <div className="flex gap-2">
+              <Button
+                onClick={handleCancelEdit}
+                variant="outline"
+                className="border-fitbod-subtle text-fitbod-text hover:bg-fitbod-subtle"
+              >
+                <X className="h-4 w-4 mr-2" />
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveProfile}
+                className="bg-fitbod-accent hover:bg-red-600 text-white"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Save Changes
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={handleEditProfile}
+              className="bg-fitbod-accent hover:bg-red-600 text-white"
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Profile
+            </Button>
+          )}
         </div>
 
         {/* Profile Cards */}
@@ -151,11 +237,33 @@ export default function ProfilePage() {
             <CardContent className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-fitbod-text-secondary">Name</label>
-                <p className="text-lg font-semibold text-fitbod-text">{profile.name}</p>
+                {editMode && editedProfile ? (
+                  <Input
+                    type="text"
+                    value={editedProfile.name}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, name: e.target.value })}
+                    className="mt-1 bg-fitbod-background border-fitbod-subtle text-fitbod-text"
+                    placeholder="Enter your name"
+                  />
+                ) : (
+                  <p className="text-lg font-semibold text-fitbod-text">{profile.name}</p>
+                )}
               </div>
               <div>
                 <label className="text-sm font-medium text-fitbod-text-secondary">Age</label>
-                <p className="text-lg font-semibold text-fitbod-text">{profile.age} years old</p>
+                {editMode && editedProfile ? (
+                  <Input
+                    type="number"
+                    value={editedProfile.age}
+                    onChange={(e) => setEditedProfile({ ...editedProfile, age: parseInt(e.target.value) || 0 })}
+                    className="mt-1 bg-fitbod-background border-fitbod-subtle text-fitbod-text"
+                    placeholder="Enter your age"
+                    min="10"
+                    max="100"
+                  />
+                ) : (
+                  <p className="text-lg font-semibold text-fitbod-text">{profile.age} years old</p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -169,12 +277,38 @@ export default function ProfilePage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Badge className={`text-sm px-3 py-1 ${getGoalColor(profile.primaryGoal)}`}>
-                {profile.primaryGoal}
-              </Badge>
-              <p className="text-sm text-fitbod-text-secondary mt-2">
-                Your workouts are optimized for this goal
-              </p>
+              {editMode && editedProfile ? (
+                <div className="space-y-2">
+                  <Select
+                    value={editedProfile.primaryGoal}
+                    onValueChange={(value) => setEditedProfile({ ...editedProfile, primaryGoal: value })}
+                  >
+                    <SelectTrigger className="bg-fitbod-background border-fitbod-subtle text-fitbod-text">
+                      <SelectValue placeholder="Select your goal" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-fitbod-card border-fitbod-subtle">
+                      <SelectItem value="strength">Build Strength</SelectItem>
+                      <SelectItem value="muscle">Build Muscle</SelectItem>
+                      <SelectItem value="weight_loss">Lose Weight</SelectItem>
+                      <SelectItem value="fitness">General Fitness</SelectItem>
+                      <SelectItem value="endurance">Improve Endurance</SelectItem>
+                      <SelectItem value="hypertrophy">Hypertrophy</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-fitbod-text-secondary">
+                    Your workouts are optimized for this goal
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <Badge className={`text-sm px-3 py-1 ${getGoalColor(profile.primaryGoal)}`}>
+                    {profile.primaryGoal}
+                  </Badge>
+                  <p className="text-sm text-fitbod-text-secondary mt-2">
+                    Your workouts are optimized for this goal
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -187,12 +321,35 @@ export default function ProfilePage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Badge className={`text-sm px-3 py-1 ${getExperienceColor(profile.experienceLevel)}`}>
-                {profile.experienceLevel}
-              </Badge>
-              <p className="text-sm text-fitbod-text-secondary mt-2">
-                Exercise difficulty is tailored to your level
-              </p>
+              {editMode && editedProfile ? (
+                <div className="space-y-2">
+                  <Select
+                    value={editedProfile.experienceLevel}
+                    onValueChange={(value) => setEditedProfile({ ...editedProfile, experienceLevel: value })}
+                  >
+                    <SelectTrigger className="bg-fitbod-background border-fitbod-subtle text-fitbod-text">
+                      <SelectValue placeholder="Select your experience level" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-fitbod-card border-fitbod-subtle">
+                      <SelectItem value="beginner">Beginner</SelectItem>
+                      <SelectItem value="intermediate">Intermediate</SelectItem>
+                      <SelectItem value="advanced">Advanced</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-fitbod-text-secondary">
+                    Exercise difficulty is tailored to your level
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <Badge className={`text-sm px-3 py-1 ${getExperienceColor(profile.experienceLevel)}`}>
+                    {profile.experienceLevel}
+                  </Badge>
+                  <p className="text-sm text-fitbod-text-secondary mt-2">
+                    Exercise difficulty is tailored to your level
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -205,15 +362,42 @@ export default function ProfilePage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-fitbod-text">
-                {profile.weeklyWorkouts} 
-                <span className="text-sm font-normal text-fitbod-text-secondary ml-1">
-                  workouts per week
-                </span>
-              </p>
-              <p className="text-sm text-fitbod-text-secondary mt-2">
-                Volume recommendations based on your schedule
-              </p>
+              {editMode && editedProfile ? (
+                <div className="space-y-2">
+                  <Select
+                    value={editedProfile.weeklyWorkouts.toString()}
+                    onValueChange={(value) => setEditedProfile({ ...editedProfile, weeklyWorkouts: parseInt(value) })}
+                  >
+                    <SelectTrigger className="bg-fitbod-background border-fitbod-subtle text-fitbod-text">
+                      <SelectValue placeholder="Select weekly workouts" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-fitbod-card border-fitbod-subtle">
+                      <SelectItem value="1">1 workout per week</SelectItem>
+                      <SelectItem value="2">2 workouts per week</SelectItem>
+                      <SelectItem value="3">3 workouts per week</SelectItem>
+                      <SelectItem value="4">4 workouts per week</SelectItem>
+                      <SelectItem value="5">5 workouts per week</SelectItem>
+                      <SelectItem value="6">6 workouts per week</SelectItem>
+                      <SelectItem value="7">7 workouts per week</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-fitbod-text-secondary">
+                    Volume recommendations based on your schedule
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <p className="text-2xl font-bold text-fitbod-text">
+                    {profile.weeklyWorkouts} 
+                    <span className="text-sm font-normal text-fitbod-text-secondary ml-1">
+                      workouts per week
+                    </span>
+                  </p>
+                  <p className="text-sm text-fitbod-text-secondary mt-2">
+                    Volume recommendations based on your schedule
+                  </p>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
@@ -227,20 +411,51 @@ export default function ProfilePage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {profile.availableEquipment.map((equipment, index) => (
-                <Badge
-                  key={index}
-                  variant="outline"
-                  className="text-fitbod-text border-fitbod-subtle"
-                >
-                  {equipment}
-                </Badge>
-              ))}
-            </div>
-            <p className="text-sm text-fitbod-text-secondary mt-3">
-              Exercise recommendations are filtered to your available equipment
-            </p>
+            {editMode && editedProfile ? (
+              <div>
+                <div className="flex flex-wrap gap-2">
+                  {availableEquipmentOptions.map((equipment) => {
+                    const isSelected = editedProfile.availableEquipment.includes(equipment);
+                    return (
+                      <button
+                        key={equipment}
+                        onClick={() => handleEquipmentToggle(equipment)}
+                        className={`
+                          px-3 py-1 rounded-full text-sm font-medium transition-all
+                          ${isSelected
+                            ? 'bg-fitbod-accent text-white'
+                            : 'bg-fitbod-background border border-fitbod-subtle text-fitbod-text hover:bg-fitbod-subtle'
+                          }
+                        `}
+                      >
+                        {isSelected && <Check className="inline h-3 w-3 mr-1" />}
+                        {equipment}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-sm text-fitbod-text-secondary mt-3">
+                  Select all equipment you have access to
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-wrap gap-2">
+                  {profile.availableEquipment.map((equipment, index) => (
+                    <Badge
+                      key={index}
+                      variant="outline"
+                      className="text-fitbod-text border-fitbod-subtle"
+                    >
+                      {equipment}
+                    </Badge>
+                  ))}
+                </div>
+                <p className="text-sm text-fitbod-text-secondary mt-3">
+                  Exercise recommendations are filtered to your available equipment
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
 
