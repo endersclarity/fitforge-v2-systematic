@@ -8,6 +8,8 @@ import { calculateMuscleVolume, getRecentWorkoutData } from "@/lib/muscle-volume
 import { WorkoutRoutineDisplay } from "@/components/workout-routine-display"
 import { WorkoutTemplateSelector } from "@/components/workout-template-selector"
 import exercisesData from '@/data/exercises-real.json'
+import { api } from "@/lib/api-client"
+import { WorkoutCreate } from "@/schemas/typescript-interfaces"
 
 interface MuscleGroup {
   id: string
@@ -63,11 +65,6 @@ export function FitbodHome() {
     window.location.href = `/exercises/${muscleGroupId}`
   }
 
-  const handleQuickStart = () => {
-    // Navigate to the existing working workout logger
-    window.location.href = '/workouts-simple'
-  }
-
   const handleStartWorkout = () => {
     setShowTemplateSelector(true)
   }
@@ -78,27 +75,44 @@ export function FitbodHome() {
     setShowWorkoutRoutine(true)
   }
 
-  const handleWorkoutStart = (template: any) => {
-    console.log('Starting workout with template:', template)
-    
-    // Convert template exercises to workout queue format expected by WorkoutLoggerEnhanced
-    const workoutQueue = template.exercises.map((templateExercise: any) => {
-      const exerciseData = exercisesData.find((ex: any) => ex.id === templateExercise.exerciseId)
-      return {
-        id: templateExercise.exerciseId,
-        name: exerciseData?.name || templateExercise.exerciseId.replace(/_/g, ' '),
-        category: exerciseData?.category || 'Unknown',
-        equipment: exerciseData?.equipment || 'Unknown',
-        difficulty: exerciseData?.difficulty || 'Intermediate'
-      }
-    })
+  const handleWorkoutStart = async (template: any) => {
+    console.log('Starting workout with template:', template);
+    // This is a placeholder user_id. In a real app, this would come from the auth context.
+    const placeholderUserId = "550e8400-e29b-41d4-a716-446655440000";
 
-    // Save workout queue to localStorage for WorkoutLoggerEnhanced
-    localStorage.setItem('workoutQueue', JSON.stringify(workoutQueue))
-    
-    // Navigate to the workout logger
-    window.location.href = '/workouts-simple'
-  }
+    try {
+      const workoutData: WorkoutCreate = {
+        user_id: placeholderUserId,
+        name: template.name,
+        workout_type: template.workoutType,
+        variation: template.variant,
+      };
+
+      const newWorkout = await api.workouts.create(workoutData);
+      console.log('Created new workout session:', newWorkout);
+
+      const workoutQueue = template.exercises.map((templateExercise: any) => {
+        const exerciseData = exercisesData.find((ex: any) => ex.id === templateExercise.exerciseId);
+        return {
+          id: templateExercise.exerciseId,
+          name: exerciseData?.name || templateExercise.exerciseId.replace(/_/g, ' '),
+          category: exerciseData?.category || 'Unknown',
+          equipment: exerciseData?.equipment || 'Unknown',
+          difficulty: exerciseData?.difficulty || 'Intermediate',
+        };
+      });
+
+      // Save the plan to localStorage, keyed by the new workout ID
+      // The logger will fetch this to know which exercises to show.
+      localStorage.setItem(`workout-plan-${newWorkout.id}`, JSON.stringify(workoutQueue));
+
+      // Navigate to the workout logger with the new workout ID
+      window.location.href = `/workouts-simple?id=${newWorkout.id}`;
+    } catch (error) {
+      console.error("Failed to create workout session:", error);
+      // TODO: Add user-facing error message
+    }
+  };
 
   // Show template selector if user clicked "Start Workout"
   if (showTemplateSelector) {
@@ -183,13 +197,6 @@ export function FitbodHome() {
 
       {/* Quick Actions */}
       <div className="px-6 mt-8 space-y-4">
-        <Button 
-          onClick={handleQuickStart}
-          className="w-full bg-[#FF375F] hover:bg-[#E63050] text-white h-14 text-lg font-semibold"
-        >
-          Quick Start Workout
-        </Button>
-        
         <div className="grid grid-cols-2 gap-4">
           <Button 
             variant="outline" 

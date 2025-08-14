@@ -10,8 +10,10 @@ import {
   WorkoutSet, 
   MuscleState,
   UserUpdate,
-  WorkoutInsert,
-  WorkoutSetInsert 
+  WorkoutCreate,
+  WorkoutUpdate,
+  WorkoutSetCreate,
+  WorkoutSetUpdate
 } from '@/schemas/typescript-interfaces'
 
 // API Configuration
@@ -229,30 +231,23 @@ export const api = {
       offset?: number
     }) => {
       const query = new URLSearchParams(params as any).toString()
-      return apiClient.get<Workout[]>(`/workouts${query ? `?${query}` : ''}`)
+      return apiClient.get<Workout[]>(`/workouts?${query}`)
     },
     get: (id: string) => apiClient.get<Workout>(`/workouts/${id}`),
-    create: (data: WorkoutInsert) => apiClient.post<Workout>('/workouts', data),
-    complete: (id: string, data?: { notes?: string, energy_level?: number }) => 
-      apiClient.post<Workout>(`/workouts/${id}/complete`, data),
+    create: (data: WorkoutCreate) => apiClient.post<Workout>('/workouts/', data),
+    update: (id: string, data: WorkoutUpdate) => apiClient.put<Workout>(`/workouts/${id}`, data),
+    delete: (id: string) => apiClient.delete<void>(`/workouts/${id}`),
+    complete: (id: string) => apiClient.post<any>(`/workouts/${id}/complete`),
   },
 
-  // Workout set endpoints
+  // Workout set endpoints (nested under workouts)
   workoutSets: {
-    list: (params?: {
-      workout_id?: string
-      exercise_id?: string
-      limit?: number
-      offset?: number
-    }) => {
-      const query = new URLSearchParams(params as any).toString()
-      return apiClient.get<WorkoutSet[]>(`/workout-sets${query ? `?${query}` : ''}`)
-    },
-    get: (id: string) => apiClient.get<WorkoutSet>(`/workout-sets/${id}`),
-    create: (data: WorkoutSetInsert) => apiClient.post<WorkoutSet>('/workout-sets', data),
-    update: (id: string, data: Partial<WorkoutSetInsert>) => 
-      apiClient.put<WorkoutSet>(`/workout-sets/${id}`, data),
-    delete: (id: string) => apiClient.delete<void>(`/workout-sets/${id}`),
+    list: (workoutId: string) => apiClient.get<WorkoutSet[]>(`/workouts/${workoutId}/sets`),
+    create: (workoutId: string, data: WorkoutSetCreate) => apiClient.post<WorkoutSet>(`/workouts/${workoutId}/sets`, data),
+    update: (workoutId: string, setId: string, data: WorkoutSetUpdate) =>
+      apiClient.put<WorkoutSet>(`/workouts/${workoutId}/sets/${setId}`, data),
+    delete: (workoutId: string, setId: string) =>
+      apiClient.delete<void>(`/workouts/${workoutId}/sets/${setId}`),
   },
 
   // Analytics endpoints

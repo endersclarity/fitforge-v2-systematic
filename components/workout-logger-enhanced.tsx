@@ -1,15 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Plus, Minus, Clock, CheckCircle, Dumbbell, Timer } from "lucide-react"
-import { WorkoutPlan, PlannedSet } from '@/schemas/typescript-interfaces'
+import { WorkoutSet, WorkoutSetCreate } from '@/schemas/typescript-interfaces' // Use the real schema
 import { RestTimer } from './rest-timer'
+import { api } from '@/lib/api-client'
 
+// This local interface is still useful for the workout *plan*
 interface WorkoutExercise {
   id: string
   name: string
@@ -18,40 +20,22 @@ interface WorkoutExercise {
   difficulty: string
 }
 
-interface SetLog {
-  id: string
-  exerciseId: string
-  weight: number
-  reps: number
-  completed: boolean
-  timestamp: string
-}
-
-interface WorkoutSession {
-  id: string
-  name: string
-  date: string
-  startTime: string
-  endTime?: string
-  duration: number
-  exercises: WorkoutExercise[]
-  sets: SetLog[]
-  totalSets: number
-}
-
 export function WorkoutLoggerEnhanced() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const [workoutId, setWorkoutId] = useState<string | null>(null)
   const [workoutQueue, setWorkoutQueue] = useState<WorkoutExercise[]>([])
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0)
-  const [sets, setSets] = useState<SetLog[]>([])
+  const [sets, setSets] = useState<WorkoutSet[]>([]) // Use the real WorkoutSet interface
   const [currentWeight, setCurrentWeight] = useState('')
   const [currentReps, setCurrentReps] = useState('')
+  const [currentRpe, setCurrentRpe] = useState('')
   const [startTime] = useState(new Date().toISOString())
   const [elapsedTime, setElapsedTime] = useState(0)
   const [isWorkoutComplete, setIsWorkoutComplete] = useState(false)
-  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null)
-  const [plannedSets, setPlannedSets] = useState<PlannedSet[]>([])
   const [showRestTimer, setShowRestTimer] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   // Timer effect
   useEffect(() => {
@@ -65,96 +49,87 @@ export function WorkoutLoggerEnhanced() {
     return () => clearInterval(timer)
   }, [startTime])
 
-  // Load workout queue and planned sets on mount
+  // Load workout plan and existing sets on mount
   useEffect(() => {
-    // First try the new format from pull/push/legs pages
-    const savedSession = localStorage.getItem('fitforge-workout-session')
-    if (savedSession) {
-      const session = JSON.parse(savedSession)
-      setWorkoutQueue(session.exercises || [])
-      
-      // Load planned workout if available
-      const savedPlan = localStorage.getItem('workout-plan')
-      if (savedPlan) {
-        const plan: WorkoutPlan = JSON.parse(savedPlan)
-        setWorkoutPlan(plan)
-        setPlannedSets(plan.plannedSets)
-        
-        // Set initial weight/reps from first planned set if available
-        if (plan.plannedSets.length > 0 && session.exercises.length > 0) {
-          const firstExercisePlannedSets = plan.plannedSets.filter(set => set.exerciseId === session.exercises[0].id)
-          if (firstExercisePlannedSets.length > 0) {
-            const firstSet = firstExercisePlannedSets[0]
-            setCurrentWeight(firstSet.targetWeight.toString())
-            setCurrentReps(firstSet.targetReps.toString())
+    const id = searchParams.get('id')
+    if (!id) {
+      console.error("No workout ID provided, redirecting.")
+      router.push('/')
+      return
+    }
+    setWorkoutId(id)
+
+    const loadWorkoutData = async (workoutId: string) => {
+      try {
+        // Load the plan from localStorage
+        const savedPlan = localStorage.getItem(`workout-plan-${workoutId}`)
+        if (savedPlan) {
+          const queue = JSON.parse(savedPlan)
+          if (queue.length > 0) {
+            setWorkoutQueue(queue)
+          } else {
+            throw new Error("Workout plan is empty.")
           }
+        } else {
+          throw new Error("Workout plan not found in localStorage.")
         }
-      }
-      
-      if (session.exercises.length === 0) {
-        // No exercises selected, redirect back
+
+        // Fetch already logged sets from the backend
+        const existingSets = await api.workoutSets.list(workoutId)
+        setSets(existingSets)
+
+      } catch (error) {
+        console.error("Failed to load workout data:", error)
+        // TODO: show error to user
         router.push('/')
-      }
-    } else {
-      // Fallback to legacy workoutQueue format
-      const savedQueue = localStorage.getItem('workoutQueue')
-      if (savedQueue) {
-        const queue = JSON.parse(savedQueue)
-        setWorkoutQueue(queue)
-        
-        if (queue.length === 0) {
-          router.push('/')
-        }
-      } else {
-        router.push('/')
+      } finally {
+        setIsLoading(false)
       }
     }
-  }, [router])
 
-  // Get planned values for current exercise and set
-  const getCurrentPlannedSet = (exerciseId: string, setNumber: number): PlannedSet | null => {
-    return plannedSets.find(set => set.exerciseId === exerciseId && set.setNumber === setNumber) || null
-  }
-
-  const getExercisePlannedSets = (exerciseId: string): PlannedSet[] => {
-    return plannedSets.filter(set => set.exerciseId === exerciseId).sort((a, b) => a.setNumber - b.setNumber)
-  }
+    loadWorkoutData(id)
+  }, [router, searchParams])
 
   const currentExercise = workoutQueue[currentExerciseIndex]
-  const exerciseSets = sets.filter(set => set.exerciseId === currentExercise?.id)
+  // Filter sets from state for the current exercise
+  const exerciseSets = sets.filter(set => set.exercise_id === currentExercise?.id)
 
-  const addSet = () => {
-    if (!currentWeight || !currentReps || !currentExercise) return
+  const addSet = async () => {
+    if (!currentWeight || !currentReps || !currentExercise || !workoutId) return
 
-    const newSet: SetLog = {
-      id: `set_${Date.now()}_${Math.random()}`,
-      exerciseId: currentExercise.id,
-      weight: parseFloat(currentWeight),
+    const newSetData: WorkoutSetCreate = {
+      exercise_id: currentExercise.id,
+      set_number: exerciseSets.length + 1,
+      weight_lbs: parseFloat(currentWeight),
       reps: parseInt(currentReps),
-      completed: true,
-      timestamp: new Date().toISOString()
+      rpe: currentRpe ? parseInt(currentRpe) : undefined,
     }
 
-    setSets(prev => [...prev, newSet])
-    
-    // Auto-start rest timer after set completion
-    setShowRestTimer(true)
-    
-    // Auto-populate next planned set values if available
-    const nextSetNumber = exerciseSets.length + 2 // +2 because we just added one
-    const nextPlannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
-    
-    if (nextPlannedSet) {
-      setCurrentWeight(nextPlannedSet.targetWeight.toString())
-      setCurrentReps(nextPlannedSet.targetReps.toString())
-    } else {
+    try {
+      const createdSet = await api.workoutSets.create(workoutId, newSetData)
+      setSets(prev => [...prev, createdSet])
+
+      // Clear inputs for next set
       setCurrentReps('')
-      // Keep weight for convenience if no planned set
+      setCurrentRpe('')
+      // Keep weight for convenience
+
+      setShowRestTimer(true)
+    } catch (error) {
+      console.error("Failed to add set:", error)
+      // TODO: show error to user
     }
   }
 
-  const removeSet = (setId: string) => {
-    setSets(prev => prev.filter(set => set.id !== setId))
+  const removeSet = async (setId: string) => {
+    if (!workoutId) return
+    try {
+      await api.workoutSets.delete(workoutId, setId)
+      setSets(prev => prev.filter(set => set.id !== setId))
+    } catch (error) {
+      console.error("Failed to delete set:", error)
+      // TODO: show error to user
+    }
   }
 
   const handleRestTimerComplete = () => {
@@ -165,22 +140,9 @@ export function WorkoutLoggerEnhanced() {
     if (currentExerciseIndex < workoutQueue.length - 1) {
       const newIndex = currentExerciseIndex + 1
       setCurrentExerciseIndex(newIndex)
-      
-      // Load planned values for first set of next exercise
-      const nextExercise = workoutQueue[newIndex]
-      if (nextExercise) {
-        const firstPlannedSet = getCurrentPlannedSet(nextExercise.id, 1)
-        if (firstPlannedSet) {
-          setCurrentWeight(firstPlannedSet.targetWeight.toString())
-          setCurrentReps(firstPlannedSet.targetReps.toString())
-        } else {
-          setCurrentWeight('')
-          setCurrentReps('')
-        }
-      } else {
-        setCurrentWeight('')
-        setCurrentReps('')
-      }
+      setCurrentWeight('')
+      setCurrentReps('')
+      setCurrentRpe('')
     }
   }
 
@@ -189,41 +151,29 @@ export function WorkoutLoggerEnhanced() {
       setCurrentExerciseIndex(prev => prev - 1)
       setCurrentWeight('')
       setCurrentReps('')
+      setCurrentRpe('')
     }
   }
 
-  const finishWorkout = () => {
-    if (sets.length === 0) return
+  const finishWorkout = async () => {
+    if (!workoutId || sets.length === 0) return
 
-    const endTime = new Date().toISOString()
-    const duration = Math.floor((new Date(endTime).getTime() - new Date(startTime).getTime()) / 1000 / 60)
+    try {
+      await api.workouts.complete(workoutId)
 
-    const workoutSession: WorkoutSession = {
-      id: `workout_${Date.now()}`,
-      name: `Custom Workout`,
-      date: new Date().toISOString().split('T')[0],
-      startTime,
-      endTime,
-      duration,
-      exercises: workoutQueue,
-      sets,
-      totalSets: sets.length
+      // Clean up the plan from localStorage
+      localStorage.removeItem(`workout-plan-${workoutId}`)
+
+      setIsWorkoutComplete(true)
+
+      // Redirect to dashboard after a moment
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 2000)
+    } catch (error) {
+      console.error("Failed to complete workout:", error)
+      // TODO: show error to user
     }
-
-    // Save to localStorage
-    const existingSessions = JSON.parse(localStorage.getItem('workoutSessions') || '[]')
-    const updatedSessions = [...existingSessions, workoutSession]
-    localStorage.setItem('workoutSessions', JSON.stringify(updatedSessions))
-
-    // Clear workout queue
-    localStorage.removeItem('workoutQueue')
-
-    setIsWorkoutComplete(true)
-
-    // Redirect to dashboard after a moment
-    setTimeout(() => {
-      router.push('/dashboard')
-    }, 2000)
   }
 
   const formatTime = (seconds: number) => {
@@ -239,6 +189,17 @@ export function WorkoutLoggerEnhanced() {
       case 'advanced': return 'bg-red-500/20 text-red-400 border-red-500/30'
       default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#121212] flex items-center justify-center">
+        <div className="text-center">
+          <Dumbbell className="h-12 w-12 text-[#A1A1A3] mx-auto mb-4 animate-pulse" />
+          <p className="text-[#A1A1A3]">Loading workout...</p>
+        </div>
+      </div>
+    )
   }
 
   if (isWorkoutComplete) {
@@ -261,11 +222,11 @@ export function WorkoutLoggerEnhanced() {
   }
 
   if (!currentExercise) {
-    return (
+     return (
       <div className="min-h-screen bg-[#121212] flex items-center justify-center">
         <div className="text-center">
           <Dumbbell className="h-12 w-12 text-[#A1A1A3] mx-auto mb-4" />
-          <p className="text-[#A1A1A3]">Loading workout...</p>
+          <p className="text-[#A1A1A3]">Could not load workout plan.</p>
         </div>
       </div>
     )
@@ -286,7 +247,7 @@ export function WorkoutLoggerEnhanced() {
           </Button>
           
           <div className="text-center">
-            <h1 className="text-lg font-semibold">Custom Workout</h1>
+            <h1 className="text-lg font-semibold">Workout</h1>
             <div className="flex items-center space-x-2 text-sm text-[#A1A1A3]">
               <Timer className="h-4 w-4" />
               <span>{formatTime(elapsedTime)}</span>
@@ -338,74 +299,15 @@ export function WorkoutLoggerEnhanced() {
           </CardHeader>
         </Card>
 
-        {/* Planned Sets Preview */}
-        {workoutPlan && getExercisePlannedSets(currentExercise.id).length > 0 && (
-          <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
-            <CardHeader>
-              <CardTitle className="text-lg text-white">Planned Workout</CardTitle>
-              <CardDescription className="text-[#A1A1A3]">
-                Your planned sets for this exercise
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {getExercisePlannedSets(currentExercise.id).map((plannedSet, index) => {
-                  const isCompleted = exerciseSets.length > index
-                  const actualSet = exerciseSets[index]
-                  
-                  return (
-                    <div key={plannedSet.id} className={`flex items-center justify-between p-3 rounded-lg border ${
-                      isCompleted 
-                        ? 'bg-[#1E3A1E] border-green-800/30' 
-                        : 'bg-[#2C2C2E] border-[#3C3C3E]'
-                    }`}>
-                      <div className="flex items-center space-x-3">
-                        <span className="text-sm font-medium text-white">Set {plannedSet.setNumber}</span>
-                        <div className="text-sm text-[#A1A1A3]">
-                          {currentExercise.equipment !== 'Bodyweight' && (
-                            <span>{plannedSet.targetWeight} lb × </span>
-                          )}
-                          <span>{plannedSet.targetReps} reps</span>
-                        </div>
-                      </div>
-                      
-                      {isCompleted && actualSet && (
-                        <div className="text-sm">
-                          <span className="text-green-400">
-                            {currentExercise.equipment !== 'Bodyweight' && (
-                              <span>{actualSet.weight} lb × </span>
-                            )}
-                            <span>{actualSet.reps} reps</span>
-                          </span>
-                        </div>
-                      )}
-                      
-                      {!isCompleted && exerciseSets.length === index && (
-                        <Badge className="bg-[#FF375F] text-white text-xs">Current</Badge>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Set Input */}
         <Card className="bg-[#1C1C1E] border-[#2C2C2E] mb-6">
           <CardHeader>
             <CardTitle className="text-lg text-white">
-              {(() => {
-                const nextSetNumber = exerciseSets.length + 1
-                const plannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
-                return plannedSet ? `Set ${nextSetNumber} (Planned: ${
-                  currentExercise.equipment !== 'Bodyweight' ? `${plannedSet.targetWeight} lb × ` : ''
-                }${plannedSet.targetReps} reps)` : `Add Set ${nextSetNumber}`
-              })()}
+              Add Set {exerciseSets.length + 1}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="text-sm text-[#A1A1A3] mb-2 block">Weight (lbs)</label>
                 <Input
@@ -426,25 +328,17 @@ export function WorkoutLoggerEnhanced() {
                   className="bg-[#2C2C2E] border-[#3C3C3E] text-white"
                 />
               </div>
+               <div>
+                <label className="text-sm text-[#A1A1A3] mb-2 block">RPE</label>
+                <Input
+                  type="number"
+                  value={currentRpe}
+                  onChange={(e) => setCurrentRpe(e.target.value)}
+                  placeholder="8"
+                  className="bg-[#2C2C2E] border-[#3C3C3E] text-white"
+                />
+              </div>
             </div>
-            
-            {/* Quick Fill Planned Values Button */}
-            {(() => {
-              const nextSetNumber = exerciseSets.length + 1
-              const plannedSet = getCurrentPlannedSet(currentExercise.id, nextSetNumber)
-              return plannedSet ? (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setCurrentWeight(plannedSet.targetWeight.toString())
-                    setCurrentReps(plannedSet.targetReps.toString())
-                  }}
-                  className="w-full bg-[#2C2C2E] border-[#3C3C3E] text-[#A1A1A3] hover:bg-[#3C3C3E] hover:text-white"
-                >
-                  Use Planned Values ({currentExercise.equipment !== 'Bodyweight' ? `${plannedSet.targetWeight} lb × ` : ''}{plannedSet.targetReps} reps)
-                </Button>
-              ) : null
-            })()}
             
             <Button
               onClick={addSet}
@@ -483,7 +377,7 @@ export function WorkoutLoggerEnhanced() {
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-[#FF375F]" />
                       <span className="text-white">
-                        Set {index + 1}: {set.weight} lbs × {set.reps} reps
+                        Set {index + 1}: {set.weight_lbs} lbs × {set.reps} reps {set.rpe && ` @ RPE ${set.rpe}`}
                       </span>
                     </div>
                     <Button

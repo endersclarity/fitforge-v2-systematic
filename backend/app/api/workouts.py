@@ -285,23 +285,120 @@ async def create_workout(
 
 
 @router.put("/{workout_id}", response_model=Workout)
-async def update_workout(workout_id: str, workout_update: WorkoutUpdate):
+async def update_workout(
+    workout_id: str,
+    workout_update: WorkoutUpdate,
+    db: DatabaseManager = Depends(get_database)
+):
     """Update workout details"""
-    # TODO: Implement workout update
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Endpoint not implemented yet"
-    )
+    logger.info("🔥 update_workout ENTRY", extra={"workout_id": workout_id, "update_data": workout_update.dict(exclude_unset=True)})
+
+    try:
+        # First, verify the workout exists
+        existing_workout = await db.execute_query(
+            "SELECT id FROM workouts WHERE id = $1", workout_id, fetch_one=True
+        )
+        if not existing_workout:
+            logger.warning("🚨 Workout not found for update", extra={"workout_id": workout_id})
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Workout with ID {workout_id} not found"
+            )
+
+        update_data = workout_update.dict(exclude_unset=True)
+        if not update_data:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No update data provided"
+            )
+
+        # Dynamically build the SET clause
+        set_clauses = []
+        params = []
+        param_idx = 1
+        for key, value in update_data.items():
+            set_clauses.append(f"{key} = ${param_idx}")
+            params.append(value)
+            param_idx += 1
+
+        # Add updated_at timestamp
+        set_clauses.append(f"updated_at = ${param_idx}")
+        params.append(datetime.utcnow())
+        param_idx += 1
+
+        params.append(workout_id)
+
+        update_query = f"""
+            UPDATE workouts
+            SET {', '.join(set_clauses)}
+            WHERE id = ${param_idx}
+            RETURNING *
+        """
+
+        logger.info("🔧 Executing workout update", extra={"query": update_query, "params": params})
+        updated_workout = await db.execute_query(
+            update_query, *params, fetch_one=True
+        )
+
+        if not updated_workout:
+            # This case should ideally not be hit if the initial check passes, but is good practice
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Workout with ID {workout_id} not found during update."
+            )
+
+        logger.info("🔧 Workout updated successfully", extra={"workout_id": workout_id})
+        return updated_workout
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"🚨 update_workout FAILURE - {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to update workout: {str(e)}"
+        )
 
 
 @router.delete("/{workout_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_workout(workout_id: str):
-    """Delete workout session"""
-    # TODO: Implement workout deletion
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Endpoint not implemented yet"
-    )
+async def delete_workout(
+    workout_id: str,
+    db: DatabaseManager = Depends(get_database)
+):
+    """Delete workout session and all associated sets"""
+    logger.info("🔥 delete_workout ENTRY", extra={"workout_id": workout_id})
+
+    try:
+        # Use a transaction to ensure atomicity
+        async with db.connection_pool.acquire() as connection:
+            async with connection.transaction():
+                # Check if the workout exists
+                workout = await connection.fetchrow("SELECT id FROM workouts WHERE id = $1", workout_id)
+                if not workout:
+                    logger.warning("🚨 Workout not found for deletion", extra={"workout_id": workout_id})
+                    raise HTTPException(
+                        status_code=status.HTTP_404_NOT_FOUND,
+                        detail=f"Workout with ID {workout_id} not found"
+                    )
+
+                # Delete associated workout sets first to maintain data integrity
+                deleted_sets_result = await connection.execute("DELETE FROM workout_sets WHERE workout_id = $1", workout_id)
+                logger.info(f"🔧 Deleted {deleted_sets_result.split(' ')[-1]} associated sets", extra={"workout_id": workout_id})
+
+                # Delete the workout itself
+                await connection.execute("DELETE FROM workouts WHERE id = $1", workout_id)
+
+        logger.info("🔧 Workout and associated sets deleted successfully", extra={"workout_id": workout_id})
+        return None # Return None for 204 No Content response
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"🚨 delete_workout FAILURE - {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete workout: {str(e)}"
+        )
 
 
 @router.post("/{workout_id}/complete")
@@ -474,40 +571,153 @@ async def update_muscle_states(
 
 # Workout Sets endpoints
 @router.get("/{workout_id}/sets", response_model=List[WorkoutSet])
-async def get_workout_sets(workout_id: str):
-    """Get all sets for a workout"""
-    # TODO: Implement workout sets retrieval
-    return []
+async def get_workout_sets(
+    workout_id: str,
+    db: DatabaseManager = Depends(get_database)
+):
+    """Get all sets for a specific workout, ordered by creation time."""
+    logger.info("🔥 get_workout_sets ENTRY", extra={"workout_id": workout_id})
+    try:
+        # Check if workout exists to give a clear 404 error
+        workout_exists = await db.execute_query("SELECT id FROM workouts WHERE id = $1", workout_id, fetch_one=True)
+        if not workout_exists:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Workout not found")
+
+        query = "SELECT * FROM workout_sets WHERE workout_id = $1 ORDER BY created_at ASC"
+        sets = await db.execute_query(query, workout_id, fetch=True)
+        logger.info(f"🔧 Found {len(sets)} sets for workout", extra={"workout_id": workout_id})
+        return sets or []
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"🚨 get_workout_sets FAILURE - {str(e)}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve workout sets")
 
 
 @router.post("/{workout_id}/sets", response_model=WorkoutSet, status_code=status.HTTP_201_CREATED)
-async def create_workout_set(workout_id: str, workout_set: WorkoutSetCreate):
-    """Add new set to workout"""
-    # TODO: Implement workout set creation
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Endpoint not implemented yet"
-    )
+async def create_workout_set(
+    workout_id: str,
+    workout_set: WorkoutSetCreate,
+    db: DatabaseManager = Depends(get_database)
+):
+    """Add a new set to a workout."""
+    logger.info("🔥 create_workout_set ENTRY", extra={"workout_id": workout_id, "set_data": workout_set.dict()})
+    try:
+        # Use a transaction to perform checks and insertion atomically
+        async with db.connection_pool.acquire() as connection:
+            async with connection.transaction():
+                # Verify workout exists and is not completed
+                workout = await connection.fetchrow("SELECT id, is_completed FROM workouts WHERE id = $1", workout_id)
+                if not workout:
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Workout not found")
+                if workout['is_completed']:
+                    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot add sets to a completed workout")
+
+                # Verify exercise exists
+                exercise = await connection.fetchrow("SELECT id FROM exercises WHERE id = $1", workout_set.exercise_id)
+                if not exercise:
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Exercise with ID {workout_set.exercise_id} not found")
+
+                set_id = str(uuid4())
+                insert_query = """
+                    INSERT INTO workout_sets (id, workout_id, exercise_id, set_number, weight_lbs, reps, rpe)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    RETURNING *
+                """
+                # The `volume_lbs` is calculated by a database trigger, so we don't insert it.
+                created_set = await connection.fetchrow(
+                    insert_query,
+                    set_id,
+                    workout_id,
+                    workout_set.exercise_id,
+                    workout_set.set_number,
+                    workout_set.weight_lbs,
+                    workout_set.reps,
+                    workout_set.rpe
+                )
+        logger.info("🔧 Set created successfully", extra={"set_id": set_id, "workout_id": workout_id})
+        return created_set
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"🚨 create_workout_set FAILURE - {str(e)}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to create workout set: {str(e)}")
 
 
 @router.put("/{workout_id}/sets/{set_id}", response_model=WorkoutSet)
-async def update_workout_set(workout_id: str, set_id: str, set_update: WorkoutSetUpdate):
-    """Update workout set details"""
-    # TODO: Implement workout set update
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Endpoint not implemented yet"
-    )
+async def update_workout_set(
+    workout_id: str,
+    set_id: str,
+    set_update: WorkoutSetUpdate,
+    db: DatabaseManager = Depends(get_database)
+):
+    """Update the details of a specific workout set."""
+    logger.info("🔥 update_workout_set ENTRY", extra={"set_id": set_id, "update_data": set_update.dict(exclude_unset=True)})
+    try:
+        update_data = set_update.dict(exclude_unset=True)
+        if not update_data:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No update data provided")
+
+        set_clauses = []
+        params = []
+        param_idx = 1
+        for key, value in update_data.items():
+            set_clauses.append(f"{key} = ${param_idx}")
+            params.append(value)
+            param_idx += 1
+
+        params.extend([set_id, workout_id])
+
+        update_query = f"""
+            UPDATE workout_sets
+            SET {', '.join(set_clauses)}, updated_at = NOW()
+            WHERE id = ${param_idx} AND workout_id = ${param_idx + 1}
+            RETURNING *
+        """
+
+        updated_set = await db.execute_query(update_query, *params, fetch_one=True)
+
+        if not updated_set:
+            # Check if the set exists at all to give a more specific error
+            set_exists = await db.execute_query("SELECT id FROM workout_sets WHERE id = $1", set_id, fetch_one=True)
+            if not set_exists:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Set with ID {set_id} not found")
+            else:
+                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Set with ID {set_id} not found in workout {workout_id}")
+
+        logger.info("🔧 Set updated successfully", extra={"set_id": set_id})
+        return updated_set
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"🚨 update_workout_set FAILURE - {str(e)}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to update workout set: {str(e)}")
 
 
 @router.delete("/{workout_id}/sets/{set_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_workout_set(workout_id: str, set_id: str):
-    """Delete workout set"""
-    # TODO: Implement workout set deletion
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Endpoint not implemented yet"
-    )
+async def delete_workout_set(
+    workout_id: str,
+    set_id: str,
+    db: DatabaseManager = Depends(get_database)
+):
+    """Delete a specific workout set."""
+    logger.info("🔥 delete_workout_set ENTRY", extra={"set_id": set_id, "workout_id": workout_id})
+    try:
+        # The query ensures we only delete the set if it belongs to the correct workout
+        delete_query = "DELETE FROM workout_sets WHERE id = $1 AND workout_id = $2"
+        result = await db.execute_query(delete_query, set_id, workout_id, fetch=False)
+
+        # result for DELETE is a string like 'DELETE 1'. If it's 'DELETE 0', nothing was deleted.
+        if result == 'DELETE 0':
+             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Set not found or does not belong to this workout")
+
+        logger.info("🔧 Set deleted successfully", extra={"set_id": set_id})
+        return None
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"🚨 delete_workout_set FAILURE - {str(e)}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to delete workout set: {str(e)}")
 
 
 @router.get("/{workout_id}/summary")

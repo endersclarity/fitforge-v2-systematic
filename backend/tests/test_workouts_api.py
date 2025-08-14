@@ -497,3 +497,206 @@ class TestEvidenceFirstDebugging:
 if __name__ == "__main__":
     # Run tests with: python -m pytest backend/tests/test_workouts_api.py -v
     pytest.main([__file__, "-v", "--tb=short"])
+
+
+# ============================================================================
+# INTEGRATION TESTS FOR NEW CRUD ENDPOINTS
+# ============================================================================
+from fastapi.testclient import TestClient
+from backend.main import app
+from backend.app.core.database import get_database, DatabaseManager
+import sqlite3
+
+# Use an in-memory SQLite database for testing
+DATABASE_URL = "sqlite:///:memory:"
+
+# Simplified schema for testing (without PostgreSQL specific features)
+TEST_SCHEMA = """
+CREATE TABLE users (
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL
+);
+CREATE TABLE exercises (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    equipment TEXT NOT NULL,
+    difficulty TEXT NOT NULL,
+    muscle_engagement TEXT NOT NULL
+);
+CREATE TABLE workouts (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    name TEXT,
+    workout_type TEXT,
+    variation TEXT,
+    started_at TEXT NOT NULL,
+    ended_at TEXT,
+    is_completed BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+CREATE TABLE workout_sets (
+    id TEXT PRIMARY KEY,
+    workout_id TEXT NOT NULL,
+    exercise_id TEXT NOT NULL,
+    set_number INTEGER NOT NULL,
+    weight_lbs REAL NOT NULL,
+    reps INTEGER NOT NULL,
+    rpe INTEGER,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (workout_id) REFERENCES workouts (id),
+    FOREIGN KEY (exercise_id) REFERENCES exercises (id)
+);
+"""
+
+@pytest.fixture(scope="module")
+def test_db_manager():
+    """Fixture to set up a test database manager with an in-memory SQLite DB."""
+    conn = sqlite3.connect(":memory:")
+    cursor = conn.cursor()
+    cursor.executescript(TEST_SCHEMA)
+    # Add dummy data for foreign key constraints
+    cursor.execute("INSERT INTO users (id, email) VALUES ('test_user_id', 'test@example.com')")
+    cursor.execute("INSERT INTO exercises (id, name, category, equipment, difficulty, muscle_engagement) VALUES ('test_exercise_id', 'Test Curl', 'Pull', 'Dumbbell', 'Beginner', '{}')")
+    conn.commit()
+
+    # This is a simplified manager for sqlite3 for testing purposes
+    class TestDbManager:
+        def __init__(self, connection):
+            self.conn = connection
+        async def execute_query(self, query, *args, fetch=False, fetch_one=False):
+            # SQLite uses '?' for placeholders
+            sql_query = query.replace('$', '?')
+            cursor = self.conn.cursor()
+            cursor.execute(sql_query, args)
+            if fetch:
+                columns = [desc[0] for desc in cursor.description]
+                return [dict(zip(columns, row)) for row in cursor.fetchall()]
+            if fetch_one:
+                columns = [desc[0] for desc in cursor.description]
+                row = cursor.fetchone()
+                return dict(zip(columns, row)) if row else None
+            self.conn.commit()
+            # For DELETE, result is rowcount
+            return f"DELETE {cursor.rowcount}"
+
+    yield TestDbManager(conn)
+    conn.close()
+
+@pytest.fixture(scope="module")
+def test_client(test_db_manager):
+    """Fixture to create a TestClient with an overridden database dependency."""
+    async def override_get_database():
+        return test_db_manager
+
+    app.dependency_overrides[get_database] = override_get_database
+    client = TestClient(app)
+    yield client
+    app.dependency_overrides.clear()
+
+
+class TestWorkoutAndSetCRUD:
+    """Integration tests for the full CRUD lifecycle of workouts and workout_sets."""
+
+    def test_create_and_delete_workout(self, test_client):
+        # Create a workout
+        response = test_client.post(
+            "/api/workouts/",
+            json={"user_id": "test_user_id", "name": "Integration Test Workout"}
+        )
+        assert response.status_code == 201
+        data = response.json()
+        workout_id = data["id"]
+        assert data["name"] == "Integration Test Workout"
+
+        # Verify it exists
+        response = test_client.get(f"/api/workouts/{workout_id}")
+        assert response.status_code == 200
+        assert response.json()["id"] == workout_id
+
+        # Delete the workout
+        response = test_client.delete(f"/api/workouts/{workout_id}")
+        assert response.status_code == 204
+
+        # Verify it's gone
+        response = test_client.get(f"/api/workouts/{workout_id}")
+        assert response.status_code == 404
+
+    def test_update_workout(self, test_client):
+        # Create a workout
+        response = test_client.post("/api/workouts/", json={"user_id": "test_user_id", "name": "Before Update"})
+        assert response.status_code == 201
+        workout_id = response.json()["id"]
+
+        # Update the workout
+        update_data = {"name": "After Update", "notes": "Updated successfully"}
+        response = test_client.put(f"/api/workouts/{workout_id}", json=update_data)
+        assert response.status_code == 200
+        updated_data = response.json()
+        assert updated_data["name"] == "After Update"
+        assert updated_data["notes"] == "Updated successfully"
+
+        # Clean up
+        test_client.delete(f"/api/workouts/{workout_id}")
+
+    def test_full_set_lifecycle(self, test_client):
+        # 1. Create a workout to host the sets
+        response = test_client.post("/api/workouts/", json={"user_id": "test_user_id", "name": "Set Lifecycle Test"})
+        assert response.status_code == 201
+        workout_id = response.json()["id"]
+
+        # 2. Create a set
+        set_data = {
+            "exercise_id": "test_exercise_id",
+            "set_number": 1,
+            "weight_lbs": 100,
+            "reps": 10,
+            "rpe": 8
+        }
+        response = test_client.post(f"/api/workouts/{workout_id}/sets", json=set_data)
+        assert response.status_code == 201
+        created_set = response.json()
+        set_id = created_set["id"]
+        assert created_set["weight_lbs"] == 100
+
+        # 3. Update the set
+        update_set_data = {"weight_lbs": 110, "reps": 8}
+        response = test_client.put(f"/api/workouts/{workout_id}/sets/{set_id}", json=update_set_data)
+        assert response.status_code == 200
+        updated_set = response.json()
+        assert updated_set["weight_lbs"] == 110
+        assert updated_set["reps"] == 8
+
+        # 4. Delete the set
+        response = test_client.delete(f"/api/workouts/{workout_id}/sets/{set_id}")
+        assert response.status_code == 204
+
+        # 5. Verify the set is gone
+        response = test_client.get(f"/api/workouts/{workout_id}/sets")
+        assert response.status_code == 200
+        assert len(response.json()) == 0
+
+        # Clean up workout
+        test_client.delete(f"/api/workouts/{workout_id}")
+
+    def test_list_workout_sets(self, test_client):
+        # Create a workout
+        response = test_client.post("/api/workouts/", json={"user_id": "test_user_id", "name": "List Sets Test"})
+        assert response.status_code == 201
+        workout_id = response.json()["id"]
+
+        # Create multiple sets
+        test_client.post(f"/api/workouts/{workout_id}/sets", json={"exercise_id": "test_exercise_id", "set_number": 1, "weight_lbs": 50, "reps": 12})
+        test_client.post(f"/api/workouts/{workout_id}/sets", json={"exercise_id": "test_exercise_id", "set_number": 2, "weight_lbs": 55, "reps": 10})
+
+        # List the sets
+        response = test_client.get(f"/api/workouts/{workout_id}/sets")
+        assert response.status_code == 200
+        sets = response.json()
+        assert len(sets) == 2
+        assert sets[0]["set_number"] == 1
+        assert sets[1]["set_number"] == 2
+
+        # Clean up
+        test_client.delete(f"/api/workouts/{workout_id}")

@@ -286,24 +286,18 @@ export interface Workout {
   is_completed: boolean; // Default: false
 }
 
-export interface WorkoutInsert {
+export interface WorkoutCreate {
   user_id: string;
   name?: string;
   workout_type?: string;
   variation?: 'A' | 'B';
-  started_at?: string; // Default: NOW()
+  started_at?: string;
   notes?: string;
-  energy_level?: number;
-  perceived_exertion?: number;
-  previous_workout_id?: string;
 }
 
 export interface WorkoutUpdate {
   name?: string;
-  ended_at?: string;
   notes?: string;
-  energy_level?: number;
-  perceived_exertion?: number;
   is_completed?: boolean;
 }
 
@@ -321,45 +315,36 @@ export interface WorkoutSet {
   set_number: number; // 1-20
   reps: number; // 1-50 (prevents impossible rep counts)
   weight_lbs: number; // Decimal(6,2), 0-500, 0.25 increments
+  rpe?: number; // Rating of Perceived Exertion
   
   // Performance metrics
   time_under_tension_seconds?: number;
   rest_seconds?: number; // 0-600 (max 10 minutes)
-  perceived_exertion?: number; // 1-10
   
   // Calculated metrics (generated columns)
   volume_lbs: number; // weight_lbs * reps
-  estimated_one_rep_max?: number; // Decimal(6,2)
   
   // Progressive tracking
   is_personal_best: boolean; // Default: false
-  improvement_vs_last?: number; // Decimal(5,2) percentage
   
   // System fields
   created_at: string;
   updated_at: string;
 }
 
-export interface WorkoutSetInsert {
-  workout_id: string;
+export interface WorkoutSetCreate {
   exercise_id: string;
-  user_id: string;
   set_number: number;
   reps: number;
   weight_lbs: number;
-  time_under_tension_seconds?: number;
-  rest_seconds?: number;
-  perceived_exertion?: number;
+  rpe?: number;
 }
 
 export interface WorkoutSetUpdate {
   reps?: number;
   weight_lbs?: number;
-  time_under_tension_seconds?: number;
-  rest_seconds?: number;
-  perceived_exertion?: number;
-  is_personal_best?: boolean;
-  improvement_vs_last?: number;
+  rpe?: number;
+  set_number?: number;
 }
 
 // ============================================================================
