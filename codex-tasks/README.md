@@ -32,7 +32,7 @@ cd codex-tasks/001-workout-logger
 ```
 
 ## Completed Tasks
-*None yet*
+009-comprehensive-stress-test - initial diagnostic report available in `deliverables/DIAGNOSTIC_REPORT.md`
 
 ## Instructions for Codex
 
