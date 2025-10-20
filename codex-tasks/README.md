@@ -32,7 +32,7 @@ cd codex-tasks/001-workout-logger
 ```
 
 ## Completed Tasks
-*None yet*
+- 007-progressive-overload-calc ✅
 
 ## Instructions for Codex
 
